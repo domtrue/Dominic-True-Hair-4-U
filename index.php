@@ -22,7 +22,6 @@
                     <li><a href="">Book Appointment</a></li>
                    <li><a href="">Hair Services</a></li>
                    <li><a href="">Gift Vouchers</a></li>
-                   <li><a href="">About</a></li>
             </div>
         </section>
     
