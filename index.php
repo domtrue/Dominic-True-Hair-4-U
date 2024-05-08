@@ -1,32 +1,37 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hair 4 U</title>
-    <link rel="stylesheet" href=<"style.css">
-    </head>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<nav>
+    <div class="left-menu">
+        <ul>
+            <li><a href="promotions.php">Promotions</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="book_appointment.php">Book Appointment</a></li>
+        </ul>
     
-    <body>
+    <nav>
+    <a href="index.php" class="logo-container">
+        <img class="logo-img" src="img\logo.png" alt="Logo">
+    </a>
+    <nav>
+    
+     <div class="right-menu">  
+        <ul>
+            <li><a href="hair_services.php">Hair Services</a></li>
+            <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
+            <li><a href="about.php">About</a></li>
+        </ul>
         
-        <section id="header">
-            <a href="#"><img src="img/logo.png" class="logo" alt=""</a>
-                
-            <div>
-               <ul id="navbar">
-                    <li><a href="">Home</a></li>
-                    <li><a href="">Promotions</a></li>
-                    <li><a href="">Shop</a></li>
-                    <li><a href="">Book Appointment</a></li>
-                   <li><a href="">Hair Services</a></li>
-                   <li><a href="">Gift Vouchers</a></li>
-            </div>
-        </section>
-    
-    
-        <script src="script.js"></script>
-    </body>
-    
+   
+    </div>
+    </nav>
+</body>
 </html>

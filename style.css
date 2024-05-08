@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Neuton:wght@100;200;300;400;500;600;700;800;900&display=swap');
 * {
     margin: 0;
     padding: 0;
@@ -6,42 +6,44 @@
     font-family: 'Spartan', sans-serif;
 }
 
-h1 {
-    font-size: 50px;
-    line-height: 64px;
-    color: black;
+    nav {
+        background-color: #cfcece;
+        color: #fff;
+        padding: 10px 0;
+        display: flex;
+        margin: 0 auto;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        display: inline-block;
+        margin: 10px;
+    }
+
+.left-menu,
+.right-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
 }
 
-h2 {
-    font-size: 46px;
-    line-height: 54px;
-    color: black;
+.left-menu li,
+.right-menu li {
+  margin-right: 20px;
 }
 
-h4 {
-    font-size: 20px;
-    color: black;
-}
+  
+    .logo-container {
+        display: inline-block;
+    }
+    
+    .logo-img {
+        height: auto;
+        align-self: center;
+    }
 
-h6 {
-    font-weight: 700;
-    font-size: 12px;
-}
-
-p {
-    font-size: 16px;
-    color: darkgrey;
-    margin: 15px 0 20px 0;
-}
-
-.section-pl {
-    padding: 40px 80px;
-}
-
-.section-ml {
-    margin: 40px 0;
-}
-
-body {
-    width: 100%;
-}
+    
