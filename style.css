@@ -1,49 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Neuton:wght@100;200;300;400;500;600;700;800;900&display=swap');
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: 0;
-    font-family: 'Spartan', sans-serif;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333; /* Choose your desired background color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    color: white; /* Choose your desired text color */
 }
 
-    nav {
-        background-color: #cfcece;
-        color: #fff;
-        padding: 10px 0;
-        display: flex;
-        margin: 0 auto;
-    }
-    ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-    li {
-        display: inline-block;
-        margin: 10px;
-    }
-
-.left-menu,
-.right-menu {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
+.navbar__left,
+.navbar__right {
+    display: flex;
 }
 
-.left-menu li,
-.right-menu li {
-  margin-right: 20px;
+.navbar__left a,
+.navbar__right a {
+    color: inherit; /* Inherit text color from parent */
+    text-decoration: none; /* Remove underline from links */
+    margin-right: 20px; /* Adjust spacing between links */
 }
 
-  
-    .logo-container {
-        display: inline-block;
-    }
-    
-    .logo-img {
-        height: auto;
-        align-self: center;
-    }
+.navbar__logo {
+    flex: 1; /* Make the logo section take up remaining space */
+    display: flex;
+    justify-content: center; /* Center the logo horizontally */
+}
 
-    
+.navbar__logo img {
+    max-height: 40px; /* Adjust logo size as needed */
+}
+
+@media (min-width: 768px) {
+    .navbar__logo {
+        flex: initial; /* Reset flex property */
+    }
+}
+
+.footer {
+    text-align: center;
+    height: 100px;
+    background-color: #333; /* Choose your desired background color */
+    padding: 20px; /* Adjust padding as needed */
+    color: white; /* Choose your desired text color */
+}
