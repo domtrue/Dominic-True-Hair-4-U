@@ -1,32 +1,52 @@
 .navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    background-color: #333; /* Choose your desired background color */
-    padding: 10px 20px; /* Adjust padding as needed */
-    color: white; /* Choose your desired text color */
+    height: 100px;
+    background-color: #c5bdbd; /* Choose your desired background color */
 }
 
-.navbar__left,
-.navbar__right {
+.promotions,
+.shop,
+.book_appointment,
+.hair_services,
+.gift_vouchers,
+.about {
     display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
 }
 
-.navbar__left a,
-.navbar__right a {
+.promotions li,
+.shop li,
+.book_appointment li,
+.hair_services li,
+.gift_vouchers li,
+.about li {
+    margin-right: 50px;
+}
+.promotions a,
+.shop a,
+.book_appointment a,
+.hair_services a,
+.gift_vouchers a,
+.about a {
     color: inherit; /* Inherit text color from parent */
     text-decoration: none; /* Remove underline from links */
-    margin-right: 20px; /* Adjust spacing between links */
 }
 
-.navbar__logo {
-    flex: 1; /* Make the logo section take up remaining space */
+.navbar_logo {
     display: flex;
     justify-content: center; /* Center the logo horizontally */
+    align-items: center;
 }
 
-.navbar__logo img {
-    max-height: 40px; /* Adjust logo size as needed */
+.logo-img {
+    max-width: 150px; /* Adjust logo size as needed */
+    height: auto;
+    margin-right: 25px;
 }
 
 @media (min-width: 768px) {
@@ -37,8 +57,8 @@
 
 .footer {
     text-align: center;
-    height: 100px;
-    background-color: #333; /* Choose your desired background color */
+    height: 30px;
+    background-color: #c5bdbd; /* Choose your desired background color */
     padding: 20px; /* Adjust padding as needed */
-    color: white; /* Choose your desired text color */
+    color: black; /* Choose your desired text color */
 }
