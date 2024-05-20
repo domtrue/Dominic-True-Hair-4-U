@@ -55,10 +55,27 @@
     }
 }
 
-.footer {
-    text-align: center;
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #c5bdbd;
     height: 30px;
-    background-color: #c5bdbd; /* Choose your desired background color */
-    padding: 20px; /* Adjust padding as needed */
-    color: black; /* Choose your desired text color */
+}
+.social-icons img {
+    max-width: 60px;
+    height: auto;
+}
+
+.copyright {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.address {
+    flex: 1;
+    text-align: right;
 }
