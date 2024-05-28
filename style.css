@@ -1,61 +1,59 @@
 .navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    background-color: #c5bdbd; /* Choose your desired background color */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #c5bdbd;
+  color: black;
+  padding: 10px;
 }
 
-.promotions,
-.shop,
-.book_appointment,
-.hair_services,
-.gift_vouchers,
-.about {
-    display: flex;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    align-items: center;
+.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
-.promotions li,
-.shop li,
-.book_appointment li,
-.hair_services li,
-.gift_vouchers li,
-.about li {
-    margin-right: 50px;
-}
-.promotions a,
-.shop a,
-.book_appointment a,
-.hair_services a,
-.gift_vouchers a,
-.about a {
-    color: inherit; /* Inherit text color from parent */
-    text-decoration: none; /* Remove underline from links */
+.hamburger {
+  display: none; /* Hide hamburger menu by default */
+  cursor: pointer;
+  color: #fff; /* Adjust the color of the hamburger menu icon */
+  font-size: 24px; /* Adjust the size of the hamburger menu icon */
 }
 
-.navbar_logo {
-    display: flex;
-    justify-content: center; /* Center the logo horizontally */
-    align-items: center;
+@media (max-width: 768px) {
+  .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 55%; /* Adjust the width as needed */
+      background-color: #333;
+      color: #fff;
+      display: none;
+      z-index: 999; /* Ensure the menu appears over the body */
+  }
+
+  .hamburger {
+    display: block; /* Show hamburger menu in mobile view */
+    position: absolute;
+    top: 50px;
+    right: 260px; /* Adjust the distance from the right as needed */
 }
 
-.logo-img {
-    max-width: 150px; /* Adjust logo size as needed */
-    height: auto;
-    margin-right: 25px;
+  .menu li {
+      padding: 20px;
+  }
+
+  .menu li a {
+      color: #fff;
+      text-decoration: none;
+  }
+
+  .menu.show {
+      display: block;
+  }
 }
-
-@media (min-width: 768px) {
-    .navbar__logo {
-        flex: initial; /* Reset flex property */
-    }
-}
-
-
+  
 footer {
     display: flex;
     justify-content: space-between;
