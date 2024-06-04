@@ -11,29 +11,26 @@
 <head>
 <body>
     <nav class="navbar">
-      <div class="logo">
-          <a href="index.php">
-            <img src="img/logo.png" alt="Logo">
-          </a>
-        </div>
-        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
-        <ul class="menu">
+        <ul class="menu-left">
             <li><a href="promotions.php">Promotions</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="book_appointment.php">Book Appointment</a></li>
+        </ul>
+        <div class="logo">
+          <a href="index.php">
+            <img src="img/logo.png" alt="Logo">
+        </div>
+
+         <ul class="menu-right">
             <li><a href="hair_services.php">Hair Services</a></li>
             <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
             <li><a href="about.php">About</a></li>
         </ul>
+        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
       </nav>
 </div>
    
 
     <script src="script.js"></script>
-</body>
-</html>
-
-
-  <script src="script.js"></script>
 </body>
 </html>

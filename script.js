@@ -1,4 +1,7 @@
 function toggleMenu() {
-  var menu = document.querySelector('.menu');
-  menu.classList.toggle('show');
+  var menuLeft = document.querySelector('.menu-left');
+  var menuRight = document.querySelector('.menu-right');
+
+  menuLeft.classList.toggle('show');
+  menuRight.classList.toggle('show');
 }

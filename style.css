@@ -1,79 +1,131 @@
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #c5bdbd;
-  color: black;
-  padding: 10px;
+  display: flex; /* Displays the navbar items in a flex container */
+  justify-content: space-between; /* Distributes the items evenly along the main axis */
+  align-items: center; /* Centers the items along the cross axis */
+  background-color: #c5bdbd; /* Sets the background color of the navbar */
+  color: black; /* Sets the text color */
+  padding: 10px; /* Adds padding around the navbar */
 }
 
-.menu {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+.navbar .logo {
+  font-size: 24px; /* Sets the font size for the logo */
 }
+
 
 .hamburger {
-  display: none; /* Hide hamburger menu by default */
-  cursor: pointer;
-  color: #fff; /* Adjust the color of the hamburger menu icon */
-  font-size: 24px; /* Adjust the size of the hamburger menu icon */
+  display: none; /* Hides hamburger menu by default */
+  cursor: pointer; /* Sets cursor to pointer */
+  color: #fff; /* Sets the color of the hamburger menu icon */
+  font-size: 24px; /* Sets the font size of the hamburger menu icon */
+}
+
+.menu-left,
+.menu-right {
+  display: flex; /* Displays the menu items in a flex container */
+  list-style: none; /* Removes default list styles */
+  padding: 0; /* Removes padding */
+  margin: 0; /* Removes margin */
+}
+
+.menu-left li,
+.menu-right li {
+  margin-right: 20px; /* Adds right margin to each menu item */
+}
+
+.menu-left li a,
+.menu-right li a {
+    text-decoration: none; /* Removes underline from menu items */
+    color: black;
+}
+
+.menu-left li:last-child,
+.menu-right li:last-child {
+  margin-right: 0; /* Removes right margin from the last menu item */
+}
+
+/* Media query for desktop devices */
+@media (min-width: 768px) {
+  .menu-left {
+      order: 1; /* Moves menu-left to the left */
+  }
+
+  .menu-right {
+      order: 3; /* Moves menu-right to the right */
+  }
+
+  .logo {
+      order: 2; /* Keeps the logo in the middle */
+  }
 }
 
 @media (max-width: 768px) {
-  .menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 55%; /* Adjust the width as needed */
-      background-color: #333;
-      color: #fff;
-      display: none;
-      z-index: 999; /* Ensure the menu appears over the body */
+  .menu-left,
+  .menu-right {
+      position: fixed; /* Fixes the position of the menu */
+      top: 0; /* Sets the top position */
+      right: 0; /* Sets the right position */
+      bottom: 0; /* Sets the bottom position */
+      width: 55%; /* Sets the width of the menu */
+      background-color: #333; /* Sets the background color of the menu */
+      color: #fff; /* Sets the text color of the menu */
+      display: none; /* Hides the menu */
+      z-index: 999; /* Sets the stacking order */
   }
 
-  .hamburger {
-    display: block; /* Show hamburger menu in mobile view */
-    position: absolute;
-    top: 50px;
-    right: 260px; /* Adjust the distance from the right as needed */
-}
+      .navbar .logo {
+          order: -1; /* Moves the logo to the left */
+          margin-right: 400px; /* Optional: Adjusts margin for spacing */
+      }
 
-  .menu li {
-      padding: 20px;
+      .hamburger {
+          display: block; /* Shows the hamburger menu in mobile view */
+          position: absolute; /* Positions the hamburger menu */
+          top: 50px; /* Sets the top position */
+          right: 260px; /* Adjusts the distance from the right */
+      }
+
+  .menu-left li,
+  .menu-right li {
+      padding: 20px; /* Adds padding to each menu item */
   }
 
-  .menu li a {
-      color: #fff;
-      text-decoration: none;
+  .menu-left li a,
+  .menu-right li a {
+      color: #fff; /* Sets the text color of the menu items */
+      text-decoration: none; /* Removes underline from menu items */
   }
 
-  .menu.show {
-      display: block;
+  /* Show mobile menu items when .menu has the 'show' class */
+    .menu.show .menu-left,
+    .menu.show .menu-right {
+        display: flex;
+        flex-direction: column; /* Stack menu items vertically */
+    }
+
+
   }
-}
-  
+
 footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #c5bdbd;
-    height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #c5bdbd;
+  height: 30px;
 }
+
 .social-icons img {
-    max-width: 60px;
-    height: auto;
+  max-width: 60px;
+  height: auto;
 }
 
 .copyright {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .address {
-    flex: 1;
-    text-align: right;
+  flex: 1;
+  text-align: right;
 }
