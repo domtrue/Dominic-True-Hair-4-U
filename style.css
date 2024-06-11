@@ -1,131 +1,118 @@
 .navbar {
-  display: flex; /* Displays the navbar items in a flex container */
-  justify-content: space-between; /* Distributes the items evenly along the main axis */
-  align-items: center; /* Centers the items along the cross axis */
-  background-color: #c5bdbd; /* Sets the background color of the navbar */
-  color: black; /* Sets the text color */
-  padding: 10px; /* Adds padding around the navbar */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #c5bdbd;
+  color: black;
+  padding: 10px;
 }
 
-.navbar .logo {
-  font-size: 24px; /* Sets the font size for the logo */
-}
-
-
-.hamburger {
-  display: none; /* Hides hamburger menu by default */
-  cursor: pointer; /* Sets cursor to pointer */
-  color: #fff; /* Sets the color of the hamburger menu icon */
-  font-size: 24px; /* Sets the font size of the hamburger menu icon */
+.menu-container {
+  display: flex;
 }
 
 .menu-left,
 .menu-right {
-  display: flex; /* Displays the menu items in a flex container */
-  list-style: none; /* Removes default list styles */
-  padding: 0; /* Removes padding */
-  margin: 0; /* Removes margin */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
 }
 
 .menu-left li,
 .menu-right li {
-  margin-right: 20px; /* Adds right margin to each menu item */
+  padding: 0 15px; /* Adjust spacing between menu items */
 }
 
 .menu-left li a,
 .menu-right li a {
-    text-decoration: none; /* Removes underline from menu items */
-    color: black;
+  color: black; /* Set the color of the menu options */
+  text-decoration: none; /* Remove the underline */
 }
 
-.menu-left li:last-child,
-.menu-right li:last-child {
-  margin-right: 0; /* Removes right margin from the last menu item */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 24px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 160px; /* Adjust the distance from the left */
 }
 
-/* Media query for desktop devices */
-@media (min-width: 768px) {
-  .menu-left {
-      order: 1; /* Moves menu-left to the left */
-  }
 
-  .menu-right {
-      order: 3; /* Moves menu-right to the right */
-  }
-
-  .logo {
-      order: 2; /* Keeps the logo in the middle */
+@media (min-width: 769px) {
+  .menu {
+    display: none; /* Hide the vertically stacked menu items */
   }
 }
 
 @media (max-width: 768px) {
-  .menu-left,
-  .menu-right {
-      position: fixed; /* Fixes the position of the menu */
-      top: 0; /* Sets the top position */
-      right: 0; /* Sets the right position */
-      bottom: 0; /* Sets the bottom position */
-      width: 55%; /* Sets the width of the menu */
-      background-color: #333; /* Sets the background color of the menu */
-      color: #fff; /* Sets the text color of the menu */
-      display: none; /* Hides the menu */
-      z-index: 999; /* Sets the stacking order */
+  .menu-container {
+    display: none;
   }
 
-      .navbar .logo {
-          order: -1; /* Moves the logo to the left */
-          margin-right: 400px; /* Optional: Adjusts margin for spacing */
-      }
-
-      .hamburger {
-          display: block; /* Shows the hamburger menu in mobile view */
-          position: absolute; /* Positions the hamburger menu */
-          top: 50px; /* Sets the top position */
-          right: 260px; /* Adjusts the distance from the right */
-      }
-
-  .menu-left li,
-  .menu-right li {
-      padding: 20px; /* Adds padding to each menu item */
+  .hamburger {
+    display: block;
   }
 
-  .menu-left li a,
-  .menu-right li a {
-      color: #fff; /* Sets the text color of the menu items */
-      text-decoration: none; /* Removes underline from menu items */
+  .menu {
+    position: fixed;
+    top: -8px; /* Adjust to match the height of your navbar */
+    bottom: 0;
+    right: 0;
+    width: 45%;
+    height: 100vh; /* Make the menu fill the viewport height */
+    background-color: #333;
+    color: #fff;
+    display: none;
+    z-index: 999;
+    list-style-type: none;
+    padding-left: 0;
   }
 
-  /* Show mobile menu items when .menu has the 'show' class */
-    .menu.show .menu-left,
-    .menu.show .menu-right {
-        display: flex;
-        flex-direction: column; /* Stack menu items vertically */
-    }
-
-
+  .hamburger {
+    position: absolute;
+    top: 60px;
+    right: 20px;
   }
 
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  background-color: #c5bdbd;
-  height: 30px;
+  .menu li {
+    padding: 20px;
+  }
+
+  .menu li a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .menu.show {
+    display: block;
+  }
 }
 
+  
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #c5bdbd;
+    height: 30px;
+}
 .social-icons img {
-  max-width: 60px;
-  height: auto;
+    max-width: 60px;
+    height: auto;
 }
 
 .copyright {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .address {
-  flex: 1;
-  text-align: right;
+    flex: 1;
+    text-align: right;
 }
