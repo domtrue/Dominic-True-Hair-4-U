@@ -1,6 +1,7 @@
 <?php
 // Include the database connection setup file
 include 'setup.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Escape user inputs for security
     $first_name = $conn->real_escape_string($_POST['first_name']);
