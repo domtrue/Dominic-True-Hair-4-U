@@ -87,7 +87,7 @@ input[type=submit] {
         <label for="fname">First Name</label>
       </div>
       <div class="col-75">
-        <input type="text" id="fname" name="firstname" placeholder="Your name..">
+        <input type="text" id="fname" name="firstname" placeholder="Your first name..">
       </div>
     </div>
     <div class="row">
@@ -100,7 +100,7 @@ input[type=submit] {
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="email">email</label>
+        <label for="email">Email</label>
       </div>
       <div class="col-75">
         <input type="text" id="email" name="email" placeholder="Your email..">
