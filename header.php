@@ -23,6 +23,7 @@
                 <li><a href="hair_services.php">Hair Services</a></li>
                 <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
                 <li><a href="about.php">About</a></li>
+                <li><a href="contact.php">Contact</a></li>
             </ul>
         </div>
         <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
@@ -33,6 +34,7 @@
             <li><a href="hair_services.php">Hair Services</a></li>
             <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
             <li><a href="about.php">About</a></li>
+            <li><a href= "contact.php">Contact</a></li>
         </ul>
     </nav>
 
