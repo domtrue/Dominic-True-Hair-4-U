@@ -11,9 +11,10 @@
             height: calc(100vh - 60px); 
         }
     /* Style inputs, select elements and textareas */
+    
 input[type=text], select, textarea{
   width: 100%;
-  padding: 12px;
+  padding: 36px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
@@ -28,7 +29,7 @@ label {
 
 /* Style the submit button */
 input[type=submit] {
-  background-color: #04AA6D;
+  background-color: #4a00e0;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -108,22 +109,10 @@ input[type=submit] {
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="country">Country</label>
-      </div>
-      <div class="col-75">
-        <select id="country" name="country">
-          <option value="australia">Australia</option>
-          <option value="canada">Canada</option>
-          <option value="usa">USA</option>
-        </select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-25">
         <label for="subject">Subject</label>
       </div>
       <div class="col-75">
-        <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+        <textarea id="subject" name="subject" placeholder="Your message.." style="height:200px"></textarea>
       </div>
     </div>
     <div class="row">
