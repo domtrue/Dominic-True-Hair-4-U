@@ -109,10 +109,11 @@ input[type=submit] {
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="subject">Subject</label>
+        <label for="message">Message</label>
       </div>
       <div class="col-75">
-        <textarea id="subject" name="subject" placeholder="Your message.." style="height:200px"></textarea>
+      <textarea id="message" name="message" placeholder="Your message.." style="height:200px"></textarea>
+
       </div>
     </div>
     <div class="row">
