@@ -67,7 +67,7 @@
     <div class="content">
     <div class="responsive">
     <div class="gallery">
-    <a target="_blank" href="img\Rejuven8Shampoo375mL.jpg">
+    <a target="_blank" href="img/Rejuven8Shampoo375mL.jpg">
       <img src="img\Rejuven8Shampoo375mL.jpg" alt="Rejuven8Shampoo">
     </a>
     <div class="desc">DE LORENZO INSTANT REJUVEN8 SHAMPOO 375ML</div>
@@ -76,7 +76,7 @@
 
 <div class="responsive">
   <div class="gallery">
-    <a target="_blank" href="img\Rejuven8Conditioner375mL.jpg">
+    <a target="_blank" href="img/Rejuven8Conditioner375mL.jpg">
       <img src="img\Rejuven8Conditioner375mL.jpg" alt="Rejuven8Conditioner">
     </a>
     <div class="desc">DE LORENZO INSTANT REJUVEN8 CONDITIONER 375ML</div>
@@ -85,7 +85,7 @@
 
 <div class="responsive">
   <div class="gallery">
-    <a target="_blank" href="img\Rejuven8TheEnds120mL.jpg">
+    <a target="_blank" href="img/Rejuven8TheEnds120mL.jpg">
       <img src="img\Rejuven8TheEnds120mL.jpg" alt="Rejuven8TheEnds">
     </a>
     <div class="desc">DE LORENZO INSTANT REJUVEN8 THE ENDS 120ML</div>
@@ -94,7 +94,7 @@
 
 <div class="responsive">
   <div class="gallery">
-    <a target="_blank" href="img\Rejuven8Treatment150g.jpg">
+    <a target="_blank" href="img/Rejuven8Treatment150g.jpg">
       <img src="img\Rejuven8Treatment150g.jpg" alt="Rejuven8Treatment">
     </a>
     <div class="desc">DE LORENZO INSTANT REJUVEN8 TREATMENT 150G</div>
@@ -115,5 +115,6 @@
 
 <?php include 'footer.php';?>
     <script src="script.js"></script>
+    <script src="slideshow.js"></script>
 </body>
 </html>
