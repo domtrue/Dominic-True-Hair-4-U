@@ -43,7 +43,7 @@ include 'setup.php';
 </body>
 <?php
 // SQL query to select data from the contacts table
-$sql = "SELECT id, first_name, last_name, email, message, created_at FROM contacts";
+$sql = "SELECT id, firstname, lastname, email, message, created_at FROM contacts";
 $result = $conn->query($sql);
 
 
@@ -54,8 +54,8 @@ if ($result->num_rows > 0) {
         // Output each row of the data in a table row
         echo "<tr>";
         echo "<td>" . $row["id"] . "</td>";
-        echo "<td>" . $row["first_name"] . "</td>";
-        echo "<td>" . $row["last_name"] . "</td>";
+        echo "<td>" . $row["firstname"] . "</td>";
+        echo "<td>" . $row["lastname"] . "</td>";
         echo "<td>" . $row["email"] . "</td>";
         echo "<td>" . $row["message"] . "</td>";
         echo "<td>" . $row["created_at"] . "</td>";
