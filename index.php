@@ -180,55 +180,61 @@ error_reporting(E_ALL);
     <?php include 'header.php'; ?>
 
     <div class="content">
+
         <!-- Heading -->
-        <div class="heading">Welcome to Hair 4 U</div>
+        <div class="heading">
+        <?php
+         include 'setup.php';
 
-        <!-- Blurb section -->
-        <div class="blurb">
-            <?php
-            // Database connection
-            $servername = "localhost";
-            $username = "sec_user";
-            $password = "greenChair153";
-            $dbname = "hair4u";
-
-            // Create connection
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            // Fetch blurb text from the database
-            $sql = "SELECT text_description FROM homepage_text ORDER BY id ASC";
+        // Fetch all pages from the database
+        $sql = "SELECT * FROM pages WHERE id = 1";
             $result = $conn->query($sql);
-
             if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo '<p>' . htmlspecialchars($row['text_description']) . '</p>';
-                }
-            } else {
-                echo "<p>No blurb available</p>";
-            }
-            $conn->close();
+                $page = $result->fetch_assoc();
+            
+            // Assign the fields to variables
+            $title1 = $page['title1'];
+            $text1 = $page['text1'];
+            $image1 = $page['image1'];
+            $title2 = $page['title2'];
+            $text2 = $page['text2'];
+            $image2 = $page['image2'];
+            $title3 = $page['title3'];
+            $text3 = $page['text3'];
+            $image3 = $page['image3'];
+          } else {
+            echo "Page not found.";
+            exit;
+          }
+          $conn->close();
+          // Display the heading
+          echo $title1;
+          ?>
+      </div>
+
+       <!-- Blurb section -->
+       <div class="blurb">
+            <?php
+            // Display the paragraphs
+            echo '<p>' . $text1 . '</p>';
+            echo '<p>' . $text2 . '</p>';
             ?>
         </div>
 
         <!-- Slideshow container -->
         <div class="slideshow-container">
+            
             <?php
-            // Database connection
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+               $basePath = 'img/';
+               include 'setup.php';
 
             // Fetch images from the database
-            $sql = "SELECT * FROM homepage_images";
+            $sql = "SELECT * FROM slideshow";
             $result = $conn->query($sql);
+
+            if (!$result) {
+                die("Query failed: " . $conn->error);
+            }
 
             $numSlides = $result->num_rows; // Save the number of slides
 
@@ -236,7 +242,7 @@ error_reporting(E_ALL);
                 $i = 1;
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="mySlides">
-                            <img src="' . htmlspecialchars($row['image_url']) . '" alt="Slide ' . $i . '" style="width:100%">
+                            <img src="' . $basePath . htmlspecialchars($row['image_url']) . '" alt="Slide ' . $i . '" style="width:100%">
                           </div>';
                     $i++;
                 }
@@ -244,6 +250,8 @@ error_reporting(E_ALL);
                 echo "No images found";
             }
             $conn->close();
+
+            
             ?>
 
             <!-- Prev & Next buttons -->
