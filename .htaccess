@@ -1,0 +1,10 @@
+# Set the default index file
+DirectoryIndex cms/index.php
+
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect requests to the cms directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ cms/$1 [L]

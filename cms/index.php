@@ -10,7 +10,7 @@ error_reporting(E_ALL);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hair 4 U</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
@@ -183,10 +183,11 @@ error_reporting(E_ALL);
 
         <!-- Heading -->
         <div class="heading">
-        <?php
-         include 'setup.php';
+        <?php include 'setup.php'; ?>
 
-        // Fetch all pages from the database
+
+       
+        <?php
         $sql = "SELECT * FROM pages WHERE id = 1";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {

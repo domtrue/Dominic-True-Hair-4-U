@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Navbar</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
       <div class="logo">
-          <a href="index.php">
+          <a href="/">
             <img src="img/logo.png" alt="Logo">
           </a>
         </div>
@@ -34,7 +34,7 @@
             <li><a href="hair_services.php">Hair Services</a></li>
             <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
             <li><a href="about.php">About</a></li>
-            <li><a href= "contact.php">Contact</a></li>
+            <li><a href="contact.php">Contact</a></li>
         </ul>
     </nav>
 
