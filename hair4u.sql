@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 31, 2024 at 07:05 AM
+-- Generation Time: Aug 07, 2024 at 06:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,13 +36,6 @@ CREATE TABLE `appointments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `appointments`
---
-
-INSERT INTO `appointments` (`id`, `customer_first_name`, `customer_last_name`, `service_type`, `appointment_datetime`, `created_at`) VALUES
-(1, 'John', 'Doe', 'Haircut', '2024-07-31 15:00:00', '2024-07-25 06:44:59');
-
 -- --------------------------------------------------------
 
 --
@@ -57,13 +50,6 @@ CREATE TABLE `contacts` (
   `message` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `contacts`
---
-
-INSERT INTO `contacts` (`id`, `firstname`, `lastname`, `email`, `message`, `created_at`) VALUES
-(1, 'John', 'Doe', 'john.doe@mail.com', 'test', '2024-06-19 09:58:34');
 
 -- --------------------------------------------------------
 
@@ -89,7 +75,7 @@ CREATE TABLE `pages` (
 --
 
 INSERT INTO `pages` (`id`, `title1`, `text1`, `image1`, `title2`, `text2`, `image2`, `title3`, `text3`, `image3`) VALUES
-(1, 'Welcome to Hair 4 U', 'Where style meets sophistication in the heart of Bulls, New Zealand. Owner and senior stylist Melissa True brings her passion and expertise to every appointment. Whether you\'re looking for a fresh new look or a classic cut, Melissa is dedicated to delivering the perfect style for your needs.', NULL, NULL, 'Looking for top-notch hair products? Explore our curated selection of quality items from industry-leading brands, all available for purchase online at competitive prices.', NULL, NULL, NULL, NULL);
+(1, 'Welcome to Hair 4 U', 'Where style meets sophistication in the heart of Bulls, New Zealand. Owner and senior stylist Melissa True brings her passion and expertise to every appointment. Whether you\'re looking for a fresh new look or a classic cut, Melissa is dedicated to delivering the perfect style for your needs. ', NULL, NULL, 'Looking for top-notch hair products? Explore our curated selection of quality items from industry-leading brands, all available for purchase online at competitive prices. ', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -150,13 +136,13 @@ ALTER TABLE `slideshow`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pages`

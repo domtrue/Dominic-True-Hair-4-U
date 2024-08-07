@@ -1,4 +1,3 @@
-
 <footer>
         <div class="social-icons">
             <a href="https://www.facebook.com/hair4ubulls/" class="social-icon"><img src="img\facebook-logo.png" alt="Facebook"></a>
