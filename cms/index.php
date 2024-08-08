@@ -2,6 +2,51 @@
 // Enable error reporting
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+// Include database configuration
+include 'setup.php';
+
+// Determine the page ID
+$id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if no ID is provided
+
+// Fetch the page details from the database
+$sql = "SELECT * FROM pages WHERE id=$id";
+$result = $conn->query($sql);
+
+// Initialize variables for page content
+$title1 = $text1 = $text2 = ''; // Initialize all variables to empty strings
+
+if ($result->num_rows > 0) {
+    $page = $result->fetch_assoc();
+    
+    // Assign the fields to variables
+    $title1 = $page['title1'];
+    $text1 = $page['text1'];
+    $text2 = $page['text2'];
+    // Add other fields if needed
+
+    // Prepare for slideshow
+    $basePath = 'img/';
+
+    // Fetch images for the slideshow
+    $slideshowSql = "SELECT * FROM slideshow";
+    $slideshowResult = $conn->query($slideshowSql);
+
+    if (!$slideshowResult) {
+        die("Query failed: " . $conn->error);
+    }
+
+    $numSlides = $slideshowResult->num_rows; // Save the number of slides
+
+    // Close the database connection after all queries
+    $conn->close();
+} else {
+    $title1 = "Page not found";
+    $text1 = "";
+    $text2 = "";
+    $numSlides = 0; // No slides to show
+    $slideshowResult = null; // No result to fetch
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,8 +59,6 @@ error_reporting(E_ALL);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
 
     <style>
@@ -180,41 +223,13 @@ error_reporting(E_ALL);
     <?php include 'header.php'; ?>
 
     <div class="content">
-
         <!-- Heading -->
         <div class="heading">
-        <?php include 'setup.php'; ?>
+            <?php echo $title1; ?>
+        </div>
 
-
-       
-        <?php
-        $sql = "SELECT * FROM pages WHERE id = 1";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                $page = $result->fetch_assoc();
-            
-            // Assign the fields to variables
-            $title1 = $page['title1'];
-            $text1 = $page['text1'];
-            $image1 = $page['image1'];
-            $title2 = $page['title2'];
-            $text2 = $page['text2'];
-            $image2 = $page['image2'];
-            $title3 = $page['title3'];
-            $text3 = $page['text3'];
-            $image3 = $page['image3'];
-          } else {
-            echo "Page not found.";
-            exit;
-          }
-          $conn->close();
-          // Display the heading
-          echo $title1;
-          ?>
-      </div>
-
-       <!-- Blurb section -->
-       <div class="blurb">
+        <!-- Blurb section -->
+        <div class="blurb">
             <?php
             // Display the paragraphs
             echo '<p>' . $text1 . '</p>';
@@ -223,52 +238,38 @@ error_reporting(E_ALL);
         </div>
 
         <!-- Slideshow container -->
-        <div class="slideshow-container">
-            
-            <?php
-               $basePath = 'img/';
-               include 'setup.php';
-
-            // Fetch images from the database
-            $sql = "SELECT * FROM slideshow";
-            $result = $conn->query($sql);
-
-            if (!$result) {
-                die("Query failed: " . $conn->error);
-            }
-
-            $numSlides = $result->num_rows; // Save the number of slides
-
-            if ($numSlides > 0) {
-                $i = 1;
-                while ($row = $result->fetch_assoc()) {
-                    echo '<div class="mySlides">
-                            <img src="' . $basePath . htmlspecialchars($row['image_url']) . '" alt="Slide ' . $i . '" style="width:100%">
-                          </div>';
-                    $i++;
+        <?php if ($numSlides > 0) { ?>
+            <div class="slideshow-container">
+                <?php
+                if ($numSlides > 0) {
+                    $i = 1;
+                    while ($row = $slideshowResult->fetch_assoc()) {
+                        echo '<div class="mySlides">
+                                <img src="' . $basePath . htmlspecialchars($row['image_url']) . '" alt="Slide ' . $i . '" style="width:100%">
+                              </div>';
+                        $i++;
+                    }
+                } else {
+                    echo "No images found";
                 }
-            } else {
-                echo "No images found";
-            }
-            $conn->close();
+                ?>
 
-            
-            ?>
+                <!-- Prev & Next buttons -->
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
 
-            <!-- Prev & Next buttons -->
-            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-            <a class="next" onclick="plusSlides(1)">&#10095;</a>
-        </div>
+            <!-- Dots -->
+            <div style="text-align:center">
+                <?php
+                // Display dots for each slide
+                for ($j = 1; $j <= $numSlides; $j++) {
+                    echo '<span class="dot" onclick="currentSlide(' . $j . ')"></span>';
+                }
+                ?>
+            </div>
+        <?php } ?>
 
-        <!-- Dots -->
-        <div style="text-align:center">
-            <?php
-            // Display dots for each slide
-            for ($j = 1; $j <= $numSlides; $j++) {
-                echo '<span class="dot" onclick="currentSlide(' . $j . ')"></span>';
-            }
-            ?>
-        </div>
     </div>
 
     <?php include 'footer.php'; ?>
