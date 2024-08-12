@@ -30,6 +30,12 @@
   text-decoration: none; /* Remove the underline */
 }
 
+.sign-in-icon {
+  position: relative; /* Enables top property to work */
+  top: -5px;          /* Adjust this value to move the icon up */
+  font-size: 1.2em;   /* Make icon 20% larger than the text size */
+}
+
 .hamburger {
   display: none;
   cursor: pointer;

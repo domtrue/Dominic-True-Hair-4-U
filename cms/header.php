@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Navbar</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -24,6 +25,8 @@
                 <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
                 <li><a href="about.php">About</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <li><a href="login.php" class="fa-solid fa-right-to-bracket"></a></li>
+
             </ul>
         </div>
         <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
@@ -35,6 +38,8 @@
             <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
             <li><a href="about.php">About</a></li>
             <li><a href="contact.php">Contact</a></li>
+            <i class="fa-solid fa-right-to-bracket"></i>
+
         </ul>
     </nav>
 
