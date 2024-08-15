@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Log In - Hair 4 U</title>
+  <title>Register - Hair 4 U</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
@@ -90,7 +90,7 @@
         color: #e5e5e5;
     }
 
-    .login, .create-account {
+    .register {
     width: 100%; /* Full width */
     height: 50px;
     background-color: #ffffff; /* Button background color */
@@ -106,41 +106,14 @@
     display: inline-block; /* Ensure buttons are treated as block-level elements */
 }
 
-    .login, .create-account {
+    .register {
     margin-top: 20px; /* Space between login button and create account button */
     display: inline-block; /* Ensure it's treated as a block-level element */
     text-decoration: none; /* Remove underline for link */
     }
 
-    .login:hover, .create-account:hover {
+    .register:hover {
     background-color: rgba(255, 255, 255, 0.27); /* Hover effect */
-    }
-
-    .social {
-        margin-top: 30px;
-        display: flex;
-    }
-
-    .social div {
-        background: red;
-        width: 150px;
-        border-radius: 3px;
-        padding: 5px 10px 10px 5px;
-        background-color: rgba(255, 255, 255, 0.27);
-        color: #eaf0fb;
-        text-align: center;
-    }
-
-    .social div:hover {
-        background-color: rgba(255, 255, 255, 0.47);
-    }
-
-    .social .fb {
-        margin-left: 25px;
-    }
-
-    .social i {
-        margin-right: 4px;
     }
 
     .error {
@@ -151,28 +124,21 @@
     }
 </style>
 <body>
-    <form method="post" action="authenticate.php">
-        <h3>Log In</h3>
+    <form method="post" action="register.php">
+        <h3>Register</h3>
 
         <label for="username">Username</label>
-        <input type="text" placeholder="Username or Email" id="username" name="username" required>
+        <input type="text" placeholder="Username" id="username" name="username" required>
 
         <label for="password">Password</label>
         <input type="password" placeholder="Password" id="password" name="password" required>
 
-        <button type="submit" class="login">Login</button>
+        <label for="email">Email</label>
+        <input type="text" placeholder="Email" id="email" name="email" required>
 
-        <?php if (isset($error_message)): ?>
-            <div class="error"><?php echo htmlspecialchars($error_message); ?></div>
-        <?php endif; ?>
+        <button type="submit" class="register">Create account</button>
 
-        <!-- Create an account button -->
-        <a href="register.html" class="create-account">Create an account</a>
-
-        <div class="social">
-            <div class="go"><i class="fab fa-google"></i> Google</div>
-            <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>
-        </div>
+    
     </form>
 </body>
 </html>

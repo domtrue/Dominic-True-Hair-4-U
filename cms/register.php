@@ -1,83 +1,101 @@
 <?php
-require 'vendor/autoload.php'; // For PHPMailer or any other libraries
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+// Include the PHPMailer classes
+require '../PHPMailer/PHPMailer.php';
+require '../PHPMailer/SMTP.php';
+require '../PHPMailer/Exception.php';
+
+// Include the database connection setup file
 include 'setup.php';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Now we check if the data was submitted, isset() function will check if the data exists.
+if (!isset($_POST['username'], $_POST['password'], $_POST['email'])) {
+    // Could not get the data that should have been sent.
+    exit('Please complete the registration form!');
 }
 
-$email = $_POST['email'];
-$phone = $_POST['phone'];
-$password = $_POST['password'];
-
-if (empty($email) && empty($phone)) {
-    die('Email or phone required');
+// Make sure the submitted registration values are not empty.
+if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email'])) {
+    // One or more values are empty.
+    exit('Please complete the registration form');
 }
 
-if (empty($password)) {
-    die('Password required');
+// Validate email address
+if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    exit('Email is not valid!');
 }
 
-// Check if email or phone already exists
-$sql = "SELECT * FROM users WHERE email = ? OR phone = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('ss', $email, $phone);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    die('Email or phone already registered');
+// Validate username
+if (preg_match('/^[a-zA-Z0-9]+$/', $_POST['username']) == 0) {
+    exit('Username is not valid!');
 }
 
-// Encrypt the password
-$password_hash = password_hash($password, PASSWORD_BCRYPT);
-
-// Insert the user into the database
-$sql = "INSERT INTO users (email, phone, password_hash) VALUES (?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('sss', $email, $phone, $password_hash);
-$stmt->execute();
-
-// Send verification email
-$last_id = $stmt->insert_id;
-$verification_code = rand(100000, 999999);
-$expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
-
-$sql = "INSERT INTO verification_codes (user_id, code, expires_at) VALUES (?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('iss', $last_id, $verification_code, $expires_at);
-$stmt->execute();
-
-// Use PHPMailer to send the email
-$mail = new PHPMailer(true);
-try {
-    $mail->isSMTP();
-    $mail->Host = 'smtp.example.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'your_email@example.com';
-    $mail->Password = 'your_password';
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
-
-    $mail->setFrom('from@example.com', 'Mailer');
-    $mail->addAddress($email);
-    $mail->isHTML(true);
-    $mail->Subject = 'Email Verification';
-    $mail->Body    = 'Your verification code is ' . $verification_code;
-
-    $mail->send();
-    echo 'Verification code has been sent';
-} catch (Exception $e) {
-    echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+// Validate password length
+if (strlen($_POST['password']) > 20 || strlen($_POST['password']) < 5) {
+    exit('Password must be between 5 and 20 characters long!');
 }
 
-$conn->close();
+// We need to check if the account with that username exists.
+if ($stmt = $conn->prepare('SELECT id, password FROM accounts WHERE username = ?')) {
+    $stmt->bind_param('s', $_POST['username']);
+    $stmt->execute();
+    $stmt->store_result();
+
+    // Store the result so we can check if the account exists in the database.
+    if ($stmt->num_rows > 0) {
+        // Username already exists
+        echo 'Username exists, please choose another!';
+    } else {
+        // Username doesn't exist, insert new account
+        if ($stmt = $conn->prepare('INSERT INTO accounts (username, password, email, activation_code) VALUES (?, ?, ?, ?)')) {
+            // Hash the password and use password_verify when a user logs in.
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $uniqid = uniqid();
+            $stmt->bind_param('ssss', $_POST['username'], $password, $_POST['email'], $uniqid);
+            $stmt->execute();
+
+            // Define activation link
+            // Define activation link
+            $activate_link = 'http://localhost/hair4u/cms/activate.php?email=' . urlencode($_POST['email']) . '&code=' . urlencode($uniqid);
+
+
+            // Initialize PHPMailer
+            $mail = new PHPMailer(true);
+
+            try {
+                // Server settings
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'domtrue.dt@gmail.com';
+                $mail->Password   = 'eagx szua bnbr abwf'; // Use app password if 2FA is enabled
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
+
+                // Recipients
+                $mail->setFrom('domtrue.dt@gmail.com', 'Hair 4 U');
+                $mail->addAddress($_POST['email']);
+
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Account Activation Required';
+                $mail->Body    = '<p>Please click the following link to activate your account: <a href="' . $activate_link . '">' . $activate_link . '</a></p>';
+                $mail->AltBody = 'Please click the following link to activate your account: ' . $activate_link;
+
+                $mail->send();
+                echo 'Please check your email to activate your account!';
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
+        } else {
+            // Something is wrong with the SQL statement
+            echo 'Could not prepare statement!';
+        }
+    }
+} else {
+    // Something is wrong with the SQL statement
+    echo 'Could not prepare statement!';
+}
 ?>

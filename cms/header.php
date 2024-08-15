@@ -25,7 +25,7 @@
                 <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
                 <li><a href="about.php">About</a></li>
                 <li><a href="contact.php">Contact</a></li>
-                <li><a href="login.php" class="fa-solid fa-right-to-bracket"></a></li>
+                <li><a href="login.php" class="fa-solid fa-user"></a></li>
 
             </ul>
         </div>
@@ -38,7 +38,7 @@
             <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
             <li><a href="about.php">About</a></li>
             <li><a href="contact.php">Contact</a></li>
-            <i class="fa-solid fa-right-to-bracket"></i>
+            <li><a href="login.php">Sign In</a></li>
 
         </ul>
     </nav>
