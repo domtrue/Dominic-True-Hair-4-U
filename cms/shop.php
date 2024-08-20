@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,115 +6,129 @@
     <title>Hair 4 U</title>
     <link rel="stylesheet" href="style.css">
     <style>
-/* Ensure all items in a row stretch to the same height */
+        /* Ensure all items in a row stretch to the same height */
+        .content {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next row if necessary */
+            justify-content: space-around; /* Adjust alignment as needed */
+            align-items: flex-start; /* Align items at the top */
+        }
 
-.content {
-  display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next row if necessary */
-  justify-content: space-around; /* Adjust alignment as needed */
-  align-items: flex-start; /* Align items at the top */
-}
+        .responsive {
+            width: 25%; /* Adjust width as needed for four items per row */
+            padding: 10px; /* Adjust padding as needed */
+            box-sizing: border-box; /* Ensure padding is included in width calculation */
+        }
 
-.responsive {
-  width: 25%; /* Adjust width as needed for four items per row */
-  padding: 10px; /* Adjust padding as needed */
-  box-sizing: border-box; /* Ensure padding is included in width calculation */
-}
+        @media only screen and (max-width: 875px) {
+            .responsive {
+                width: 49.99999%;
+                margin: 6px 0;
+            }
+        }
 
- @media only screen and (max-width: 875px) {
-  .responsive {
-    width: 49.99999%;
-    margin: 6px 0;
-  }
-}
+        @media only screen and (max-width: 500px) {
+            .responsive {
+                width: 100%;
+            }
+        }
 
-@media only screen and (max-width: 500px) {
-  .responsive {
-    width: 100%;
-  }
-} 
+        /* Remove border and padding from gallery */
+        .gallery {
+            text-align: center; /* Center align text */
+            padding: 0; /* Remove padding */
+        }
 
+        /* Image style */
+        .gallery img {
+            width: 100%; /* Make image responsive */
+            height: auto; /* Maintain aspect ratio */
+        }
 
-/* Gallery style */
-.gallery {
-  border: 1px solid #ccc; /* Thin border around each gallery item */
-  padding: 15px; /* Padding inside each gallery item */
-  text-align: center; /* Center align text */
-  height: 100%; /* Ensure each gallery item takes full height */
-}
+        /* Description style */
+        .desc {
+            margin-top: 10px; /* Margin at the top of each description */
+            font-size: 16px; /* Adjust font size as needed */
+            color: #333; /* Text color */
+        }
 
-/* Image style */
-.gallery img {
-  width: 100%; /* Make image responsive */
-  height: auto; /* Maintain aspect ratio */
-}
+        /* Price style */
+        .price {
+            margin-top: 5px; /* Margin above price */
+            font-size: 18px; /* Font size for price */
+            color: #000; /* Text color for price */
+            font-weight: bold; /* Make price bold */
+        }
 
-/* Description style */
-.desc {
-  margin-top: 10px; /* Margin at the top of each description */
-  overflow: hidden; /* Hide any overflow beyond the specified height */
-  text-overflow: ellipsis; /* Show ellipsis (...) for overflowing text */
-  display: -webkit-box; /* For iOS and Safari */
-  -webkit-line-clamp: 3; /* Limit number of text lines to 3 */
-  -webkit-box-orient: vertical; /* Vertical layout */
-}
+        /* Button style */
+        .button {
+            margin-top: 10px; /* Margin above button */
+            padding: 10px 20px; /* Padding inside button */
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            text-decoration: none; /* Remove underline from text */
+            display: inline-block; /* Inline-block for spacing */
+        }
 
+        .button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
 
-  </style>
-</head>
-<body>
-<?php include 'header.php';?>
-    <div class="content">
-    <div class="responsive">
-    <div class="gallery">
-    <a target="_blank" href="img/Rejuven8Shampoo375mL.jpg">
-      <img src="img\Rejuven8Shampoo375mL.jpg" alt="Rejuven8Shampoo">
-    </a>
-    <div class="desc">DE LORENZO INSTANT REJUVEN8 SHAMPOO 375ML</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="img/Rejuven8Conditioner375mL.jpg">
-      <img src="img\Rejuven8Conditioner375mL.jpg" alt="Rejuven8Conditioner">
-    </a>
-    <div class="desc">DE LORENZO INSTANT REJUVEN8 CONDITIONER 375ML</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="img/Rejuven8TheEnds120mL.jpg">
-      <img src="img\Rejuven8TheEnds120mL.jpg" alt="Rejuven8TheEnds">
-    </a>
-    <div class="desc">DE LORENZO INSTANT REJUVEN8 THE ENDS 120ML</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="img/Rejuven8Treatment150g.jpg">
-      <img src="img\Rejuven8Treatment150g.jpg" alt="Rejuven8Treatment">
-    </a>
-    <div class="desc">DE LORENZO INSTANT REJUVEN8 TREATMENT 150G</div>
-  </div>
-</div>
-
-<div class="clearfix"></div>
-
-    </div>
-
-    <style>
         .content {
             background: linear-gradient(135deg, #8e2de2, #4a00e0);
             height: calc(100vh - 60px); 
         }
-
     </style>
+</head>
+<body>
+<?php include 'header.php';?>
+
+<div class="content">
+    <?php
+    // Database connection details
+    include 'setup.php';
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // SQL query to get all products including the id
+    $sql = "SELECT id, name, image, price FROM products";
+    $result = $conn->query($sql);
+
+    // Check if there are results
+    if ($result->num_rows > 0) {
+        // Output data for each row
+        while($row = $result->fetch_assoc()) {
+            echo '<div class="responsive">';
+            echo '<div class="gallery">';
+            echo '<a target="_blank" href="img/' . $row["image"] . '">';
+            echo '<img src="img/' . $row["image"] . '" alt="' . htmlspecialchars($row["name"]) . '">';
+            echo '</a>';
+            echo '<div class="desc">' . htmlspecialchars($row["name"]) . '</div>';
+            echo '<div class="price">$' . number_format($row["price"], 2) . '</div>';
+            echo '<a href="add_to_cart.php?id=' . $row["id"] . '" class="button">Add to Cart</a>';
+            echo '</div>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p>No products found</p>';
+    }
+
+    // Close connection
+    $conn->close();
+    ?>
+</div>
 
 <?php include 'footer.php';?>
-    <script src="script.js"></script>
-    <script src="slideshow.js"></script>
+<script src="script.js"></script>
+<script src="slideshow.js"></script>
 </body>
 </html>
