@@ -19,16 +19,21 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     $sql = "SELECT id, name, image, price FROM products WHERE id IN ($productIds)";
     $result = $conn->query($sql);
 
-    // Display the cart
+    // Calculate subtotal for the cart items
+    $subtotal = 0;
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $productId = $row['id'];
+            $quantity = $_SESSION['cart'][$productId];
+            $subtotal += $row['price'] * $quantity;
+        }
+    }
+
+    // Store the subtotal in session
+    $_SESSION['order_total'] = $subtotal;
+
     ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Your Cart</title>
-        <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
-        <style>
+    <style>
             body {
                 background: #ddd;
                 min-height: 100vh;
@@ -171,13 +176,22 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                 color: #555;
             }
         </style>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Cart</title>
+        <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
     </head>
     <body>
         <div class="card">
             <div class="cart">
                 <h2>Your Cart</h2>
                 <?php
+                // Display the cart items
                 if ($result->num_rows > 0) {
+                    $result->data_seek(0); // Reset result pointer
                     while ($row = $result->fetch_assoc()) {
                         $productId = $row['id'];
                         $quantity = $_SESSION['cart'][$productId];
@@ -192,7 +206,7 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                             echo '<option value="' . $i . '"' . ($i == $quantity ? ' selected' : '') . '>' . $i . '</option>';
                         }
                         echo '</select>';
-                        echo '<span class="price">Price: $' . number_format($row['price'], 2) . '</span>';
+                        echo '<span class="price">Price: $' . number_format($totalPrice, 2) . '</span>';
                         echo '<a href="remove_from_cart.php?id=' . $productId . '" class="remove">x</a>';
                         echo '<input type="hidden" name="product_id" value="' . $productId . '">';
                         echo '</div>';
@@ -207,14 +221,7 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
 
             <div class="checkout">
                 <h3>Checkout</h3>
-                <form action="checkout.php" method="post">
-                    <div class="form-group">
-                        <label for="shipping">Shipping:</label>
-                        <select id="shipping" name="shipping">
-                            <option value="standard">Standard Shipping</option>
-                            <option value="express">Express Shipping</option>
-                        </select>
-                    </div>
+                <form action="shipping.php" method="post">
 
                     <div class="form-group">
                         <label for="promo">Promo Code:</label>
@@ -224,30 +231,13 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                     <div class="summary">
                         <div class="total">
                             <span>Total:</span>
-                            <?php
-                            // Calculate total price
-                            $total = 0;
-                            $result->data_seek(0); // Reset the result pointer
-                            while ($row = $result->fetch_assoc()) {
-                                $productId = $row['id'];
-                                $quantity = $_SESSION['cart'][$productId];
-                                $total += $row['price'] * $quantity;
-                            }
-                            echo '$' . number_format($total, 2);
-                            ?>
+                            $<?php echo number_format($subtotal, 2); ?>
                         </div>
                         <button type="submit" class="btn">Proceed to Checkout</button>
                     </div>
                 </form>
             </div>
         </div>
-
-        <script>
-            function removeItem(productId) {
-                // Perform an AJAX request or redirect to remove the item
-                window.location.href = 'remove_from_cart.php?id=' + productId;
-            }
-        </script>
     </body>
     </html>
     <?php
@@ -261,9 +251,6 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Your Cart</title>
         <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
-        <style>
-            /* Same styles as above or additional styles if needed */
-        </style>
     </head>
     <body>
         <div class="card">
