@@ -1,267 +1,312 @@
 <?php
 session_start(); // Start the session
 
-// Check if the cart exists
-if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-    // Database connection details
-    include 'setup.php';
+// Ensure there is a cart
+if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+    echo '<p>Your cart is empty. <a href="shop.php">Continue Shopping</a></p>';
+    exit();
+}
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+// Process form submissions for updating quantity and removing items
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['quantity']) && is_array($_POST['quantity'])) {
+        foreach ($_POST['quantity'] as $key => $quantity) {
+            if (isset($_SESSION['cart'][$key])) {
+                $_SESSION['cart'][$key]['quantity'] = max(1, intval($quantity)); // Ensure quantity is at least 1
+            }
+        }
+        $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
+            return $total + ($item['price'] * $item['quantity']);
+        }, 0); // Recalculate order total
     }
-
-    // SQL query to get product details based on cart items
-    $productIds = implode(',', array_keys($_SESSION['cart']));
-    $sql = "SELECT id, name, image, price FROM products WHERE id IN ($productIds)";
-    $result = $conn->query($sql);
-
-    // Calculate subtotal for the cart items
-    $subtotal = 0;
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $productId = $row['id'];
-            $quantity = $_SESSION['cart'][$productId];
-            $subtotal += $row['price'] * $quantity;
+    
+    if (isset($_POST['remove_item'])) {
+        $itemKey = intval($_POST['remove_item']);
+        if (isset($_SESSION['cart'][$itemKey])) {
+            unset($_SESSION['cart'][$itemKey]);
+            $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex the array
         }
     }
+}
 
-    // Store the subtotal in session
-    $_SESSION['order_total'] = $subtotal;
+// Retrieve cart items and calculate total
+$cartItems = $_SESSION['cart'];
+$cartTotal = 0;
+?>
 
-    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-            body {
-                background: #ddd;
-                min-height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: sans-serif;
-                font-size: 0.8rem;
-                font-weight: bold;
-                margin: 0;
-            }
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 
-            .card {
-                max-width: 950px;
-                width: 90%;
-                background: #fff;
-                box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-                border-radius: 1rem;
-                overflow: hidden;
-                display: flex;
-                flex-direction: row;
-                margin: auto;
-            }
+body {
+    background: #f4f4f4;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
-            .cart {
-                width: 65%;
-                padding: 2rem;
-                border-right: 1px solid #ddd;
-                overflow-y: auto;
-            }
+.container {
+    width: 90%;
+    max-width: 800px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* Ensure container is above other elements */
+}
 
-            .checkout {
-                width: 35%;
-                padding: 2rem;
-            }
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('path-to-your-pattern-image.png') repeat;
+    opacity: 0.1;
+    z-index: 0; /* Ensure background pattern is behind content */
+}
 
-            .cart-item {
-                display: flex;
-                align-items: center;
-                padding: 1rem 0;
-                border-bottom: 1px solid #ddd;
-            }
+.logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1; /* Ensure logo is above background pattern */
+}
 
-            .cart-item img {
-                width: 3.5rem;
-                margin-right: 1rem;
-            }
+.logo img {
+    max-width: 150px;
+}
 
-            .cart-item .details {
-                flex: 1;
-            }
+h1 {
+    text-align: center;
+    color: #000;
+    font-family: 'Merriweather', serif;
+    margin: 0;
+    position: relative;
+    z-index: 1; /* Ensure heading is above background pattern */
+}
 
-            .cart-item .details strong {
-                display: block;
-                margin-bottom: 0.5rem;
-            }
+.cart-items {
+    margin-bottom: 2rem;
+}
 
-            .cart-item select {
-                padding: 0.5rem;
-                border: 1px solid #ddd;
-                margin-right: 1rem;
-            }
+.cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+    position: relative; /* Ensure cart items are positioned correctly */
+    z-index: 2; /* Ensure items are above background pattern */
+}
 
-            .cart-item .price {
-                margin-right: 1rem;
-            }
+.cart-item:last-child {
+    border-bottom: none;
+}
 
-            .cart-item .remove {
-                cursor: pointer;
-                color: red;
-                font-size: 1rem;
-                margin-left: 1rem;
-            }
+.cart-item img {
+    max-width: 100px;
+    margin-right: 1rem;
+}
 
-            .summary {
-                padding-top: 1rem;
-            }
+.cart-item .item-details {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-            .summary select, .summary input {
-                width: 100%;
-                padding: 0.5rem;
-                margin-bottom: 1rem;
-                border: 1px solid #ddd;
-                border-radius: 0.5rem;
-            }
+.cart-item select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 3; /* Ensure dropdown is clickable */
+}
 
-            .checkout .form-group {
-                display: flex;
-                align-items: center;
-                margin-bottom: 1rem;
-            }
+.cart-item select:focus {
+    border-color: #4a148c;
+    outline: none;
+}
 
-            .checkout .form-group label {
-                margin-right: 1rem;
-                flex: 0 0 30%; /* Adjust as needed for spacing */
-                font-weight: bold;
-            }
+.cart-item button {
+    background-color: #e57373;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+    z-index: 3; /* Ensure button is clickable */
+}
 
-            .checkout .form-group input, 
-            .checkout .form-group select {
-                flex: 1; /* Takes up the remaining space */
-                padding: 0.5rem;
-                border: 1px solid #ddd;
-                border-radius: 0.5rem;
-            }
+.cart-item button:hover {
+    background-color: #d32f2f;
+}
 
-            .summary .total {
-                font-weight: bold;
-                margin-bottom: 1rem;
-            }
+.cart-summary {
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+}
 
-            .summary .btn {
-                background-color: #000;
-                color: #fff;
-                padding: 1rem;
-                border: none;
-                border-radius: 0.5rem;
-                cursor: pointer;
-                width: 100%;
-                text-align: center;
-            }
+.cart-summary .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
 
-            .back-to-shop {
-                display: flex;
-                align-items: center;
-                font-size: 0.9rem;
-                color: black;
-                text-decoration: none;
-                margin-top: 1rem;
-            }
+.cart-summary .summary-item span {
+    font-weight: bold;
+}
 
-            .back-to-shop img {
-                width: 1rem;
-                margin-right: 0.5rem;
-            }
+.auth-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
 
-            .empty-message {
-                text-align: center;
-                font-size: 1.2rem;
-                color: #555;
-            }
-        </style>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Your Cart</title>
-        <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
-    </head>
-    <body>
-        <div class="card">
-            <div class="cart">
-                <h2>Your Cart</h2>
-                <?php
-                // Display the cart items
-                if ($result->num_rows > 0) {
-                    $result->data_seek(0); // Reset result pointer
-                    while ($row = $result->fetch_assoc()) {
-                        $productId = $row['id'];
-                        $quantity = $_SESSION['cart'][$productId];
-                        $totalPrice = $row['price'] * $quantity;
+.auth-buttons button {
+    background-color: #4a148c; /* Primary color for the buttons */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+    position: relative;
+    z-index: 3; /* Ensure buttons are clickable */
+}
 
-                        echo '<form method="post" action="update_cart.php" class="cart-item">';
-                        echo '<img src="img/' . $row['image'] . '" alt="' . htmlspecialchars($row['name']) . '">';
-                        echo '<div class="details">';
-                        echo '<strong>' . htmlspecialchars($row['name']) . '</strong>';
-                        echo '<select name="quantity" onchange="this.form.submit()">';
-                        for ($i = 1; $i <= 10; $i++) {
-                            echo '<option value="' . $i . '"' . ($i == $quantity ? ' selected' : '') . '>' . $i . '</option>';
+.auth-buttons button:hover {
+    background-color: #6a1b9a; /* Darker shade for hover effect */
+}
+
+.auth-buttons button:active {
+    transform: scale(0.98); /* Slight scale effect for button press */
+}
+
+/* Optional: Focus state for accessibility */
+.auth-buttons button:focus {
+    outline: 2px solid #4a148c;
+    outline-offset: 2px;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Shopping Cart</h1>
+
+        <!-- Display cart items -->
+                <form id="cart-form" method="POST">
+                <div class="cart-items">
+                    <?php
+                    if (!empty($cartItems) && is_array($cartItems)) {
+                        foreach ($cartItems as $key => $item) {
+                            if (is_array($item) && isset($item['name'], $item['price'], $item['quantity'], $item['image']) && is_numeric($item['price']) && is_numeric($item['quantity'])) {
+                                $itemTotal = $item['price'] * $item['quantity'];
+                                $cartTotal += $itemTotal;
+                                echo '<div class="cart-item">';
+                                echo '<img src="' . htmlspecialchars($item['image']) . '" alt="' . htmlspecialchars($item['name']) . '">';
+                                echo '<div class="item-details">';
+                                echo '<span>' . htmlspecialchars($item['name']) . '</span>';
+                                echo '<span>$' . number_format($item['price'], 2) . '</span>'; // Display price as stored
+                                echo '<span>';
+                                echo '<select name="quantity[' . $key . ']" onchange="updateQuantity(this)">';
+                                for ($i = 1; $i <= 10; $i++) {
+                                    $selected = $i == $item['quantity'] ? 'selected' : '';
+                                    echo '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
+                                }
+                                echo '</select>';
+                                echo '</span>';
+                                echo '<span>';
+                                echo '<button type="submit" name="remove_item" value="' . $key . '">Remove</button>';
+                                echo '</span>';
+                                echo '</div>';
+                                echo '</div>';
+                            } else {
+                                echo '<p>Cart item structure is incorrect.</p>';
+                                echo '<pre>';
+                                print_r($item); // Inspect the incorrect item structure
+                                echo '</pre>';
+                            }
                         }
-                        echo '</select>';
-                        echo '<span class="price">Price: $' . number_format($totalPrice, 2) . '</span>';
-                        echo '<a href="remove_from_cart.php?id=' . $productId . '" class="remove">x</a>';
-                        echo '<input type="hidden" name="product_id" value="' . $productId . '">';
-                        echo '</div>';
-                        echo '</form>';
+                    } else {
+                        echo '<p>Your cart is empty.</p>';
+                    }
+                    ?>
+                </div>
+                <!-- Hidden input to trigger AJAX -->
+                <input type="hidden" name="update_quantity" value="1">
+            </form>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+            <div class="summary-item">
+                <span>Cart Total:</span>
+                <span id="cart-total">$<?php echo number_format($cartTotal, 2); ?></span>
+            </div>
+        </div>
+
+        <!-- Authentication Buttons -->
+        <div class="auth-buttons">
+            <button type="button" onclick="window.location.href='login.php'">Login / Sign Up</button>
+            <button type="button" onclick="window.location.href='checkout.php'">Checkout as Guest</button>
+        </div>
+    </div>
+
+    <script>
+        function updateQuantity(selectElement) {
+            var formData = new FormData(document.getElementById('cart-form'));
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'update_cart.php', true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            document.getElementById('cart-total').innerText = '$' + response.newTotal.toFixed(2);
+                        } else {
+                            console.error('Failed to update cart');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
                     }
                 } else {
-                    echo '<p class="empty-message">Your cart is empty.</p>';
+                    console.error('Failed to update cart. Status:', xhr.status);
                 }
-                ?>
-                <a href="shop.php" class="back-to-shop"><img src="https://img.icons8.com/small/16/000000/long-arrow-left.png" alt="Back Arrow"> Back to Shop</a>
-            </div>
-
-            <div class="checkout">
-                <h3>Checkout</h3>
-                <form action="shipping.php" method="post">
-
-                    <div class="form-group">
-                        <label for="promo">Promo Code:</label>
-                        <input type="text" id="promo" name="promo" placeholder="Enter promo code">
-                    </div>
-
-                    <div class="summary">
-                        <div class="total">
-                            <span>Total:</span>
-                            $<?php echo number_format($subtotal, 2); ?>
-                        </div>
-                        <button type="submit" class="btn">Proceed to Checkout</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </body>
-    </html>
-    <?php
-    $conn->close();
-} else {
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Your Cart</title>
-        <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
-    </head>
-    <body>
-        <div class="card">
-            <div class="cart">
-                <h2>Your Cart</h2>
-                <p class="empty-message">Your cart is empty.</p>
-                <a href="shop.php" class="back-to-shop"><img src="https://img.icons8.com/small/16/000000/long-arrow-left.png" alt="Back Arrow"> Back to Shop</a>
-            </div>
-        </div>
-    </body>
-    </html>
-    <?php
-}
-?>
+            };
+            xhr.onerror = function () {
+                console.error('Request failed');
+            };
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>

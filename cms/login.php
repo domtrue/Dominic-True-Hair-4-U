@@ -160,6 +160,8 @@
         <label for="password">Password</label>
         <input type="password" placeholder="Password" id="password" name="password" required>
 
+        <input type="hidden" name="redirect" value="<?php echo isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : ''; ?>">
+
         <button type="submit" class="login">Login</button>
 
         <?php if (isset($error_message)): ?>

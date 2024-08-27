@@ -87,7 +87,7 @@
 <?php include 'header.php';?>
 
 <div class="content">
-    <?php
+<?php
     // Database connection details
     include 'setup.php';
 
@@ -106,15 +106,15 @@
     // Check if there are results
     if ($result->num_rows > 0) {
         // Output data for each row
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             echo '<div class="responsive">';
             echo '<div class="gallery">';
-            echo '<a target="_blank" href="img/' . $row["image"] . '">';
-            echo '<img src="img/' . $row["image"] . '" alt="' . htmlspecialchars($row["name"]) . '">';
+            echo '<a target="_blank" href="img/' . htmlspecialchars($row["image"]) . '">';
+            echo '<img src="img/' . htmlspecialchars($row["image"]) . '" alt="' . htmlspecialchars($row["name"]) . '">';
             echo '</a>';
             echo '<div class="desc">' . htmlspecialchars($row["name"]) . '</div>';
             echo '<div class="price">$' . number_format($row["price"], 2) . '</div>';
-            echo '<a href="add_to_cart.php?id=' . $row["id"] . '" class="button">Add to Cart</a>';
+            echo '<a href="add_to_cart.php?id=' . $row["id"] . '&quantity=1" class="button">Add to Cart</a>';
             echo '</div>';
             echo '</div>';
         }

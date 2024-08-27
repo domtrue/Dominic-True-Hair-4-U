@@ -17,21 +17,22 @@ $orderTotal = $_SESSION['order_total'];
 
 // Placeholder values for the shipping options
 $shippingOptions = [
-    'Standard Shipping' => '5.00',
-    'Express Shipping' => '10.00',
-    'Overnight Shipping' => '20.00'
+    'Standard Shipping' => 5.00,
+    'Express Shipping' => 10.00,
+    'Overnight Shipping' => 20.00
 ];
 
 // Default shipping cost (could be updated based on user selection)
 $shippingCost = array_values($shippingOptions)[0]; // Default to the first shipping option
 $grandTotal = $orderTotal + $shippingCost;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shipping Information</title>
+    <title>Checkout</title>
     <link rel="stylesheet" href="style.css"> <!-- Link to your external CSS file -->
     <style>
         /* Import a classic serif font for headings */
@@ -62,7 +63,6 @@ $grandTotal = $orderTotal + $shippingCost;
             overflow: hidden;
         }
 
-        /* Background pattern */
         .container::before {
             content: "";
             position: absolute;
@@ -175,18 +175,49 @@ $grandTotal = $orderTotal + $shippingCost;
         .btn-proceed:hover {
             background-color: #6a1b9a; /* Slightly lighter purple for hover */
         }
+
+
+        .guest-checkout {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .guest-checkout label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .guest-checkout input {
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="img/logo.png" alt="Business Logo">
-        </div>
+
         <h1>CHECKOUT</h1>
-        <h2>SHIPPING ADDRESS</h2>
+        <h2>PERSONAL DETAILS</h2>
         <form action="payment.php" method="post">
             <div class="form-section">
                 <div class="form-group">
+                <div class="form-control">
+                        <label for="first_name">First Name:</label>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="last_name">Last Name:</label>
+                        <input type="text" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="email">Email Address:</label>
+                        <input type="text" id="email" name="email" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="phone">Phone Number:</label>
+                        <input type="text" id="phone" name="phone" required>
+                    </div>
+                    <h2>SHIPPING INFORMATION</h2>
                     <div class="form-control full-width">
                         <label for="address">Street Address:</label>
                         <input type="text" id="address" name="address" required>
@@ -202,7 +233,11 @@ $grandTotal = $orderTotal + $shippingCost;
                     <div class="form-control">
                         <label for="region">Region:</label>
                         <select id="region" name="region" required>
-                            <!-- Options for regions -->
+                            <!-- Example regions; replace with actual options -->
+                            <option value="">Select Region</option>
+                            <option value="region1">Region 1</option>
+                            <option value="region2">Region 2</option>
+                            <option value="region3">Region 3</option>
                         </select>
                     </div>
                     <div class="form-control full-width">
@@ -211,11 +246,13 @@ $grandTotal = $orderTotal + $shippingCost;
                     </div>
                 </div>
             </div>
+
             <div class="form-section">
                 <h2>SHIPPING METHOD</h2>
                 <div class="form-group">
                     <label for="shipping_method">Select Shipping Method:</label>
                     <select id="shipping_method" name="shipping_method" required class="full-width">
+                        <option value="">Select Shipping Method</option>
                         <?php foreach ($shippingOptions as $method => $cost): ?>
                             <option value="<?php echo htmlspecialchars($cost); ?>"><?php echo htmlspecialchars($method); ?></option>
                         <?php endforeach; ?>
@@ -239,5 +276,16 @@ $grandTotal = $orderTotal + $shippingCost;
             </div>
         </form>
     </div>
+
+    <script>
+        function toggleGuestCheckout() {
+            var guestCheckout = document.getElementById('guest-checkout');
+            if (guestCheckout.style.display === 'none') {
+                guestCheckout.style.display = 'block';
+            } else {
+                guestCheckout.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
