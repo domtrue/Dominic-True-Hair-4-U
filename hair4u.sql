@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 15, 2024 at 04:36 AM
+-- Generation Time: Sep 10, 2024 at 10:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,6 +58,13 @@ CREATE TABLE `appointments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`id`, `customer_first_name`, `customer_last_name`, `service_type`, `appointment_datetime`, `created_at`) VALUES
+(1, 'dom ', 'True', 'Perm', '2024-08-27 17:45:00', '2024-08-27 00:28:45');
+
 -- --------------------------------------------------------
 
 --
@@ -70,6 +77,30 @@ CREATE TABLE `contacts` (
   `lastname` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `apartment` varchar(255) DEFAULT NULL,
+  `city` varchar(255) NOT NULL,
+  `region` varchar(255) NOT NULL,
+  `postal_code` varchar(20) NOT NULL,
+  `shipping_method` varchar(255) NOT NULL,
+  `order_total` decimal(10,2) NOT NULL,
+  `shipping_cost` decimal(10,2) NOT NULL,
+  `grand_total` decimal(10,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -98,6 +129,27 @@ CREATE TABLE `pages` (
 
 INSERT INTO `pages` (`id`, `title1`, `text1`, `image1`, `title2`, `text2`, `image2`, `title3`, `text3`, `image3`) VALUES
 (1, 'Welcome to Hair 4 U', 'Where style meets sophistication in the heart of Bulls, New Zealand. Owner and senior stylist Melissa True brings her passion and expertise to every appointment. Whether you\'re looking for a fresh new look or a classic cut, Melissa is dedicated to delivering the perfect style for your needs. ', NULL, NULL, 'Looking for top-notch hair products? Explore our curated selection of quality items from industry-leading brands, all available for purchase online at competitive prices. ', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `description`, `image`, `price`) VALUES
+(1, 'De Lorenzo Rejuven8 Shampoo 375mL', 'Extends the life of Coloured Hair. A mild cleanser with a rich lather that maximises colour vibrancy and provides softening and moisture to hair. Contains Baobab Protein, Gingko Biloba and Berry extracts.', 'Rejuven8Shampoo375mL.png', 29.99);
 
 -- --------------------------------------------------------
 
@@ -145,9 +197,21 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `pages`
 --
 ALTER TABLE `pages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -170,7 +234,7 @@ ALTER TABLE `accounts`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -179,9 +243,21 @@ ALTER TABLE `contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --

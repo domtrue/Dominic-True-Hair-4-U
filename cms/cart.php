@@ -282,31 +282,34 @@ h1 {
     </div>
 
     <script>
-        function updateQuantity(selectElement) {
-            var formData = new FormData(document.getElementById('cart-form'));
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'update_cart.php', true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    try {
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            document.getElementById('cart-total').innerText = '$' + response.newTotal.toFixed(2);
-                        } else {
-                            console.error('Failed to update cart');
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
+        document.getElementById('cart-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(document.getElementById('cart-form'));
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'update_cart.php', true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    document.getElementById('cart-total').innerText = '$' + response.newTotal.toFixed(2);
+                    document.getElementById('checkout-button').disabled = false;
                 } else {
-                    console.error('Failed to update cart. Status:', xhr.status);
+                    console.error('Failed to update cart:', response.message);
                 }
-            };
-            xhr.onerror = function () {
-                console.error('Request failed');
-            };
-            xhr.send(formData);
+            } catch (e) {
+                console.error('Error parsing response:', e);
+            }
+        } else {
+            console.error('Failed to update cart. Status:', xhr.status);
         }
+    };
+    xhr.onerror = function () {
+        console.error('Request failed');
+    };
+    xhr.send(formData);
+});
+
     </script>
 </body>
 </html>

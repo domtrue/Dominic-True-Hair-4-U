@@ -14,9 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['quantity']) && is_array($_POST['quantity'])) {
         foreach ($_POST['quantity'] as $key => $quantity) {
             if (isset($_SESSION['cart'][$key])) {
-                $_SESSION['cart'][$key]['quantity'] = max(1, intval($quantity)); // Ensure quantity is at least 1
+                $quantity = intval($quantity); // Ensure quantity is an integer
+                if ($quantity < 1) $quantity = 1; // Enforce minimum quantity of 1
+                $_SESSION['cart'][$key]['quantity'] = $quantity;
+                
                 // Recalculate individual item total
-                $itemTotal = $_SESSION['cart'][$key]['price'] * $_SESSION['cart'][$key]['quantity'];
+                $itemTotal = $_SESSION['cart'][$key]['price'] * $quantity;
                 $itemTotals[$key] = $itemTotal;
             }
         }
@@ -31,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'itemTotals' => $itemTotals // Send item totals back to client
         ]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid data']);
+        echo json_encode(['success' => false, 'message' => 'Invalid quantity data']);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request']);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 ?>

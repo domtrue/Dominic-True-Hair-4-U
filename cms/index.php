@@ -63,16 +63,6 @@ if ($result->num_rows > 0) {
 
 
     <style>
-        /* General styles */
-        .content {
-            background: linear-gradient(135deg, #8e2de2, #4a00e0);
-            height: auto; /* Adjusted to allow content to dictate height */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
 
         @keyframes fadeInFromLeft {
             0% {
@@ -92,7 +82,7 @@ if ($result->num_rows > 0) {
             font-style: normal;
             color: #fff; /* White color for visibility */
             font-size: 2.3em; /* Adjust size as needed */
-            margin: 0; /* Adjusted margin to remove extra space */
+            margin: 20px 0 0; /* Adjust the top margin to create the gap, e.g., 20px */
             padding: 0; /* Ensure no padding affects spacing */
             animation: fadeInFromLeft 1s ease-out; /* Add animation */
         }
@@ -113,6 +103,16 @@ if ($result->num_rows > 0) {
             animation: fadeInFromLeft 1s ease-out; /* Add animation */
         }
 
+        /* Increase spacing between paragraphs */
+        .blurb p {
+            margin-top: 10px;
+            margin-bottom: 20px; /* Adjust the bottom margin as needed */
+        }
+
+        .blurb p:last-of-type {
+            margin-bottom: 0; /* Remove bottom margin for the last paragraph, if needed */
+        }
+
         /* Define the animation */
         @keyframes fadeIn {
             from {
@@ -129,7 +129,7 @@ if ($result->num_rows > 0) {
             width: 100%;
             height: 100vh; /* Make height of the container equal to the viewport height */
             overflow: hidden;
-            margin: 0 auto 60px; /* Adjust margin as needed */
+            margin: 30px auto 60px; /* Adjust margin as needed */
         }
 
         /* Individual slides */

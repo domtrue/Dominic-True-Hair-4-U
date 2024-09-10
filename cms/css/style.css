@@ -1,8 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+}
+
+/* Remove default border */
+html, body {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ensure body takes full viewport height */
+body {
+  overflow-x: hidden; /* Prevent horizontal scrollbars */
+}
+
+      .content {
+          background-image: url('../img/homepage_bg.jpg'); /* Replace with your image path */
+          background-size: cover; /* Ensures the image covers the whole area */
+          background-position: center; /* Centers the image */
+          background-repeat: no-repeat; /* Prevents the image from repeating */
+          height: auto; /* Adjusted to allow content to dictate height */
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+      }
+
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #c5bdbd;
+  background-color: #d8d5d5;
   color: black;
   padding: 10px;
 }
@@ -52,10 +86,9 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #c5bdbd;
+  padding: 35px;
+  background-color: #d8d5d5;
   height: 30px;
-  position: relative; /* Ensure relative positioning for the footer */
 }
 
 .social-icons {

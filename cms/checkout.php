@@ -35,162 +35,167 @@ $grandTotal = $orderTotal + $shippingCost;
     <title>Checkout</title>
     <link rel="stylesheet" href="style.css"> <!-- Link to your external CSS file -->
     <style>
-        /* Import a classic serif font for headings */
-        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
+       /* Import a classic serif font for headings */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 
-        body {
-            background: #f4f4f4;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+body {
+    background: #f4f4f4;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
+.container {
+    width: 90%;
+    max-width: 800px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
 
-        .container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('path-to-your-pattern-image.png') repeat;
-            opacity: 0.1; /* Adjust the opacity for subtlety */
-            z-index: 0;
-        }
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('path-to-your-pattern-image.png') repeat;
+    opacity: 0.1; /* Adjust the opacity for subtlety */
+    z-index: 0; /* Ensure background is behind form fields */
+}
 
-        .logo {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
+.logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
 
-        .logo img {
-            max-width: 150px; /* Adjust size as needed */
-        }
+.logo img {
+    max-width: 150px; /* Adjust size as needed */
+}
 
-        h1, h2 {
-            text-align: center;
-            color: #000; /* Black color for text */
-            font-family: 'Merriweather', serif; /* Classic serif font */
-            margin: 0;
-            position: relative;
-            z-index: 1;
-        }
+h1, h2 {
+    text-align: center;
+    color: #000; /* Black color for text */
+    font-family: 'Merriweather', serif; /* Classic serif font */
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
 
-        h2 {
-            font-size: 1.5rem;
-            margin-top: 1rem;
-        }
+h2 {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
 
-        .form-section, .summary-section {
-            margin-bottom: 2rem;
-        }
+.form-section, .summary-section {
+    margin-bottom: 2rem;
+}
 
-        .form-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
 
-        .form-group .form-control {
-            flex: 1;
-            min-width: calc(50% - 1rem); /* Adjust for gap */
-        }
+.form-group .form-control {
+    flex: 1;
+    min-width: calc(50% - 1rem); /* Adjust for gap */
+    z-index: 2;
+}
 
-        .form-group .form-control.full-width {
-            flex: 1;
-            min-width: 100%;
-        }
+.form-group .form-control.full-width {
+    flex: 1;
+    min-width: 100%;
+}
 
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #000; /* Black color for labels */
-        }
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #000; /* Black color for labels */
+}
 
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem; /* Ensure readable font size */
+    position: relative;
+    z-index: 2;
+}
 
-        .summary-section {
-            border-top: 1px solid #ddd;
-            padding-top: 1rem;
-        }
+.summary-section {
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+}
 
-        .order-summary {
-            display: flex;
-            flex-direction: column;
-        }
+.order-summary {
+    display: flex;
+    flex-direction: column;
+}
 
-        .summary-item {
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-        }
+.summary-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
 
-        .summary-item span {
-            font-weight: bold;
-        }
+.summary-item span {
+    font-weight: bold;
+}
 
-        .btn-proceed {
-            background-color: #4a148c; /* Rich purple color */
-            color: #fff;
-            padding: 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            width: 100%;
-            text-align: center;
-            margin-top: 1rem;
-            display: block;
-            position: relative;
-            z-index: 1;
-        }
+.btn-proceed {
+    background-color: #4a148c; /* Rich purple color */
+    color: #fff;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
 
-        .btn-proceed:hover {
-            background-color: #6a1b9a; /* Slightly lighter purple for hover */
-        }
+.btn-proceed:hover {
+    background-color: #6a1b9a; /* Slightly lighter purple for hover */
+}
 
+.guest-checkout {
+    margin-top: 1rem;
+    text-align: center;
+}
 
-        .guest-checkout {
-            margin-top: 1rem;
-            text-align: center;
-        }
+.guest-checkout label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
 
-        .guest-checkout label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
+.guest-checkout input {
+    margin-right: 0.5rem;
+}
 
-        .guest-checkout input {
-            margin-right: 0.5rem;
-        }
     </style>
 </head>
 <body>
@@ -250,8 +255,8 @@ $grandTotal = $orderTotal + $shippingCost;
             <div class="form-section">
                 <h2>SHIPPING METHOD</h2>
                 <div class="form-group">
-                    <label for="shipping_method">Select Shipping Method:</label>
-                    <select id="shipping_method" name="shipping_method" required class="full-width">
+                    <label for="shipping-method">Select Shipping Method:</label>
+                    <select id="shipping-method" name="shipping-method" required class="full-width">
                         <option value="">Select Shipping Method</option>
                         <?php foreach ($shippingOptions as $method => $cost): ?>
                             <option value="<?php echo htmlspecialchars($cost); ?>"><?php echo htmlspecialchars($method); ?></option>
