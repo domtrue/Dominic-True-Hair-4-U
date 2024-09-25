@@ -6,7 +6,7 @@ if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
     echo '<p>Your cart is empty. <a href="shop.php">Continue Shopping</a></p>';
     exit();
 }
-
+//print_r ($_SESSION);
 // Process form submissions for updating quantity and removing items
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['quantity']) && is_array($_POST['quantity'])) {
@@ -15,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['cart'][$key]['quantity'] = max(1, intval($quantity)); // Ensure quantity is at least 1
             }
         }
+        // Recalculate order total
         $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
             return $total + ($item['price'] * $item['quantity']);
-        }, 0); // Recalculate order total
+        }, 0);
     }
     
     if (isset($_POST['remove_item'])) {
@@ -26,12 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             unset($_SESSION['cart'][$itemKey]);
             $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex the array
         }
+        // Recalculate order total
+        $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
+            return $total + ($item['price'] * $item['quantity']);
+        }, 0);
     }
 }
 
 // Retrieve cart items and calculate total
 $cartItems = $_SESSION['cart'];
-$cartTotal = 0;
+$cartTotal = isset($_SESSION['order_total']) ? $_SESSION['order_total'] : 0; // Ensure cartTotal is defined
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +47,7 @@ $cartTotal = 0;
     <title>Your Cart</title>
     <link rel="stylesheet" href="style.css">
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
+       @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 
 body {
     background: #f4f4f4;
@@ -223,48 +228,48 @@ h1 {
     <div class="container">
         <h1>Your Shopping Cart</h1>
 
-        <!-- Display cart items -->
-                <form id="cart-form" method="POST">
-                <div class="cart-items">
-                    <?php
-                    if (!empty($cartItems) && is_array($cartItems)) {
-                        foreach ($cartItems as $key => $item) {
-                            if (is_array($item) && isset($item['name'], $item['price'], $item['quantity'], $item['image']) && is_numeric($item['price']) && is_numeric($item['quantity'])) {
-                                $itemTotal = $item['price'] * $item['quantity'];
-                                $cartTotal += $itemTotal;
-                                echo '<div class="cart-item">';
-                                echo '<img src="' . htmlspecialchars($item['image']) . '" alt="' . htmlspecialchars($item['name']) . '">';
-                                echo '<div class="item-details">';
-                                echo '<span>' . htmlspecialchars($item['name']) . '</span>';
-                                echo '<span>$' . number_format($item['price'], 2) . '</span>'; // Display price as stored
-                                echo '<span>';
-                                echo '<select name="quantity[' . $key . ']" onchange="updateQuantity(this)">';
-                                for ($i = 1; $i <= 10; $i++) {
-                                    $selected = $i == $item['quantity'] ? 'selected' : '';
-                                    echo '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
-                                }
-                                echo '</select>';
-                                echo '</span>';
-                                echo '<span>';
-                                echo '<button type="submit" name="remove_item" value="' . $key . '">Remove</button>';
-                                echo '</span>';
-                                echo '</div>';
-                                echo '</div>';
-                            } else {
-                                echo '<p>Cart item structure is incorrect.</p>';
-                                echo '<pre>';
-                                print_r($item); // Inspect the incorrect item structure
-                                echo '</pre>';
-                            }
-                        }
-                    } else {
-                        echo '<p>Your cart is empty.</p>';
+        <!-- Cart Update Form -->
+        <form id="cart-form" method="POST">
+    <div class="cart-items">
+        <?php
+        if (!empty($cartItems) && is_array($cartItems)) {
+            foreach ($cartItems as $key => $item) {
+                if (is_array($item) && isset($item['name'], $item['price'], $item['quantity'], $item['image']) && is_numeric($item['price']) && is_numeric($item['quantity'])) {
+                    $itemTotal = $item['price'] * $item['quantity'];
+                    echo '<div class="cart-item">';
+                    echo '<img src="' . htmlspecialchars($item['image']) . '" alt="' . htmlspecialchars($item['name']) . '">';
+                    echo '<div class="item-details">';
+                    echo '<span>' . htmlspecialchars($item['name']) . '</span>';
+                    echo '<span>$' . number_format($item['price'], 2) . '</span>'; // Display price as stored
+                    echo '<span>';
+                    echo '<select name="quantity[' . $key . ']" onchange="updateQuantity(this)">';
+                    for ($i = 1; $i <= 10; $i++) {
+                        $selected = $i == $item['quantity'] ? 'selected' : '';
+                        echo '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
                     }
-                    ?>
-                </div>
-                <!-- Hidden input to trigger AJAX -->
-                <input type="hidden" name="update_quantity" value="1">
-            </form>
+                    echo '</select>';
+                    echo '</span>';
+                    echo '<span>';
+                    echo '<button type="submit" name="remove_item" value="' . $key . '">Remove</button>';
+                    echo '</span>';
+                    echo '</div>';
+                    echo '</div>';
+                } else {
+                    echo '<p>Cart item structure is incorrect.</p>';
+                    echo '<pre>';
+                    print_r($item); // Inspect the incorrect item structure
+                    echo '</pre>';
+                }
+            }
+        } else {
+            echo '<p>Your cart is empty.</p>';
+        }
+        ?>
+    </div>
+    <!-- Hidden input to trigger AJAX -->
+    <input type="hidden" name="update_quantity" value="1">
+</form>
+
 
         <!-- Cart Summary -->
         <div class="cart-summary">
@@ -277,13 +282,14 @@ h1 {
         <!-- Authentication Buttons -->
         <div class="auth-buttons">
             <button type="button" onclick="window.location.href='login.php'">Login / Sign Up</button>
-            <button type="button" onclick="window.location.href='checkout.php'">Checkout as Guest</button>
+            <button type="button" id="checkout-button" onclick="window.location.href='checkout.php'">Checkout as Guest</button>
         </div>
     </div>
 
     <script>
+        // Handle AJAX form submission
         document.getElementById('cart-form').addEventListener('submit', function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission
     var formData = new FormData(document.getElementById('cart-form'));
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'update_cart.php', true);
@@ -293,7 +299,6 @@ h1 {
                 var response = JSON.parse(xhr.responseText);
                 if (response.success) {
                     document.getElementById('cart-total').innerText = '$' + response.newTotal.toFixed(2);
-                    document.getElementById('checkout-button').disabled = false;
                 } else {
                     console.error('Failed to update cart:', response.message);
                 }
@@ -309,6 +314,13 @@ h1 {
     };
     xhr.send(formData);
 });
+
+// Update cart total on quantity change
+function updateQuantity(selectElement) {
+    var form = document.getElementById('cart-form');
+    form.submit(); // Submit the form to update the quantity
+}
+
 
     </script>
 </body>

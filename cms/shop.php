@@ -91,13 +91,6 @@
     // Database connection details
     include 'setup.php';
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
 
     // SQL query to get all products including the id
     $sql = "SELECT id, name, image, price FROM products";

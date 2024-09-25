@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2024 at 10:35 AM
+-- Generation Time: Sep 25, 2024 at 11:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,9 +29,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `phone` varchar(20) NOT NULL,
   `activation_code` varchar(50) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -39,9 +42,9 @@ CREATE TABLE `accounts` (
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `username`, `password`, `email`, `activation_code`) VALUES
-(1, 'test', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', ''),
-(2, 'domtrue', '$2y$10$Kp3skuClHWraK1rnrtUsXOkf9n/x8q2jiuzZQSvkZoYZ1WWuSfP1G', 'domtrue.dt@icloud.com', 'activated');
+INSERT INTO `accounts` (`id`, `first_name`, `last_name`, `username`, `password`, `email`, `phone`, `activation_code`) VALUES
+(1, '', '', 'test', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', ''),
+(2, 'Dominic', 'True', 'domtrue', '$2y$10$Kp3skuClHWraK1rnrtUsXOkf9n/x8q2jiuzZQSvkZoYZ1WWuSfP1G', 'domtrue.dt@icloud.com', '', 'activated');
 
 -- --------------------------------------------------------
 
@@ -79,6 +82,13 @@ CREATE TABLE `contacts` (
   `message` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contacts`
+--
+
+INSERT INTO `contacts` (`id`, `firstname`, `lastname`, `email`, `message`, `created_at`) VALUES
+(1, '', '', '', 'hi :)', '2024-09-23 02:58:44');
 
 -- --------------------------------------------------------
 
@@ -149,7 +159,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `image`, `price`) VALUES
-(1, 'De Lorenzo Rejuven8 Shampoo 375mL', 'Extends the life of Coloured Hair. A mild cleanser with a rich lather that maximises colour vibrancy and provides softening and moisture to hair. Contains Baobab Protein, Gingko Biloba and Berry extracts.', 'Rejuven8Shampoo375mL.png', 29.99);
+(1, 'De Lorenzo Rejuven8 Shampoo 375mL', 'Extends the life of Coloured Hair. A mild cleanser with a rich lather that maximises colour vibrancy and provides softening and moisture to hair. Contains Baobab Protein, Gingko Biloba and Berry extracts.', 'Rejuven8Shampoo375mL.png', 29.99),
+(2, 'De Lorenzo Rejuven8 Conditioner 375mL', 'Extends the life of Coloured Hair. A rich formulation that replenishes lost moisture, maximizes colour vibrancy and provides exceptional detangling of colour treated hair. Contains Baobab Protein, Ginkgo Biloba and Berry extracts.', 'Rejuven8Conditioner375mL.png', 29.99);
 
 -- --------------------------------------------------------
 
@@ -240,7 +251,7 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -258,7 +269,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `slideshow`

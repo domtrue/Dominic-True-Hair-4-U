@@ -28,7 +28,7 @@ if ($stmt = $conn->prepare('SELECT id, password, first_name, last_name, email, p
             $_SESSION['name'] = $_POST['username'];
             $_SESSION['id'] = $id;
 
-            if ($redirect === 'cart') {
+            if ($_POST['username'] !== "admin") {
                 // Store user details in session for later use
                 $_SESSION['user_details'] = [
                     'first_name' => $first_name,
@@ -36,7 +36,7 @@ if ($stmt = $conn->prepare('SELECT id, password, first_name, last_name, email, p
                     'email' => $email,
                     'phone' => $phone,
                 ];
-                header('Location: shipping.php');
+                header('Location: checkout.php');
             } else {
                 header('Location: admin.php');
             }

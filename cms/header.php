@@ -26,6 +26,17 @@
                 <li><a href="about.php">About</a></li>
                 <li><a href="contact.php">Contact</a></li>
                 <li><a href="cart.php" class="fa-solid fa-bag-shopping"></a></li>
+                <?php 
+                if(!isset($_SESSION['loggedin'])){?>
+                <a href="login.php" class="right">Login</a>
+                <?php }
+                else
+                {
+                ?>          
+                <a href="logout.php" class="right">Logout</a>
+                <?php 
+                    } 
+                ?>
                 <li><a href="login.php" class="fa-solid fa-user"></a></li>
 
             </ul>

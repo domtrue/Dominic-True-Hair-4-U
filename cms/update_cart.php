@@ -1,42 +1,36 @@
 <?php
 session_start(); // Start the session
 
-// Ensure there is a cart
-if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-    echo json_encode(['success' => false, 'message' => 'Cart is empty']);
-    exit();
-}
+$response = array('success' => false, 'message' => 'Unknown error', 'newTotal' => 0);
 
-// Process form submissions for updating quantity
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $itemTotals = []; // Array to store individual item totals
-
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     if (isset($_POST['quantity']) && is_array($_POST['quantity'])) {
         foreach ($_POST['quantity'] as $key => $quantity) {
             if (isset($_SESSION['cart'][$key])) {
-                $quantity = intval($quantity); // Ensure quantity is an integer
-                if ($quantity < 1) $quantity = 1; // Enforce minimum quantity of 1
-                $_SESSION['cart'][$key]['quantity'] = $quantity;
-                
-                // Recalculate individual item total
-                $itemTotal = $_SESSION['cart'][$key]['price'] * $quantity;
-                $itemTotals[$key] = $itemTotal;
+                $_SESSION['cart'][$key]['quantity'] = max(1, intval($quantity));
             }
         }
-
-        // Recalculate order total
-        $orderTotal = array_sum($itemTotals);
-        $_SESSION['order_total'] = $orderTotal;
-
-        echo json_encode([
-            'success' => true,
-            'newTotal' => $orderTotal,
-            'itemTotals' => $itemTotals // Send item totals back to client
-        ]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid quantity data']);
     }
+
+    if (isset($_POST['remove_item'])) {
+        $itemKey = intval($_POST['remove_item']);
+        if (isset($_SESSION['cart'][$itemKey])) {
+            unset($_SESSION['cart'][$itemKey]);
+            $_SESSION['cart'] = array_values($_SESSION['cart']);
+        }
+    }
+
+    $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
+        return $total + ($item['price'] * $item['quantity']);
+    }, 0);
+
+    $response['success'] = true;
+    $response['message'] = 'Cart updated successfully';
+    $response['newTotal'] = $_SESSION['order_total'];
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    $response['message'] = 'Cart is empty or not initialized';
 }
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>
