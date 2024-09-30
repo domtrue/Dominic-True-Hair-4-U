@@ -1,0 +1,95 @@
+/* General reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for product grid */
+.product-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: flex-start; /* Align items to the left */
+    gap: 20px; /* Space between items */
+    padding: 20px;
+    background: linear-gradient(135deg, #8e2de2, #4a00e0); /* Background gradient */
+}
+
+/* Product item */
+.product {
+    flex: 1 1 calc(25% - 20px); /* 4 products per row */
+    max-width: calc(25% - 20px);
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between;
+    min-height: 400px; /* Ensure consistent height */
+    position: relative; /* Allow button positioning */
+}
+
+/* Adjust layout for tablets and medium screens */
+@media (max-width: 875px) {
+    .product {
+        flex: 1 1 calc(50% - 20px); /* 2 products per row */
+        max-width: calc(50% - 20px);
+    }
+}
+
+/* Adjust layout for mobile screens */
+@media (max-width: 500px) {
+    .product {
+        flex: 1 1 100%; /* 1 product per row */
+        max-width: 100%;
+    }
+}
+
+/* Product image styling */
+.gallery img {
+    width: 100%; /* Full width */
+    max-height: 250px; /* Set a maximum height */
+    object-fit: contain; /* Scales the image down while maintaining aspect ratio, without cropping */
+    border-radius: 8px 8px 0 0; /* Rounded corners on the top */
+}
+
+/* Product description */
+.desc {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    flex-grow: 1; /* Allow the description to take up available space */
+}
+
+/* Price styling */
+.price {
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    margin-bottom: 50px; /* Provide some space for the button */
+}
+
+/* Add to Cart button styling */
+.button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    display: block;
+    width: calc(100% - 20px); /* Ensures the button stays within the tile */
+    position: absolute;
+    bottom: 10px; /* Stays at the bottom of the tile */
+    left: 10px; /* Even spacing from the left and right */
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
