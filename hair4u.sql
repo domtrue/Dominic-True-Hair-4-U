@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 30, 2024 at 10:36 AM
+-- Generation Time: Oct 10, 2024 at 07:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,7 +66,7 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`id`, `customer_first_name`, `customer_last_name`, `service_type`, `appointment_datetime`, `created_at`) VALUES
-(1, 'dom ', 'True', 'Perm', '2024-08-27 17:45:00', '2024-08-27 00:28:45');
+(1, 'dom ', 'True', 'Perm', '2024-08-27 17:45:00', '2024-08-26 12:28:45');
 
 -- --------------------------------------------------------
 
@@ -88,7 +88,7 @@ CREATE TABLE `contacts` (
 --
 
 INSERT INTO `contacts` (`id`, `firstname`, `lastname`, `email`, `message`, `created_at`) VALUES
-(1, '', '', '', 'hi :)', '2024-09-23 02:58:44');
+(1, '', '', '', 'hi :)', '2024-09-22 14:58:44');
 
 -- --------------------------------------------------------
 
@@ -230,6 +230,27 @@ INSERT INTO `slideshow` (`id`, `image_url`) VALUES
 (5, 'slideshow/slideshow-5.jpg'),
 (6, 'slideshow/slideshow-6.jpg');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `social_media_links`
+--
+
+CREATE TABLE `social_media_links` (
+  `id` int(11) NOT NULL,
+  `platform` varchar(50) NOT NULL,
+  `logo_url` varchar(255) NOT NULL,
+  `link` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `social_media_links`
+--
+
+INSERT INTO `social_media_links` (`id`, `platform`, `logo_url`, `link`) VALUES
+(1, 'Facebook', 'img/socials/facebook-logo.png', 'https://www.facebook.com/hair4ubulls/'),
+(2, 'Instagram', 'img/socials/instagram-logo.png', 'https://www.instagram.com/hair4ubulls');
+
 --
 -- Indexes for dumped tables
 --
@@ -277,6 +298,12 @@ ALTER TABLE `slideshow`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `social_media_links`
+--
+ALTER TABLE `social_media_links`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -321,6 +348,12 @@ ALTER TABLE `products`
 --
 ALTER TABLE `slideshow`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `social_media_links`
+--
+ALTER TABLE `social_media_links`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

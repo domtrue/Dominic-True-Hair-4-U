@@ -281,7 +281,7 @@ h1 {
 
         <!-- Authentication Buttons -->
         <div class="auth-buttons">
-            <button type="button" onclick="window.location.href='login.php'">Login / Sign Up</button>
+            <button type="button" onclick="window.location.href='checkout.php'">Checkout</button>
             <button type="button" id="checkout-button" onclick="window.location.href='checkout.php'">Checkout as Guest</button>
         </div>
     </div>

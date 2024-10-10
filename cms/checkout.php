@@ -1,30 +1,65 @@
 <?php
 session_start(); // Start the session
+// Database connection details
+include 'setup.php';
 
 // Ensure there is a cart to checkout
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-    header('Location: cart.php'); // Redirect to cart if empty
+    header('Location: shop.php'); // Redirect to cart if empty
     exit();
 }
 
 // Retrieve the order subtotal from the session
 if (!isset($_SESSION['order_total'])) {
-    header('Location: cart.php'); // Redirect to cart if order total is not set
+    header('Location: shop.php'); // Redirect to cart if order total is not set
     exit();
 }
 
 $orderTotal = $_SESSION['order_total'];
 
-// Placeholder values for the shipping options
-$shippingOptions = [
-    'Standard Shipping' => 5.00,
-    'Express Shipping' => 10.00,
-    'Overnight Shipping' => 20.00
-];
+if(!isset($_SESSION['loggedin'])){
+    print "not_logged_in"; 
+    print_r ($_SESSION); die();
+} else{
+    //print "logged_in";
+   // print_r($_SESSION); // die();
+    // Prepare SQL statement to prevent SQL injection
+if ($stmt = $conn->prepare('SELECT first_name, last_name, email, phone, ad_1 FROM accounts WHERE id = ?')) {
+    $stmt->bind_param('s', $_SESSION['id']);
+    $stmt->execute();
+    $stmt->store_result();
+    // Check if the account exists
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($first_name, $last_name, $email, $phone, $ad_1);
+        $stmt->fetch();
+    }
+}
+}
 
-// Default shipping cost (could be updated based on user selection)
-$shippingCost = array_values($shippingOptions)[0]; // Default to the first shipping option
-$grandTotal = $orderTotal + $shippingCost;
+$sql = "SELECT region_id, region_name FROM regions";
+$result = $conn->query($sql);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Get selected region and shipping type
+if (isset($_POST['region']) && isset($_POST['shipping-type'])) {
+$regionId = $_POST['region']; // Assuming region is posted from a dropdown
+$shippingType = $_POST['shipping-type'];
+
+// Fetch the shipping cost from the database
+$sql = "SELECT price FROM shipping_rates WHERE region_id = ? AND shipping_type = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("is", $regionId, $shippingType);
+$stmt->execute();
+$stmt->bind_result($shippingCost);
+$stmt->fetch();
+$stmt->close();
+
+    // Now you have the $shippingCost to use in your order summary
+} else {
+    // Handle missing form fields (region or shipping type)
+    echo "Please select a region and shipping type.";
+}
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,170 +68,8 @@ $grandTotal = $orderTotal + $shippingCost;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-    <link rel="stylesheet" href="style.css"> <!-- Link to your external CSS file -->
-    <style>
-       /* Import a classic serif font for headings */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
-
-body {
-    background: #f4f4f4;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    width: 90%;
-    max-width: 800px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 2rem;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('path-to-your-pattern-image.png') repeat;
-    opacity: 0.1; /* Adjust the opacity for subtlety */
-    z-index: 0; /* Ensure background is behind form fields */
-}
-
-.logo {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-    position: relative;
-    z-index: 1;
-}
-
-.logo img {
-    max-width: 150px; /* Adjust size as needed */
-}
-
-h1, h2 {
-    text-align: center;
-    color: #000; /* Black color for text */
-    font-family: 'Merriweather', serif; /* Classic serif font */
-    margin: 0;
-    position: relative;
-    z-index: 1;
-}
-
-h2 {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-}
-
-.form-section, .summary-section {
-    margin-bottom: 2rem;
-}
-
-.form-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.form-group .form-control {
-    flex: 1;
-    min-width: calc(50% - 1rem); /* Adjust for gap */
-    z-index: 2;
-}
-
-.form-group .form-control.full-width {
-    flex: 1;
-    min-width: 100%;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #000; /* Black color for labels */
-}
-
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 1rem; /* Ensure readable font size */
-    position: relative;
-    z-index: 2;
-}
-
-.summary-section {
-    border-top: 1px solid #ddd;
-    padding-top: 1rem;
-}
-
-.order-summary {
-    display: flex;
-    flex-direction: column;
-}
-
-.summary-item {
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-}
-
-.summary-item span {
-    font-weight: bold;
-}
-
-.btn-proceed {
-    background-color: #4a148c; /* Rich purple color */
-    color: #fff;
-    padding: 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-    text-align: center;
-    margin-top: 1rem;
-    display: block;
-    position: relative;
-    z-index: 1;
-}
-
-.btn-proceed:hover {
-    background-color: #6a1b9a; /* Slightly lighter purple for hover */
-}
-
-.guest-checkout {
-    margin-top: 1rem;
-    text-align: center;
-}
-
-.guest-checkout label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.guest-checkout input {
-    margin-right: 0.5rem;
-}
-
-    </style>
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/checkout.css">
 </head>
 <body>
     <div class="container">
@@ -208,19 +81,19 @@ h2 {
                 <div class="form-group">
                 <div class="form-control">
                         <label for="first_name">First Name:</label>
-                        <input type="text" id="first_name" name="first_name" required>
+                        <input type="text" id="first_name" name="first_name" required value="<?php echo $first_name;?>">
                     </div>
                     <div class="form-control">
                         <label for="last_name">Last Name:</label>
-                        <input type="text" id="last_name" name="last_name" required>
+                        <input type="text" id="last_name" name="last_name" required value="<?php echo $last_name;?>">
                     </div>
                     <div class="form-control">
                         <label for="email">Email Address:</label>
-                        <input type="text" id="email" name="email" required>
+                        <input type="text" id="email" name="email" required value="<?php echo $email;?>">
                     </div>
                     <div class="form-control">
                         <label for="phone">Phone Number:</label>
-                        <input type="text" id="phone" name="phone" required>
+                        <input type="text" id="phone" name="phone" required value="<?php echo $phone;?>">
                     </div>
                     <h2>SHIPPING INFORMATION</h2>
                     <div class="form-control full-width">
@@ -238,11 +111,16 @@ h2 {
                     <div class="form-control">
                         <label for="region">Region:</label>
                         <select id="region" name="region" required>
-                            <!-- Example regions; replace with actual options -->
                             <option value="">Select Region</option>
-                            <option value="region1">Region 1</option>
-                            <option value="region2">Region 2</option>
-                            <option value="region3">Region 3</option>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    echo '<option value="' . $row["region_id"] . '">' . $row["region_name"] . '</option>';
+                                }
+                            } else {
+                                echo '<option value="">No regions available</option>';
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="form-control full-width">
@@ -255,42 +133,59 @@ h2 {
             <div class="form-section">
                 <h2>SHIPPING METHOD</h2>
                 <div class="form-group">
-                    <label for="shipping-method">Select Shipping Method:</label>
-                    <select id="shipping-method" name="shipping-method" required class="full-width">
-                        <option value="">Select Shipping Method</option>
-                        <?php foreach ($shippingOptions as $method => $cost): ?>
-                            <option value="<?php echo htmlspecialchars($cost); ?>"><?php echo htmlspecialchars($method); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <label for="shipping-type">Shipping Type:</label>
+                <select id="shipping-type" name="shipping-type" required class="full-width">
+                <option value="">Select Shipping Type</option>
+                    <option value="urban">Urban Delivery</option>
+                    <option value="rural">Rural Delivery</option>
+                </select>
+            </div>
+
             </div>
             <div class="summary-section">
-                <div class="order-summary">
-                    <h2>ORDER SUMMARY</h2>
-                    <div class="summary-item">
-                        <span>Subtotal:</span> $<?php echo number_format($orderTotal, 2); ?>
-                    </div>
-                    <div class="summary-item">
-                        <span>Shipping:</span> $<?php echo number_format($shippingCost, 2); ?>
-                    </div>
-                    <div class="summary-item">
-                        <span>Grand Total:</span> $<?php echo number_format($grandTotal, 2); ?>
-                    </div>
-                </div>
+    <div class="order-summary">
+        <h2>ORDER SUMMARY</h2>
+        <div class="summary-item">
+            <span>Subtotal:</span> $<?php echo number_format($orderTotal, 2); ?>
+        </div>
+        <div class="summary-item">
+            <span>Shipping:</span> <span class="shipping">$<?php echo isset($shippingCost) ? number_format($shippingCost, 2) : '0.00'; ?></span>
+        </div>
+        <div class="summary-item">
+            <span>Grand Total:</span> <span class="grand-total">$<?php echo isset($grandTotal) ? number_format($grandTotal, 2) : number_format($orderTotal, 2); ?></span>
+        </div>
+    </div>
+    </div>
+    <div>
                 <button type="submit" class="btn-proceed">Proceed to Payment</button>
             </div>
         </form>
     </div>
 
     <script>
-        function toggleGuestCheckout() {
-            var guestCheckout = document.getElementById('guest-checkout');
-            if (guestCheckout.style.display === 'none') {
-                guestCheckout.style.display = 'block';
-            } else {
-                guestCheckout.style.display = 'none';
+document.getElementById('region').addEventListener('change', updateShippingCost);
+document.getElementById('shipping-type').addEventListener('change', updateShippingCost);
+
+function updateShippingCost() {
+    var regionId = document.getElementById('region').value;
+    var shippingType = document.getElementById('shipping-type').value;
+
+    if (regionId && shippingType) {
+        // Send AJAX request to fetch shipping cost
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'calculate_shipping.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Update shipping cost and grand total in the summary
+                var response = JSON.parse(xhr.responseText);
+                document.querySelector('.summary-item span.shipping').innerHTML = '$' + parseFloat(response.shippingCost).toFixed(2);
+                document.querySelector('.summary-item span.grand-total').innerHTML = '$' + parseFloat(response.grandTotal).toFixed(2);
             }
-        }
+        };
+        xhr.send('region=' + regionId + '&shipping_type=' + shippingType);
+    }
+}
     </script>
 </body>
 </html>
