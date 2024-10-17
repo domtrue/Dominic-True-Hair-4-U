@@ -2,6 +2,9 @@
 session_start();
 // Database connection details
 include 'setup.php';
+if (!$conn) {
+    die('Database connection failed: ' . mysqli_connect_error());
+}
 
 // Check if data from the login form was submitted
 if (!isset($_POST['username'], $_POST['password'])) {
