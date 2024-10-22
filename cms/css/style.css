@@ -336,3 +336,97 @@ footer {
       font-size: 16px;
   }
 }
+/* Reset some default browser styling */
+.appointment-page body, 
+.appointment-page h2, 
+.appointment-page h3, 
+.appointment-page p, 
+.appointment-page ul, 
+.appointment-page li, 
+.appointment-page input, 
+.appointment-page select {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling for Appointment Page */
+.appointment-page body {
+    background-color: #f0f0f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Apply Roboto only to main-content */
+.appointment-page .main-content {
+    font-family: 'Roboto', sans-serif;
+}
+
+
+/* Form Styling */
+.appointment-page form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: left;
+}
+
+/* Input and Select Styling */
+.appointment-page input[type="text"],
+.appointment-page input[type="date"],
+.appointment-page input[type="time"],
+.appointment-page select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Submit Button Styling */
+.appointment-page input[type="submit"] {
+    background-color: #4a00e0;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.appointment-page input[type="submit"]:hover {
+    background-color: #7325f2;
+}
+
+/* Form Label Styling */
+.appointment-page label {
+    font-weight: 500;
+    margin-top: 10px;
+    display: block;
+    color: #4a00e0;
+}
+
+/* Heading Styling */
+.appointment-page h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive Design for Appointment Page */
+@media (max-width: 600px) {
+    .appointment-page form {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .appointment-page h1 {
+        font-size: 1.5rem;
+    }
+}

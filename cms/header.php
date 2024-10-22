@@ -19,7 +19,6 @@ session_start();
         </div>
         <div class="menu-container">
             <ul class="menu-left">
-                <li><a href="promotions.php">Promotions</a></li>
                 <li><a href="shop.php">Shop</a></li>
                 <li><a href="book_appointment.php">Book Appointment</a></li>
             </ul>
@@ -40,7 +39,6 @@ session_start();
         </div>
         <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
         <ul class="menu">
-            <li><a href="promotions.php">Promotions</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="book_appointment.php">Book Appointment</a></li>
             <li><a href="hair_services.php">Hair Services</a></li>
@@ -48,7 +46,12 @@ session_start();
             <li><a href="about.php">About</a></li>
             <li><a href="contact.php">Contact</a></li>
             <li><a href="cart.php">Cart</a></li>
-            <li><a href="login.php">Sign In</a></li>
+            <?php
+                if (!isset($_SESSION['loggedin'])) { ?>
+    <li><a href="login.php">Login</a></li>
+<?php } else { ?>
+    <li><a href="logout.php">Logout</a></li>
+<?php } ?>
 
         </ul>
     </nav>

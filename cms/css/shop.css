@@ -5,14 +5,16 @@
     padding: 0;
 }
 
-/* Container for product grid */
 .product-grid {
     display: flex;
     flex-wrap: wrap; /* Allow items to wrap */
     justify-content: flex-start; /* Align items to the left */
     gap: 20px; /* Space between items */
     padding: 20px;
-    background: linear-gradient(135deg, #8e2de2, #4a00e0); /* Background gradient */
+    background-image: url('../img/homepage_bg.jpg'); /* Use the homepage image */
+    background-size: cover; /* Ensures the image covers the container */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 
 /* Product item */
