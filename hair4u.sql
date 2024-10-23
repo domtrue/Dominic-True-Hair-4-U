@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 23, 2024 at 11:04 AM
+-- Generation Time: Oct 23, 2024 at 10:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -263,6 +263,54 @@ INSERT INTO `regions` (`region_id`, `region_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `shipping_rates`
+--
+
+CREATE TABLE `shipping_rates` (
+  `region_id` int(11) NOT NULL,
+  `shipping_type` enum('urban','rural') NOT NULL,
+  `price` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shipping_rates`
+--
+
+INSERT INTO `shipping_rates` (`region_id`, `shipping_type`, `price`) VALUES
+(1, 'urban', 9.00),
+(1, 'rural', 15.00),
+(2, 'urban', 9.00),
+(2, 'rural', 15.00),
+(3, 'urban', 9.00),
+(3, 'rural', 15.00),
+(4, 'urban', 9.00),
+(4, 'rural', 15.00),
+(5, 'urban', 9.00),
+(5, 'rural', 15.00),
+(6, 'urban', 9.00),
+(6, 'rural', 15.00),
+(7, 'urban', 9.00),
+(7, 'rural', 15.00),
+(8, 'urban', 9.00),
+(8, 'rural', 15.00),
+(9, 'urban', 9.00),
+(9, 'rural', 15.00),
+(10, 'urban', 9.00),
+(10, 'rural', 15.00),
+(11, 'urban', 9.00),
+(11, 'rural', 15.00),
+(12, 'urban', 9.00),
+(12, 'rural', 15.00),
+(13, 'urban', 9.00),
+(13, 'rural', 15.00),
+(14, 'urban', 9.00),
+(14, 'rural', 15.00),
+(15, 'urban', 9.00),
+(15, 'rural', 15.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `slideshow`
 --
 
@@ -357,6 +405,12 @@ ALTER TABLE `regions`
   ADD PRIMARY KEY (`region_id`);
 
 --
+-- Indexes for table `shipping_rates`
+--
+ALTER TABLE `shipping_rates`
+  ADD PRIMARY KEY (`region_id`,`shipping_type`);
+
+--
 -- Indexes for table `slideshow`
 --
 ALTER TABLE `slideshow`
@@ -431,6 +485,16 @@ ALTER TABLE `slideshow`
 --
 ALTER TABLE `social_media_links`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `shipping_rates`
+--
+ALTER TABLE `shipping_rates`
+  ADD CONSTRAINT `shipping_rates_ibfk_1` FOREIGN KEY (`region_id`) REFERENCES `regions` (`region_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
