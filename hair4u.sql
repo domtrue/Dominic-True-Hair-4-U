@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2024 at 07:27 AM
+-- Generation Time: Oct 23, 2024 at 11:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `about_page`
+--
+
+CREATE TABLE `about_page` (
+  `id` int(11) NOT NULL,
+  `heading` varchar(255) NOT NULL,
+  `body_text` text NOT NULL,
+  `image_path` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `about_page`
+--
+
+INSERT INTO `about_page` (`id`, `heading`, `body_text`, `image_path`) VALUES
+(1, 'Meet Melissa', 'Melissa is an internationally experienced, qualified senior stylist. She has been working in the hairdressing industry for  over 30 years.  Melissa aquired Hair 4 U in 2019 and has a wealth of experience serving the Rangitīkei District, having owned and operated Dejavu Hair by Design  in Marton from 2004-2015.  Melissa is also a qualified Hairdressing Lecturer and Assessor and works in this role additionally part time.', 'about/melissa.jpg');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `accounts`
 --
 
@@ -35,6 +55,7 @@ CREATE TABLE `accounts` (
   `password` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
   `phone` varchar(20) NOT NULL,
+  `ad_1` varchar(50) NOT NULL,
   `activation_code` varchar(50) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -42,9 +63,9 @@ CREATE TABLE `accounts` (
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `first_name`, `last_name`, `username`, `password`, `email`, `phone`, `activation_code`) VALUES
-(1, '', '', 'test', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', ''),
-(2, 'Dominic', 'True', 'domtrue', '$2y$10$Kp3skuClHWraK1rnrtUsXOkf9n/x8q2jiuzZQSvkZoYZ1WWuSfP1G', 'domtrue.dt@icloud.com', '', 'activated');
+INSERT INTO `accounts` (`id`, `first_name`, `last_name`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`) VALUES
+(1, '', '', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', ''),
+(2, 'Dominic', 'True', 'domtrue', '$2y$10$Kp3skuClHWraK1rnrtUsXOkf9n/x8q2jiuzZQSvkZoYZ1WWuSfP1G', 'domtrue.dt@icloud.com', '123456789', '123 Main Street', 'activated');
 
 -- --------------------------------------------------------
 
@@ -210,6 +231,38 @@ INSERT INTO `products` (`id`, `name`, `description`, `image`, `price`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `regions`
+--
+
+CREATE TABLE `regions` (
+  `region_id` int(11) NOT NULL,
+  `region_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `regions`
+--
+
+INSERT INTO `regions` (`region_id`, `region_name`) VALUES
+(1, 'Northland'),
+(2, 'Auckland'),
+(3, 'Bay of Plenty'),
+(4, 'Waikato'),
+(5, 'Gisborne'),
+(6, 'Hawke\'s Bay'),
+(7, 'Taranaki'),
+(8, 'Manawatu-Whanganui'),
+(9, 'Wellington'),
+(10, 'Marlborough'),
+(11, 'Nelson-Tasman'),
+(12, 'Canterbury'),
+(13, 'West Coast'),
+(14, 'Otago'),
+(15, 'Southland');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `slideshow`
 --
 
@@ -256,6 +309,12 @@ INSERT INTO `social_media_links` (`id`, `platform`, `logo_url`, `link`) VALUES
 --
 
 --
+-- Indexes for table `about_page`
+--
+ALTER TABLE `about_page`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `accounts`
 --
 ALTER TABLE `accounts`
@@ -292,6 +351,12 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `regions`
+--
+ALTER TABLE `regions`
+  ADD PRIMARY KEY (`region_id`);
+
+--
 -- Indexes for table `slideshow`
 --
 ALTER TABLE `slideshow`
@@ -306,6 +371,12 @@ ALTER TABLE `social_media_links`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `about_page`
+--
+ALTER TABLE `about_page`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `accounts`
@@ -342,6 +413,12 @@ ALTER TABLE `pages`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT for table `regions`
+--
+ALTER TABLE `regions`
+  MODIFY `region_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `slideshow`
