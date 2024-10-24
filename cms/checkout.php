@@ -1,5 +1,7 @@
 <?php
 session_start(); // Start the session
+ob_start(); // Buffer output to avoid header issues
+
 // Database connection details
 include 'setup.php';
 
@@ -17,50 +19,60 @@ if (!isset($_SESSION['order_total'])) {
 
 $orderTotal = $_SESSION['order_total'];
 
-if(!isset($_SESSION['loggedin'])){
-    print "not_logged_in"; 
-    print_r ($_SESSION); die();
-} else{
-    //print "logged_in";
-   // print_r($_SESSION); // die();
-    // Prepare SQL statement to prevent SQL injection
+// Ensure the user is logged in
+if (!isset($_SESSION['loggedin'])) {
+    echo "You are not logged in.";
+    exit();
+}
+
+// Retrieve user details from the database
 if ($stmt = $conn->prepare('SELECT first_name, last_name, email, phone, ad_1 FROM accounts WHERE id = ?')) {
     $stmt->bind_param('s', $_SESSION['id']);
     $stmt->execute();
     $stmt->store_result();
-    // Check if the account exists
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($first_name, $last_name, $email, $phone, $ad_1);
         $stmt->fetch();
     }
-}
+    $stmt->close();
 }
 
+// Fetch regions from the database
 $sql = "SELECT region_id, region_name FROM regions";
 $result = $conn->query($sql);
 
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-// Get selected region and shipping type
-if (isset($_POST['region']) && isset($_POST['shipping-type'])) {
-$regionId = $_POST['region']; // Assuming region is posted from a dropdown
-$shippingType = $_POST['shipping-type'];
+    if (isset($_POST['region'], $_POST['shipping-type'])) {
+        $regionId = $_POST['region'];
+        $shippingType = $_POST['shipping-type'];
 
-// Fetch the shipping cost from the database
-$sql = "SELECT price FROM shipping_rates WHERE region_id = ? AND shipping_type = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("is", $regionId, $shippingType);
-$stmt->execute();
-$stmt->bind_result($shippingCost);
-$stmt->fetch();
-$stmt->close();
+        // Fetch the shipping cost from the database
+        $sql = "SELECT price FROM shipping_rates WHERE region_id = ? AND shipping_type = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("is", $regionId, $shippingType);
+        $stmt->execute();
+        $stmt->bind_result($shippingCost);
+        $stmt->fetch();
+        $stmt->close();
 
-    // Now you have the $shippingCost to use in your order summary
-} else {
-    // Handle missing form fields (region or shipping type)
-    echo "Please select a region and shipping type.";
-}
+        // Calculate the grand total
+        $grandTotal = $orderTotal + $shippingCost;
+
+        // Store the grand total in the session
+        $_SESSION['grand_total'] = $grandTotal;
+
+        // Redirect to payment.php
+        header('Location: payment.php');
+        exit();
+    } else {
+        // Handle missing form fields (region or shipping type)
+        echo "Please select both a region and a shipping type.";
+    }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +88,7 @@ $stmt->close();
 
         <h1>CHECKOUT</h1>
         <h2>PERSONAL DETAILS</h2>
-        <form action="payment.php" method="post">
+        <form action="" method="post">
             <div class="form-section">
                 <div class="form-group">
                 <div class="form-control">
@@ -113,12 +125,8 @@ $stmt->close();
                         <select id="region" name="region" required>
                             <option value="">Select Region</option>
                             <?php
-                            if ($result->num_rows > 0) {
-                                while($row = $result->fetch_assoc()) {
-                                    echo '<option value="' . $row["region_id"] . '">' . $row["region_name"] . '</option>';
-                                }
-                            } else {
-                                echo '<option value="">No regions available</option>';
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<option value='{$row['region_id']}'>{$row['region_name']}</option>";
                             }
                             ?>
                         </select>

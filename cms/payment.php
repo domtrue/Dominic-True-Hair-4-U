@@ -1,11 +1,19 @@
 <?php
 session_start(); // Start the session
 
-// Retrieve the grand total from the session
-$grandTotal = isset($_SESSION['grand_total']) ? $_SESSION['grand_total'] : 0;
 
-// Convert the grand total to cents (assuming USD)
-$grandTotalCents = $grandTotal * 100;
+// Ensure grand total is available
+if (!isset($_SESSION['grand_total'])) {
+    header('Location: checkout.php'); // Redirect if grand total is missing
+    exit();
+}
+
+$grandTotal = $_SESSION['grand_total'];
+
+// Display the grand total or pass it to a payment gateway
+echo "<h2>Grand Total: $" . number_format($grandTotal, 2) . "</h2>";
+
+// Proceed with order processing or payment gateway logic here
 ?>
 
 
