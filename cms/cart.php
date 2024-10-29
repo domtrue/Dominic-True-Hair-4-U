@@ -1,43 +1,54 @@
 <?php
 session_start(); // Start the session
 
-// Ensure there is a cart
-if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-    echo '<p>Your cart is empty. <a href="shop.php">Continue Shopping</a></p>';
+// Check if the cart exists in the session; if not, set it to an empty array
+$cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+
+// Calculate the total when loading the cart page and set it in the session
+$cartTotal = array_reduce($cartItems, function ($total, $item) {
+    return $total + ($item['price'] * $item['quantity']);
+}, 0);
+
+// Set the order total in the session
+$_SESSION['order_total'] = $cartTotal;
+
+// Handle product removal
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'remove_item') {
+    $key = intval($_POST['key']);
+
+    if (isset($_SESSION['cart'][$key])) {
+        unset($_SESSION['cart'][$key]); // Remove the item from the cart
+
+        // Recalculate the order total
+        $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
+            return $total + ($item['price'] * $item['quantity']);
+        }, 0);
+    }
+
+    echo json_encode(['order_total' => $_SESSION['order_total']]);
     exit();
 }
-//print_r ($_SESSION);
-// Process form submissions for updating quantity and removing items
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['quantity']) && is_array($_POST['quantity'])) {
-        foreach ($_POST['quantity'] as $key => $quantity) {
-            if (isset($_SESSION['cart'][$key])) {
-                $_SESSION['cart'][$key]['quantity'] = max(1, intval($quantity)); // Ensure quantity is at least 1
-            }
-        }
-        // Recalculate order total
-        $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
-            return $total + ($item['price'] * $item['quantity']);
-        }, 0);
-    }
-    
-    if (isset($_POST['remove_item'])) {
-        $itemKey = intval($_POST['remove_item']);
-        if (isset($_SESSION['cart'][$itemKey])) {
-            unset($_SESSION['cart'][$itemKey]);
-            $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex the array
-        }
-        // Recalculate order total
-        $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
-            return $total + ($item['price'] * $item['quantity']);
-        }, 0);
-    }
-}
 
-// Retrieve cart items and calculate total
-$cartItems = $_SESSION['cart'];
-$cartTotal = isset($_SESSION['order_total']) ? $_SESSION['order_total'] : 0; // Ensure cartTotal is defined
+// Handle quantity update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_quantity') {
+    $key = intval($_POST['key']);
+    $quantity = max(1, intval($_POST['quantity'])); // Ensure quantity is at least 1
+
+    if (isset($_SESSION['cart'][$key])) {
+        $_SESSION['cart'][$key]['quantity'] = $quantity;
+
+        // Recalculate the order total
+        $_SESSION['order_total'] = array_reduce($_SESSION['cart'], function ($total, $item) {
+            return $total + ($item['price'] * $item['quantity']);
+        }, 0);
+    }
+
+    echo json_encode(['order_total' => $_SESSION['order_total']]);
+    exit();
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -281,47 +292,52 @@ h1 {
 
         <!-- Authentication Buttons -->
         <div class="auth-buttons">
-            <button type="button" onclick="window.location.href='checkout.php'">Checkout</button>
-            <button type="button" id="checkout-button" onclick="window.location.href='checkout.php'">Checkout as Guest</button>
+            <button type="button" onclick="window.location.href='checkout_select.php'">Proceed to Checkout</button>
         </div>
-    </div>
+        </div>
 
-    <script>
-        // Handle AJAX form submission
-        document.getElementById('cart-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent the default form submission
-    var formData = new FormData(document.getElementById('cart-form'));
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'update_cart.php', true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            try {
-                var response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    document.getElementById('cart-total').innerText = '$' + response.newTotal.toFixed(2);
-                } else {
-                    console.error('Failed to update cart:', response.message);
-                }
-            } catch (e) {
-                console.error('Error parsing response:', e);
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Update quantity via AJAX
+    $('select[name^="quantity"]').on('change', function() {
+        const key = $(this).attr('name').match(/\d+/)[0];  // Extract product key
+        const quantity = $(this).val();  // Get new quantity value
+
+        $.ajax({
+            url: 'cart.php',
+            type: 'POST',
+            data: { action: 'update_quantity', key: key, quantity: quantity },
+            dataType: 'json',
+            success: function(response) {
+                $('#cart-total').text('$' + response.order_total.toFixed(2));
+            },
+            error: function() {
+                alert('Failed to update the cart. Please try again.');
             }
-        } else {
-            console.error('Failed to update cart. Status:', xhr.status);
-        }
-    };
-    xhr.onerror = function () {
-        console.error('Request failed');
-    };
-    xhr.send(formData);
+        });
+    });
+
+    // Handle item removal via AJAX
+    $('.cart-item button[name="remove_item"]').on('click', function(e) {
+        e.preventDefault();  // Prevent form submission
+        const key = $(this).val();  // Get the item key
+
+        $.ajax({
+            url: 'cart.php',
+            type: 'POST',
+            data: { action: 'remove_item', key: key },
+            dataType: 'json',
+            success: function(response) {
+                location.reload();  // Reload the page to reflect changes
+            },
+            error: function() {
+                alert('Failed to remove the item. Please try again.');
+            }
+        });
+    });
 });
 
-// Update cart total on quantity change
-function updateQuantity(selectElement) {
-    var form = document.getElementById('cart-form');
-    form.submit(); // Submit the form to update the quantity
-}
-
-
-    </script>
+</script>
 </body>
 </html>
