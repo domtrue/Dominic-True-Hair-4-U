@@ -177,23 +177,33 @@ document.getElementById('shipping-type').addEventListener('change', updateShippi
 function updateShippingCost() {
     var regionId = document.getElementById('region').value;
     var shippingType = document.getElementById('shipping-type').value;
+    var subtotal = <?php echo json_encode($orderTotal); ?>; // Get subtotal from PHP
 
-    if (regionId && shippingType) {
-        // Send AJAX request to fetch shipping cost
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'calculate_shipping.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Update shipping cost and grand total in the summary
-                var response = JSON.parse(xhr.responseText);
-                document.querySelector('.summary-item span.shipping').innerHTML = '$' + parseFloat(response.shippingCost).toFixed(2);
-                document.querySelector('.summary-item span.grand-total').innerHTML = '$' + parseFloat(response.grandTotal).toFixed(2);
-            }
-        };
-        xhr.send('region=' + regionId + '&shipping_type=' + shippingType);
+    // If no valid region or shipping type selected, reset shipping and show subtotal only
+    if (!regionId || !shippingType) {
+        document.querySelector('.summary-item span.shipping').innerHTML = '$0.00';
+        document.querySelector('.summary-item span.grand-total').innerHTML = 
+            '$' + parseFloat(subtotal).toFixed(2); // Display subtotal as grand total
+        return; // Stop further execution
     }
+
+    // Send AJAX request to fetch shipping cost if valid selections are made
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'calculate_shipping.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Update shipping cost and grand total in the summary
+            var response = JSON.parse(xhr.responseText);
+            document.querySelector('.summary-item span.shipping').innerHTML = 
+                '$' + parseFloat(response.shippingCost).toFixed(2);
+            document.querySelector('.summary-item span.grand-total').innerHTML = 
+                '$' + (parseFloat(subtotal) + parseFloat(response.shippingCost)).toFixed(2);
+        }
+    };
+    xhr.send('region=' + regionId + '&shipping_type=' + shippingType);
 }
+
     </script>
 </body>
 </html>
