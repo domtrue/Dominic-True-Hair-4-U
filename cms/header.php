@@ -27,7 +27,15 @@ session_start();
                 <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
                 <li><a href="about.php">About</a></li>
                 <li><a href="contact.php">Contact</a></li>
-                <li><a href="cart.php" class="fa-solid fa-bag-shopping"></a></li>
+                <li style="position: relative;">
+                    <a href="cart.php" class="fa-solid fa-bag-shopping">
+                    <?php if (isset($_SESSION['cart']) && array_sum(array_column($_SESSION['cart'], 'quantity')) > 0) { ?>
+        <span id="cart-count" class="badge">
+            <?php echo array_sum(array_column($_SESSION['cart'], 'quantity')); ?>
+        </span>
+    <?php } ?>
+        </span>
+                </a></li>
                 <?php
                 if (!isset($_SESSION['loggedin'])) { ?>
     <li><a href="login.php" class="fa-solid fa-user"></a></li>

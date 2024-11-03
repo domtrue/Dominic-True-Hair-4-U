@@ -13,6 +13,23 @@ html, body {
   height: 100%;
 }
 
+.badge {
+  position: absolute;
+  top: -5px; /* Adjust to position the badge vertically */
+  right: -7px; /* Adjust to position the badge horizontally */
+  background-color: red; /* Red background */
+  color: white; /* White text */
+  border-radius: 50%; /* Make it a circle */
+  padding: 1px 5px; /* Padding around the text */
+  font-size: 10px; /* Font size */
+  font-weight: bold; /* Bold text */
+  min-width: 18px; /* Minimum width for the circle */
+  height: 18px; /* Fixed height for consistency */
+  text-align: center; /* Center the text */
+  line-height: 18px; /* Align text vertically */
+}
+
+
 /* Ensure body takes full viewport height */
 body {
   overflow-x: hidden; /* Prevent horizontal scrollbars */
@@ -429,4 +446,5 @@ footer {
     .appointment-page h1 {
         font-size: 1.5rem;
     }
+  
 }

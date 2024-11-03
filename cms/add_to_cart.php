@@ -65,7 +65,17 @@ if (isset($_GET['id'])) {
 // Close connection
 $conn->close();
 
-// Redirect back to shop or cart page
-header('Location: shop.php');
+// Count total items in the cart
+$total_items = array_sum(array_column($_SESSION['cart'], 'quantity'));
+
+// Check if the request is an AJAX request
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+    // Return JSON response with total cart items
+    header('Content-Type: application/json');
+    echo json_encode(['totalItems' => $total_items]);
+} else {
+    // Redirect back to shop or cart page for non-AJAX requests
+    header('Location: shop.php');
+}
+
 exit();
-?>
