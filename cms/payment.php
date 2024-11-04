@@ -1,4 +1,5 @@
 <?php
+include 'setup.php'; // Ensure this file contains your database connection details
 session_start(); // Start the session
 
 
@@ -10,10 +11,12 @@ if (!isset($_SESSION['grand_total'])) {
 
 $grandTotal = $_SESSION['grand_total'];
 
-// Display the grand total or pass it to a payment gateway
-echo "<h2>Grand Total: $" . number_format($grandTotal, 2) . "</h2>";
 
-// Proceed with order processing or payment gateway logic here
+
+
+// Fetch payment provider details
+$sql = "SELECT name, image FROM payment_providers";
+$result = $conn->query($sql);
 ?>
 
 
@@ -226,22 +229,19 @@ echo "<h2>Grand Total: $" . number_format($grandTotal, 2) . "</h2>";
         </div>
         <div class="payment-methods">
             <h2>Select Payment Method</h2>
-            <div class="payment-method" id="card-method">
-                <img src="img/credit-card.png" alt="Credit/Debit Card">
-                <p>Credit/Debit Card</p>
-            </div>
-            <div class="payment-method" id="poli-method">
-                <img src="img/poli.png" alt="POLi">
-                <p>POLi Bank Transfer</p>
-            </div>
-            <div class="payment-method" id="paypal-method">
-                <img src="img/paypal.png" alt="PayPal">
-                <p>PayPal</p>
-            </div>
-            <div class="payment-method" id="afterpay-method">
-                <img src="img/afterpay.png" alt="Afterpay">
-                <p>Afterpay</p>
-            </div>
+            <?php
+            if ($result->num_rows > 0) {
+                // Loop through each payment provider and display its logo and name
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="payment-method" id="' . strtolower($row['name']) . '-method">';
+                    echo '<img src="img/' . htmlspecialchars($row['image']) . '" alt="' . htmlspecialchars($row['name']) . '">';
+                    echo '<p>' . htmlspecialchars($row['name']) . '</p>';
+                    echo '</div>';
+                }
+            }
+            $conn->close(); // Close the database connection
+            ?>
+          
             <!-- Add additional payment methods here -->
             <form id="payment-form" style="display: none;">
                 <input type="hidden" id="grand-total-cents" value="<?php echo $grandTotalCents; ?>">
