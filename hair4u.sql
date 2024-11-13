@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2024 at 09:04 AM
+-- Generation Time: Nov 13, 2024 at 03:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,8 +64,27 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `first_name`, `last_name`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`) VALUES
-(1, '', '', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', ''),
+(1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', ''),
 (2, 'Dominic', 'True', 'domtrue', '$2y$10$Kp3skuClHWraK1rnrtUsXOkf9n/x8q2jiuzZQSvkZoYZ1WWuSfP1G', 'domtrue.dt@icloud.com', '123456789', '123 Main Street', 'activated');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_images`
+--
+
+CREATE TABLE `admin_images` (
+  `id` int(11) NOT NULL,
+  `account_id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin_images`
+--
+
+INSERT INTO `admin_images` (`id`, `account_id`, `image_path`) VALUES
+(1, 1, 'img/about/melissa.jpg');
 
 -- --------------------------------------------------------
 
@@ -88,6 +107,17 @@ CREATE TABLE `appointments` (
 
 INSERT INTO `appointments` (`id`, `customer_first_name`, `customer_last_name`, `service_type`, `appointment_datetime`, `created_at`) VALUES
 (1, 'dom ', 'True', 'Perm', '2024-08-27 17:45:00', '2024-08-26 12:28:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `business_logo`
+--
+
+CREATE TABLE `business_logo` (
+  `id` int(11) NOT NULL,
+  `logo_path` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -397,9 +427,22 @@ ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `admin_images`
+--
+ALTER TABLE `admin_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `account_id` (`account_id`);
+
+--
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `business_logo`
+--
+ALTER TABLE `business_logo`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -481,10 +524,22 @@ ALTER TABLE `accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `admin_images`
+--
+ALTER TABLE `admin_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `business_logo`
+--
+ALTER TABLE `business_logo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -543,6 +598,12 @@ ALTER TABLE `social_media_links`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `admin_images`
+--
+ALTER TABLE `admin_images`
+  ADD CONSTRAINT `admin_images_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`);
 
 --
 -- Constraints for table `order_items`
