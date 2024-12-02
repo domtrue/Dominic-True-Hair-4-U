@@ -2,7 +2,6 @@
 include 'setup.php'; // Ensure this file contains your database connection details
 session_start(); // Start the session
 
-
 // Ensure grand total is available
 if (!isset($_SESSION['grand_total'])) {
     header('Location: checkout.php'); // Redirect if grand total is missing
@@ -11,13 +10,29 @@ if (!isset($_SESSION['grand_total'])) {
 
 $grandTotal = $_SESSION['grand_total'];
 
-
-
-
 // Fetch payment provider details
 $sql = "SELECT name, image FROM payment_providers";
 $result = $conn->query($sql);
+
+// Placeholder for payment success logic
+$paymentSuccess = false; // Default to false
+
+// Example: Check payment status from the gateway
+// This is a placeholder for actual integration logic
+if (isset($_POST['payment_status']) && $_POST['payment_status'] === 'success') {
+    $paymentSuccess = true; // Set to true if the payment was successful
+}
+
+if ($paymentSuccess) {
+    // Redirect to order_process.php
+    header("Location: order_process.php");
+    exit();
+} else {
+    // Handle unsuccessful payment
+    echo "<p>Payment was not successful. Please try again.</p>";
+}
 ?>
+
 
 
 <!DOCTYPE html>

@@ -1,34 +1,49 @@
 <?php
-include 'setup.php'; 
+include 'setup.php';
 session_start();
+
 // Redirect to login page if user is not logged in
 if (!isset($_SESSION['loggedin'])) {
     header('Location: index.html');
     exit;
 }
+
 // Check if the user details are set in the session
-if (isset($_SESSION['user_details'])) {
+if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['account_id'])) {
+    $accountId = $_SESSION['user_details']['account_id'];
     $firstName = htmlspecialchars($_SESSION['user_details']['first_name'], ENT_QUOTES);
-    $id = $_SESSION['user_details']['account_id']; // Get the account_id from session
 } else {
     $firstName = "User";
+    $accountId = null;
 }
 
-// Fetch the admin's profile image from the database
-// Assuming $pdo is your PDO connection
-$query = "SELECT image_path FROM admin_images WHERE account_id = ?";
-$stmt = $pdo->prepare($query);
-$stmt->execute([$id]);
-$image = $stmt->fetch(PDO::FETCH_ASSOC);
+// Initialize $profilePic variable
+$profilePic = 'path/to/default_image.jpg'; // Set a default profile picture
 
-// Default profile image if not found
-if ($image) {
-    $profileImagePath = $image['image_path'];
-} else {
-    // Provide a default image if the user doesn't have one
-    $profileImagePath = 'path/to/default_image.jpg';
+// Only attempt to fetch the profile image if $accountId is set
+if ($accountId) {
+    // Fetch the admin's profile image from the database
+    $query = "SELECT image_path FROM admin_images WHERE account_id = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$accountId]);
+    $image = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Update the profile picture if an image path is found
+    if ($image && !empty($image['image_path'])) {
+        $profilePic = $image['image_path'];
+    }
+}
+
+// Fetch the business logo
+$logoPath = 'path/to/default_logo.jpg'; // Default logo image
+$logoStmt = $pdo->prepare("SELECT logo_path FROM business_logo ORDER BY id DESC LIMIT 1");
+$logoStmt->execute();
+$logoResult = $logoStmt->fetch(PDO::FETCH_ASSOC);
+if ($logoResult && !empty($logoResult['logo_path'])) {
+    $logoPath = $logoResult['logo_path'];
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
