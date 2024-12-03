@@ -448,3 +448,44 @@ footer {
     }
   
 }
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.info-box {
+  background-image: url('../img/homepage_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: calc(100vh - 60px); /* Full viewport height minus 60px */
+  min-height: 100px; /* Minimum height to ensure background is visible */
+  padding-left: 10px; /* Reduce left padding */
+}
+
+
+
+
+.info-box p {
+font-size: 1.2rem;
+margin: 0 0 1em 20px; /* Align to the left and add some left margin */
+max-width: 600px; /* Optional: Set max-width for better readability */
+line-height: 1.6;
+color: white;
+text-align: left; /* Ensure left alignment */
+}
+
+.info-box ul {
+list-style-type: disc;
+padding-left: 40px; /* Standard padding for bullets */
+margin: 0;
+text-align: left;
+}
+
+.info-box li {
+font-size: 1rem;
+margin-bottom: 0.5em;
+color: white;
+}
+
+

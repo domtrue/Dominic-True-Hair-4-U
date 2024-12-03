@@ -1,28 +1,25 @@
 <?php
-// Include Stripe PHP library
-require_once('lib/stripe-php/init.php'); // Adjust the path as needed
+require 'vendor/autoload.php';
 
-// Set your Stripe API key
-\Stripe\Stripe::setApiKey('your_stripe_secret_key'); // Replace with your Stripe secret key
+\Stripe\Stripe::setApiKey('your-secret-key');
 
-// Retrieve POST data
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
+// Get the payment amount dynamically
+$grandTotal = 1000; // Replace with your calculated total in cents (e.g., $10.00 = 1000)
 
-$paymentMethodId = $data['payment_method_id'];
-$amount = $data['amount'];
-
-// Create a payment intent
+// Create the Payment Intent
 try {
     $paymentIntent = \Stripe\PaymentIntent::create([
-        'amount' => $amount,
-        'currency' => 'usd',
-        'payment_method' => $paymentMethodId,
-        'confirm' => true,
+        'amount' => $grandTotal,
+        'currency' => 'nzd', // Use NZD for New Zealand dollars
+        'payment_method_types' => ['card'],
     ]);
 
-    echo json_encode(['success' => true]);
-} catch (\Stripe\Exception\ApiErrorException $e) {
-    // Handle error
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    // Pass the client secret to the frontend
+    echo json_encode([
+        'clientSecret' => $paymentIntent->client_secret,
+    ]);
+} catch (\Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => $e->getMessage()]);
 }
+?>
