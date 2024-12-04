@@ -1,25 +1,28 @@
 <?php
+session_start();
 require 'vendor/autoload.php';
 
-\Stripe\Stripe::setApiKey('your-secret-key');
+if (!isset($_SESSION['grand_total'])) {
+    header('Location: checkout.php');
+    exit();
+}
 
-// Get the payment amount dynamically
-$grandTotal = 1000; // Replace with your calculated total in cents (e.g., $10.00 = 1000)
+$grandTotal = $_SESSION['grand_total']; // Assume this is in dollars
+$grandTotalCents = intval(round($grandTotal * 100)); // Convert to cents
 
-// Create the Payment Intent
+\Stripe\Stripe::setApiKey('sk_test_your_secret_key'); // Use your Stripe secret key
+
 try {
     $paymentIntent = \Stripe\PaymentIntent::create([
-        'amount' => $grandTotal,
-        'currency' => 'nzd', // Use NZD for New Zealand dollars
+        'amount' => $grandTotalCents,
+        'currency' => 'nzd',
         'payment_method_types' => ['card'],
     ]);
 
-    // Pass the client secret to the frontend
-    echo json_encode([
-        'clientSecret' => $paymentIntent->client_secret,
-    ]);
+    $clientSecret = $paymentIntent->client_secret;
 } catch (\Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo 'Error: ' . $e->getMessage();
+    exit();
 }
 ?>

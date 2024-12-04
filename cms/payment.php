@@ -1,26 +1,35 @@
 <?php
+session_start();
 require 'vendor/autoload.php';
 
-\Stripe\Stripe::setApiKey('your-secret-key');
+if (!isset($_SESSION['grand_total'])) {
+    // Redirect to checkout if grand total isn't set
+    header('Location: checkout.php');
+    exit();
+}
 
-// Example grand total (in cents)
-$grandTotal = 1000; // Replace this with your dynamically calculated total
+// Get grand total from session (in dollars)
+$grandTotal = $_SESSION['grand_total'];
+
+// Convert to cents (Stripe requires the smallest currency unit)
+$grandTotalCents = intval(round($grandTotal * 100)); // Ensures integer
+
+// Set your Stripe secret key
+\Stripe\Stripe::setApiKey('');
 
 try {
+    // Create a PaymentIntent with the correct amount in cents
     $paymentIntent = \Stripe\PaymentIntent::create([
-        'amount' => $grandTotal,
+        'amount' => $grandTotalCents,
         'currency' => 'nzd',
         'payment_method_types' => ['card'],
     ]);
 
-    // Encode both clientSecret and grandTotal for use in the frontend
-    echo json_encode([
-        'clientSecret' => $paymentIntent->client_secret,
-        'grandTotal' => $grandTotal
-    ]);
+    $clientSecret = $paymentIntent->client_secret;
 } catch (\Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo 'Error: ' . $e->getMessage();
+    exit();
 }
 ?>
 
@@ -34,68 +43,19 @@ try {
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-    <div class="payment-container">
-        <h2>Secure Payment</h2>
-        <div class="order-total">
-            Grand Total: $<?php echo number_format($grandTotal / 100, 2); ?>
-        </div>
-
-        <form id="payment-form" class="stripe-form">
-            <label for="card-holder-name">Cardholder Name</label>
-            <input type="text" id="card-holder-name" placeholder="Name on Card" required>
-
-            <div id="card-element"></div>
-            <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div>
-
-            <button type="submit" class="submit-button">
-                Pay $<?php echo number_format($grandTotal / 100, 2); ?>
-            </button>
-        </form>
+    <h2>Secure Payment</h2>
+    <div>
+        Grand Total: $<?php echo number_format($grandTotal, 2); ?>
     </div>
+    <div id="payment-element"></div> <!-- Stripe accordion UI will mount here -->
+    <button id="submit-button">Pay Now</button>
+
+    <div id="payment-message" class="hidden"></div>
 
     <script>
-    // Fetch the Payment Intent from the backend
-    fetch('path-to-backend-script.php', {
-        method: 'POST',
-    })
-    .then(response => response.json())
-    .then(data => {
-        const clientSecret = data.clientSecret;
-        const grandTotal = (data.grandTotal / 100).toFixed(2); // Convert to dollars
-
-        // Display the grand total
-        document.querySelector('.grand-total').textContent = `Grand Total: $${grandTotal}`;
-
-        // Set up Stripe payment
-        const stripe = Stripe("your-publishable-key");
-        const elements = stripe.elements();
-        const card = elements.create("card");
-        card.mount("#card-element");
-
-        const form = document.getElementById("payment-form");
-        form.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: card,
-                    billing_details: {
-                        name: document.getElementById("card-holder-name").value,
-                    },
-                },
-            });
-
-            if (error) {
-                document.getElementById("card-errors").textContent = error.message;
-            } else if (paymentIntent.status === "succeeded") {
-                alert("Payment successful!");
-            }
-        });
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
-</script>
-
+        const stripe = Stripe('pk_test_your_publishable_key'); // Replace with your publishable key
+        const clientSecret = "<?php echo $clientSecret; ?>";
+    </script>
+    <script src="../payment.js"></script> <!-- Include the custom JavaScript -->
 </body>
 </html>

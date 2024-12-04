@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2024 at 03:22 AM
+-- Generation Time: Dec 04, 2024 at 05:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -119,6 +119,13 @@ CREATE TABLE `business_logo` (
   `logo_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `business_logo`
+--
+
+INSERT INTO `business_logo` (`id`, `logo_path`) VALUES
+(1, 'img/logo.png');
+
 -- --------------------------------------------------------
 
 --
@@ -140,6 +147,31 @@ CREATE TABLE `contacts` (
 
 INSERT INTO `contacts` (`id`, `firstname`, `lastname`, `email`, `message`, `created_at`) VALUES
 (1, '', '', '', 'hi :)', '2024-09-22 14:58:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hair_services`
+--
+
+CREATE TABLE `hair_services` (
+  `id` int(11) NOT NULL,
+  `content_type` enum('paragraph','list_item') NOT NULL,
+  `content` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `hair_services`
+--
+
+INSERT INTO `hair_services` (`id`, `content_type`, `content`) VALUES
+(1, 'paragraph', 'Hair 4 U provides a wide range of professional hair services tailored to meet each customer’s unique needs. From trendy cuts and vibrant colouring to expert styling and treatments, the salon is dedicated to ensuring every client leaves with a look they love. With a focus on quality and customer satisfaction, Hair 4 U combines creativity with expertise to deliver the best hairstyles for every occasion. Find a list of each service that Melissa provides below:'),
+(2, 'list_item', 'Haircuts'),
+(3, 'list_item', 'Colours'),
+(4, 'list_item', 'Foils'),
+(5, 'list_item', 'Perms'),
+(6, 'list_item', 'Treatments'),
+(7, 'list_item', 'Blow waves');
 
 -- --------------------------------------------------------
 
@@ -166,7 +198,7 @@ CREATE TABLE `order_items` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `unit_price` decimal(10,2) NOT NULL
+  `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -452,18 +484,16 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `hair_services`
+--
+ALTER TABLE `hair_services`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`);
-
---
--- Indexes for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`order_item_id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `pages`
@@ -539,7 +569,7 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `business_logo`
 --
 ALTER TABLE `business_logo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -548,16 +578,16 @@ ALTER TABLE `contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `hair_services`
+--
+ALTER TABLE `hair_services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
   MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pages`
@@ -604,13 +634,6 @@ ALTER TABLE `social_media_links`
 --
 ALTER TABLE `admin_images`
   ADD CONSTRAINT `admin_images_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`);
-
---
--- Constraints for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `shipping_rates`
