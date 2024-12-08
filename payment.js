@@ -1,4 +1,4 @@
-const stripe = Stripe('pk_test_your_publishable_key'); // Replace with your publishable key
+const stripe = Stripe("<?php echo $_ENV['STRIPE_PUBLISHABLE_KEY']; ?>");
 
 // Customize the appearance (optional)
 const appearance = {

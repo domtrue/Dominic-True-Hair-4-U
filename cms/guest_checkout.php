@@ -43,7 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Calculate the grand total
         $grandTotal = $orderTotal + $shippingCost;
-        $_SESSION['grand_total'] = $grandTotal; // Store grand total in session
+        
+        // Calculate GST at 15% of the grand total
+        $gst = $grandTotal * 0.15;
+
+        // Store the grand total and GST in the session
+        $_SESSION['grand_total'] = $grandTotal;
+        $_SESSION['shipping_cost'] = $shippingCost;
+        $_SESSION['gst'] = $gst;
 
         // Store guest info in session for review
         $_SESSION['guest_info'] = [

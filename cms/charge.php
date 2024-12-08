@@ -10,13 +10,19 @@ if (!isset($_SESSION['grand_total'])) {
 $grandTotal = $_SESSION['grand_total']; // Assume this is in dollars
 $grandTotalCents = intval(round($grandTotal * 100)); // Convert to cents
 
-\Stripe\Stripe::setApiKey('sk_test_your_secret_key'); // Use your Stripe secret key
+\Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY')); // Retrieve the Stripe secret key from the environment variable
 
 try {
+    // Create a PaymentIntent with the specified amount in cents
     $paymentIntent = \Stripe\PaymentIntent::create([
         'amount' => $grandTotalCents,
         'currency' => 'nzd',
         'payment_method_types' => ['card'],
+        'payment_method_options' => [
+            'card' => [
+                'request_three_d_secure' => 'automatic',
+            ],
+        ],
     ]);
 
     $clientSecret = $paymentIntent->client_secret;

@@ -59,8 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Calculate the grand total
         $grandTotal = $orderTotal + $shippingCost;
 
-        // Store the grand total in the session
+        // Calculate GST at 15% of the grand total
+        $gst = $grandTotal * 0.15;
+
+        // Store the grand total and GST in the session
         $_SESSION['grand_total'] = $grandTotal;
+        $_SESSION['shipping_cost'] = $shippingCost;
+        $_SESSION['gst'] = $gst;
 
         // Redirect to payment.php
         header('Location: payment.php');
@@ -71,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 
 
