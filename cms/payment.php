@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'vendor/autoload.php';
+include 'setup.php';
 
 use Dotenv\Dotenv;
 
@@ -9,11 +10,7 @@ $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 // Access the environment variables
-$stripeSecretKey = $_ENV['STRIPE_SECRET_KEY'];
 $stripePublishableKey = $_ENV['STRIPE_PUBLISHABLE_KEY'];
-
-// Set the Stripe API key
-\Stripe\Stripe::setApiKey($stripeSecretKey);
 
 if (!isset($_SESSION['grand_total'])) {
     // Redirect to checkout if grand total isn't set
@@ -21,49 +18,75 @@ if (!isset($_SESSION['grand_total'])) {
     exit();
 }
 
-// Get grand total from session (in dollars)
+// Get grand total and shipping cost from session
 $grandTotal = $_SESSION['grand_total'];
-
-// Get shipping cost from session (in dollars)
 $shippingCost = $_SESSION['shipping_cost'];
 
-// Convert to cents (Stripe requires the smallest currency unit)
-$grandTotalCents = intval(round($grandTotal * 100)); // Ensures integer
+// Assuming `$_SESSION['order_id']` and `$_SESSION['user_id']` are set during checkout
+$order_id = $_SESSION['order_id'];
+$user_id = $_SESSION['user_id'];
+$payment_method_id = $_POST['payment_method_id'];
+$card_name = $_POST['card_name'];
+$zip_code = $_POST['zip'];
+$country = $_POST['country'];
 
-try {
-    // Create a Checkout Session
-    $checkoutSession = \Stripe\Checkout\Session::create([
-        'payment_method_types' => ['card'],
-        'line_items' => [[
-            'price_data' => [
-                'currency' => 'nzd',
-                'product_data' => [
-                    'name' => 'Order #'.rand(1000, 9999),
-                ],
-                'unit_amount' => $grandTotalCents,
-            ],
-            'quantity' => 1,
-        ]],
-        'mode' => 'payment',
-        'success_url' => 'https://example.com/success',
-        'cancel_url' => 'https://example.com/cancel',
-    ]);
+// Insert payment details into the payment_details table
+$sql = "INSERT INTO payment_details (order_id, card_name, zip_code, country, payment_method_id, status)
+        VALUES (?, ?, ?, ?, ?, 'Success')";
 
-    $clientSecret = $checkoutSession->client_secret;
-} catch (\Exception $e) {
-    http_response_code(500);
-    error_log($e->getMessage());
-    echo 'An error occurred while processing your payment. Please try again.';
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('isssss', $order_id, $card_name, $zip_code, $country, $payment_method_id);
 
-    exit();
+if ($stmt->execute()) {
+    // Payment details successfully inserted
+    echo json_encode(['success' => true]);
+} else {
+    echo json_encode(['error' => $stmt->error]);
 }
 
-// Fetch allowed countries for payment from Stripe
-$allowed_countries = \Stripe\Checkout\Session::retrieve($checkoutSession->id)->payment_method_options->card->networks;
+// Insert order into the orders table
+$total_amount = $_SESSION['grand_total'];
+$sql = "INSERT INTO orders (user_id, total_amount, status)
+        VALUES (?, ?, 'Pending')";
 
-echo '<pre>' . print_r($allowed_countries, true) . '</pre>'; // Debug output
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param('id', $user_id, $total_amount);
 
+if ($stmt->execute()) {
+    // Order successfully inserted, get the order_id
+    $order_id = $stmt->insert_id;
+
+    // Store the order_id in session for use in next steps
+    $_SESSION['order_id'] = $order_id;
+
+    // Insert each item into order_items
+    $cart_items = $_SESSION['cart_items'];
+    foreach ($cart_items as $item) {
+        $product_id = $item['product_id'];
+        $quantity = $item['quantity'];
+        $price = $item['price'];
+        $subtotal = $quantity * $price;
+
+        $sql = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
+                VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('iiidi', $order_id, $product_id, $quantity, $price, $subtotal);
+
+        if (!$stmt->execute()) {
+            echo json_encode(['error' => $stmt->error]);
+            exit();
+        }
+    }
+
+    echo json_encode(['success' => true]);
+} else {
+    echo json_encode(['error' => $stmt->error]);
+}
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -76,130 +99,165 @@ echo '<pre>' . print_r($allowed_countries, true) . '</pre>'; // Debug output
     <script src="https://js.stripe.com/v3/"></script>
     <style>
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f6f9fc;
         }
-        .left-half {
-            background-color: #6c5ce7; /* Purple background */
-            color: white;
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
             padding: 20px;
-            height: 100vh;
-            overflow-y: auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .right-half {
-            background-color: #f8f9fa; /* Light grey background */
-            padding: 40px;
-            height: 100vh;
-            overflow-y: auto;
+
+        #card-element {
+            border: 1px solid #ced4da;
+            padding: 10px;
+            border-radius: 4px;
+            background: #fff;
         }
-        .back-button {
-            color: white;
-            text-decoration: none;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        .product-list {
-            list-style: none;
-            padding: 0;
-        }
-        .product-list li {
-            margin-bottom: 10px;
-        }
-        .product-list img {
-            max-width: 100px;
-            margin-right: 10px;
-        }
+        
         .pay-button {
             background-color: #6c5ce7;
             color: white;
             border: none;
-            width: 100%;
             padding: 15px;
-            font-size: 1.2rem;
+            font-size: 1rem;
             border-radius: 8px;
+            width: 100%;
         }
         .pay-button:hover {
             background-color: #5a4bdb;
         }
+        .form-section {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Left Half -->
-            <div class="col-md-6 left-half">
-                <a href="checkout.php" class="back-button">&larr; Back</a>
-                <h2>Your Order</h2>
-                <ul class="product-list">
-                    <?php
-                    if (isset($_SESSION['cart'])) {
-                        foreach ($_SESSION['cart'] as $product) {
-                            echo "<li><img src='{$product['image']}' alt='{$product['name']} Thumbnail' /> {$product['name']} - Quantity: {$product['quantity']} - NZ$ " . number_format($product['price'] * $product['quantity'], 2) . "</li>";
-                        }
-                    }
-                    ?>
-                </ul>
-                <p>Shipping: NZ$ <?php echo number_format($_SESSION['shipping_cost'], 2); ?></p>
-                <p>Total GST: NZ$ <?php echo number_format($_SESSION['gst'], 2); ?></p>
-                <h3>Grand Total: NZ$ <?php echo number_format($_SESSION['grand_total'], 2); ?></h3>
+    <div class="container">
+        <h2>Complete Your Payment</h2>
+        <p>Grand Total: <strong>NZ$ <?php echo number_format($grandTotal, 2); ?></strong></p>
+        <form id="payment-form">
+            <div class="form-section">
+                <label for="name-on-card" class="form-label">Name on Card</label>
+                <input type="text" id="name-on-card" class="form-control" placeholder="Name on card" required>
             </div>
-
-            <!-- Right Half -->
-            <div class="col-md-6 right-half">
-                <h2>Pay with Card</h2>
-                <form id="payment-form">
-                    <div id="payment-element">
-                        <input type="text" class="form-control mb-3" placeholder="1234 1234 1234 1234">
-                        <div class="row">
-                            <div class="col">
-                                <input type="text" class="form-control mb-3" placeholder="MM/YY">
-                            </div>
-                            <div class="col">
-                                <input type="text" class="form-control mb-3" placeholder="CVC">
-                            </div>
-                        </div>
-                    </div>
-                    <h5>Country or Region</h5>
-                    <select id="country-dropdown" class="form-select mb-3">
-                        <?php
-                        // Fetch allowed countries for payment from Stripe
-                        $allowed_countries = \Stripe\Checkout\Session::retrieve($checkoutSession->id)->payment_method_options->card->networks;
-
-                        if (!empty($allowed_countries)) {
-                            foreach ($allowed_countries as $country) {
-                                echo "<option value='{$country->id}'>{$country->name}</option>";
-                            }
-                        } else {
-                            echo '<option value="">No countries available</option>';
-                        }
-                        ?>
-                    </select>
-                    <h5>ZIP</h5>
-                    <input type="text" class="form-control mb-4" placeholder="ZIP Code">
-                    <button class="pay-button">Pay</button>
-                </form>
+            <div class="form-section">
+                <label for="card-element" class="form-label">Card Details</label>
+                <div id="card-element" class="form-control"></div>
+                <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div>
             </div>
-        </div>
+            <div class="form-section">
+                <label for="country" class="form-label">Country/Region</label>
+                <select id="country" class="form-select" required>
+                    <option value="NZ">New Zealand</option>
+                    <!-- Add more countries as needed -->
+                </select>
+            </div>
+            <div class="form-section">
+                <label for="zip" class="form-label">ZIP Code</label>
+                <input type="text" id="zip" class="form-control" placeholder="ZIP Code" required>
+            </div>
+            <button class="pay-button" id="submit-button">Pay Now</button>
+        </form>
     </div>
 
     <script>
-        var stripe = Stripe('<?php echo $_ENV['STRIPE_PUBLISHABLE_KEY']; ?>');
-        var elements = stripe.elements();
-        var cardElement = elements.create('card');
-        cardElement.mount('#payment-element');
+        // Initialize Stripe
+        const stripe = Stripe('<?php echo $stripePublishableKey; ?>');
+        const elements = stripe.elements();
 
-        var form = document.getElementById('payment-form');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Create a card element
+        const card = elements.create('card', {
+            style: {
+                base: {
+                    color: "#32325d",
+                    fontFamily: 'Arial, sans-serif',
+                    fontSmoothing: "antialiased",
+                    fontSize: "16px",
+                    "::placeholder": {
+                        color: "#aab7c4"
+                    }
+                },
+                invalid: {
+                    color: "#fa755a",
+                    iconColor: "#fa755a"
+                }
+            }
+        });
 
-            const {token, error} = await stripe.createToken(cardElement);
+        // Mount the card element to the div
+        card.mount('#card-element');
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Create PaymentMethod
+            const {paymentMethod, error} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+                billing_details: {
+                    name: document.getElementById('name-on-card').value,
+                    address: {
+                        postal_code: document.getElementById('zip').value,
+                        country: document.getElementById('country').value,
+                    }
+                }
+            });
+
             if (error) {
-                console.error(error.message);
+                // Display error in #card-errors
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
             } else {
-                // Token created successfully, handle server-side submission
-                form.submit();
+                // Send payment method ID to server
+                const response = await fetch('process_payment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({payment_method_id: paymentMethod.id})
+                });
+
+                const result = await response.json();
+
+                if (result.error) {
+                    // Display error from server
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error;
+                } else if (result.success) {
+                    // Redirect to success page
+                    window.location.href = 'success.php';
+                } else if (result.requires_action) {
+                    // Handle 3D Secure
+                    await stripe.handleCardAction(result.payment_intent_client_secret)
+                        .then(async (result) => {
+                            if (result.error) {
+                                document.getElementById('card-errors').textContent = result.error.message;
+                            } else {
+                                // Retry payment confirmation
+                                const retryResponse = await fetch('process_payment.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({payment_intent_id: result.paymentIntent.id})
+                                });
+
+                                const retryResult = await retryResponse.json();
+
+                                if (retryResult.success) {
+                                    window.location.href = 'success.php';
+                                } else {
+                                    document.getElementById('card-errors').textContent = retryResult.error;
+                                }
+                            }
+                        });
+                }
             }
         });
     </script>
