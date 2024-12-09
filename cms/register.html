@@ -23,7 +23,7 @@
         background-position: center; /* Center the image */
         background-repeat: no-repeat; /* Prevent the image from repeating */
         margin: 0; /* Remove default margin */
-        height: 100vh; /* Ensure body takes up the full viewport height */
+        height: 150vh; /* Ensure body takes up the full viewport height */
     }
 
     .background {
@@ -37,12 +37,12 @@
     }
 
     form {
-        height: 550px;
+        height: 880px;
         width: 400px;
         background-color: rgba(255, 255, 255, 0.13); /* Semi-transparent background */
         position: absolute;
         transform: translate(-50%, -50%);
-        top: 50%;
+        top: 75%;
         left: 50%;
         border-radius: 10px;
         backdrop-filter: blur(10px); /* Blur effect to make text readable */
@@ -127,6 +127,12 @@
     <form method="post" action="register.php">
         <h3>Register</h3>
 
+        <label for="firstname">First name</label>
+        <input type="text" placeholder="First name" id="firstname" name="firstname" required>
+
+        <label for="lastname">Last name</label>
+        <input type="text" placeholder="Last name" id="lastname" name="lastname" required>
+
         <label for="username">Username</label>
         <input type="text" placeholder="Username" id="username" name="username" required>
 
@@ -135,6 +141,9 @@
 
         <label for="email">Email</label>
         <input type="text" placeholder="Email" id="email" name="email" required>
+
+        <label for="phone">Phone</label>
+        <input type="text" placeholder="Phone" id="phone" name="phone" required>
 
         <button type="submit" class="register">Create account</button>
 

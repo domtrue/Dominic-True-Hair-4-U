@@ -9,84 +9,28 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Access the environment variables
 $stripePublishableKey = $_ENV['STRIPE_PUBLISHABLE_KEY'];
 
-if (!isset($_SESSION['grand_total'])) {
-    // Redirect to checkout if grand total isn't set
+// Ensure session variables exist
+if (!isset($_SESSION['grand_total'], $_SESSION['shipping_cost'], $_SESSION['user_id'])) {
     header('Location: checkout.php');
     exit();
 }
 
-// Get grand total and shipping cost from session
-$grandTotal = $_SESSION['grand_total'];
-$shippingCost = $_SESSION['shipping_cost'];
+// Decode JSON input
+$data = json_decode(file_get_contents('php://input'), true);
 
-// Assuming `$_SESSION['order_id']` and `$_SESSION['user_id']` are set during checkout
+$payment_method_id = $data['payment_method_id'] ?? null;
+$card_name = $data['card_name'] ?? null;
+$zip_code = $data['zip'] ?? null;
+$country = $data['country'] ?? null;
+
+
 $order_id = $_SESSION['order_id'];
 $user_id = $_SESSION['user_id'];
-$payment_method_id = $_POST['payment_method_id'];
-$card_name = $_POST['card_name'];
-$zip_code = $_POST['zip'];
-$country = $_POST['country'];
-
-// Insert payment details into the payment_details table
-$sql = "INSERT INTO payment_details (order_id, card_name, zip_code, country, payment_method_id, status)
-        VALUES (?, ?, ?, ?, ?, 'Success')";
-
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param('isssss', $order_id, $card_name, $zip_code, $country, $payment_method_id);
-
-if ($stmt->execute()) {
-    // Payment details successfully inserted
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['error' => $stmt->error]);
-}
-
-// Insert order into the orders table
-$total_amount = $_SESSION['grand_total'];
-$sql = "INSERT INTO orders (user_id, total_amount, status)
-        VALUES (?, ?, 'Pending')";
-
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param('id', $user_id, $total_amount);
-
-if ($stmt->execute()) {
-    // Order successfully inserted, get the order_id
-    $order_id = $stmt->insert_id;
-
-    // Store the order_id in session for use in next steps
-    $_SESSION['order_id'] = $order_id;
-
-    // Insert each item into order_items
-    $cart_items = $_SESSION['cart_items'];
-    foreach ($cart_items as $item) {
-        $product_id = $item['product_id'];
-        $quantity = $item['quantity'];
-        $price = $item['price'];
-        $subtotal = $quantity * $price;
-
-        $sql = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
-                VALUES (?, ?, ?, ?, ?)";
-
-        $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param('iiidi', $order_id, $product_id, $quantity, $price, $subtotal);
-
-        if (!$stmt->execute()) {
-            echo json_encode(['error' => $stmt->error]);
-            exit();
-        }
-    }
-
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['error' => $stmt->error]);
-}
+$grandTotal = $_SESSION['grand_total'];
+$cart_items = $_SESSION['cart_items'] ?? [];
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">

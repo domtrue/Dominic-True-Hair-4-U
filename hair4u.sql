@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2024 at 05:02 AM
+-- Generation Time: Dec 09, 2024 at 06:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,8 +49,8 @@ INSERT INTO `about_page` (`id`, `heading`, `body_text`, `image_path`) VALUES
 
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(100) NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -63,9 +63,9 @@ CREATE TABLE `accounts` (
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `first_name`, `last_name`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`) VALUES
+INSERT INTO `accounts` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`) VALUES
 (1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', ''),
-(2, 'Dominic', 'True', 'domtrue', '$2y$10$Kp3skuClHWraK1rnrtUsXOkf9n/x8q2jiuzZQSvkZoYZ1WWuSfP1G', 'domtrue.dt@icloud.com', '123456789', '123 Main Street', 'activated');
+(2, 'Dominic', 'True', 'domtrue', '$2y$10$a0oKOVcmI4y2CbaAA9WHKuicU5U/V0LlxKhEYEsYF1.QKFNr8Tko6', 'domtrue.dt@icloud.com', '123456789', '', 'activated');
 
 -- --------------------------------------------------------
 
@@ -181,10 +181,10 @@ INSERT INTO `hair_services` (`id`, `content_type`, `content`) VALUES
 
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `total_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) DEFAULT 'pending'
+  `user_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('Pending','Completed') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -198,7 +198,8 @@ CREATE TABLE `order_items` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `price` decimal(10,2) NOT NULL
+  `price` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -230,26 +231,19 @@ INSERT INTO `pages` (`id`, `title1`, `text1`, `image1`, `title2`, `text2`, `imag
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payment_providers`
+-- Table structure for table `payment_details`
 --
 
-CREATE TABLE `payment_providers` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `image` varchar(255) NOT NULL
+CREATE TABLE `payment_details` (
+  `payment_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `card_name` varchar(255) NOT NULL,
+  `zip_code` varchar(20) NOT NULL,
+  `country` varchar(100) NOT NULL,
+  `payment_method_id` varchar(255) NOT NULL,
+  `status` enum('Success','Failed') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payment_providers`
---
-
-INSERT INTO `payment_providers` (`id`, `name`, `image`) VALUES
-(1, 'Card', 'payment/credit-card.png'),
-(2, 'POLi', 'payment/poli.png'),
-(3, 'PayPal', 'payment/paypal.png'),
-(4, 'Afterpay', 'payment/afterpay.png'),
-(5, 'Apple Pay', 'payment/apple-pay.png'),
-(6, 'Google Pay', 'payment/google-pay.png');
 
 -- --------------------------------------------------------
 
@@ -496,16 +490,24 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`);
 
 --
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
 -- Indexes for table `pages`
 --
 ALTER TABLE `pages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `payment_providers`
+-- Indexes for table `payment_details`
 --
-ALTER TABLE `payment_providers`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `payment_details`
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `products`
@@ -590,16 +592,22 @@ ALTER TABLE `orders`
   MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `payment_providers`
+-- AUTO_INCREMENT for table `payment_details`
 --
-ALTER TABLE `payment_providers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `payment_details`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -634,6 +642,18 @@ ALTER TABLE `social_media_links`
 --
 ALTER TABLE `admin_images`
   ADD CONSTRAINT `admin_images_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`);
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`);
+
+--
+-- Constraints for table `payment_details`
+--
+ALTER TABLE `payment_details`
+  ADD CONSTRAINT `payment_details_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`);
 
 --
 -- Constraints for table `shipping_rates`

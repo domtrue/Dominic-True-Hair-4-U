@@ -25,8 +25,14 @@ if (!isset($_SESSION['loggedin'])) {
     exit();
 }
 
+// Use session variables in form fields
+$first_name = isset($_SESSION['user_details']['firstname']) ? $_SESSION['user_details']['firstname'] : '';
+$last_name = isset($_SESSION['user_details']['lastname']) ? $_SESSION['user_details']['lastname'] : '';
+$email = isset($_SESSION['user_details']['email']) ? $_SESSION['user_details']['email'] : '';
+$phone = isset($_SESSION['user_details']['phone']) ? $_SESSION['user_details']['phone'] : '';
+
 // Retrieve user details from the database
-if ($stmt = $conn->prepare('SELECT first_name, last_name, email, phone, ad_1 FROM accounts WHERE id = ?')) {
+if ($stmt = $conn->prepare('SELECT firstname, lastname, email, phone, ad_1 FROM accounts WHERE id = ?')) {
     $stmt->bind_param('s', $_SESSION['id']);
     $stmt->execute();
     $stmt->store_result();
@@ -62,7 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Calculate GST at 15% of the grand total
         $gst = $grandTotal * 0.15;
 
-        // Store the grand total and GST in the session
+        // Generate a unique order_id
+        $orderId = uniqid('ORDER-'); // Prefix with "ORDER-" for better readability
+
+        // Store data in the session
+        $_SESSION['order_id'] = $orderId; // Store order ID in session
         $_SESSION['grand_total'] = $grandTotal;
         $_SESSION['shipping_cost'] = $shippingCost;
         $_SESSION['gst'] = $gst;

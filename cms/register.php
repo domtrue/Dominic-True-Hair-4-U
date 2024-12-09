@@ -10,14 +10,13 @@ require '../PHPMailer/Exception.php';
 // Include the database connection setup file
 include 'setup.php';
 
-// Now we check if the data was submitted, isset() function will check if the data exists.
-if (!isset($_POST['username'], $_POST['password'], $_POST['email'])) {
-    // Could not get the data that should have been sent.
+// Check if all required data is submitted
+if (!isset($_POST['firstname'], $_POST['lastname'], $_POST['username'], $_POST['password'], $_POST['email'], $_POST['phone'])) {
     exit('Please complete the registration form!');
 }
 
 // Make sure the submitted registration values are not empty.
-if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email'])) {
+if (empty ($_POST['firstname']) || empty ($_POST ['lastname']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email']) || empty($_POST['phone'])) {
     // One or more values are empty.
     exit('Please complete the registration form');
 }
@@ -43,18 +42,22 @@ if ($stmt = $conn->prepare('SELECT id, password FROM accounts WHERE username = ?
     $stmt->execute();
     $stmt->store_result();
 
-    // Store the result so we can check if the account exists in the database.
-    if ($stmt->num_rows > 0) {
-        // Username already exists
-        echo 'Username exists, please choose another!';
-    } else {
-        // Username doesn't exist, insert new account
-        if ($stmt = $conn->prepare('INSERT INTO accounts (username, password, email, activation_code) VALUES (?, ?, ?, ?)')) {
-            // Hash the password and use password_verify when a user logs in.
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $uniqid = uniqid();
-            $stmt->bind_param('ssss', $_POST['username'], $password, $_POST['email'], $uniqid);
-            $stmt->execute();
+        // Insert the new account data into the database
+    if ($stmt = $conn->prepare('INSERT INTO accounts (firstname, lastname, username, password, email, phone, activation_code) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
+        // Hash the password and generate activation code
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $uniqid = uniqid();
+        $stmt->bind_param(
+            'sssssss', 
+            $_POST['firstname'], 
+            $_POST['lastname'], 
+            $_POST['username'], 
+            $password, 
+            $_POST['email'], 
+            $_POST['phone'], 
+            $uniqid
+        );
+        $stmt->execute();
 
             // Define activation link
             // Define activation link
@@ -94,7 +97,7 @@ if ($stmt = $conn->prepare('SELECT id, password FROM accounts WHERE username = ?
             echo 'Could not prepare statement!';
         }
     }
-} else {
+ else {
     // Something is wrong with the SQL statement
     echo 'Could not prepare statement!';
 }
