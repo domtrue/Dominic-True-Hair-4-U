@@ -1,45 +1,56 @@
-const stripe = Stripe("<?php echo $_ENV['STRIPE_PUBLISHABLE_KEY']; ?>");
+// Setup Stripe
+const stripe = Stripe('your-publishable-key-here');
 
-// Customize the appearance (optional)
-const appearance = {
-    theme: 'flat', // Can be 'flat', 'stripe', 'night', or 'none'
-    variables: {
-        colorPrimary: '#0570de',
-        colorBackground: '#ffffff',
-        colorText: '#333333',
-        fontSizeBase: '16px'
-    }
-};
+document.addEventListener('DOMContentLoaded', function() {
+  const elements = stripe.elements();
 
-// Accordion layout options
-const options = {
-    layout: {
-        type: 'accordion',
-        defaultCollapsed: false,
-        radios: true,
-        spacedAccordionItems: false
-    }
-};
+  // Create an instance of the card Element
+  const cardElement = elements.create('card', {
+    hidePostalCode: true, // Optionally hide postal code if not needed
+  });
 
-// Initialize Stripe elements
-const elements = stripe.elements({ clientSecret, appearance });
-const paymentElement = elements.create('payment', options);
-paymentElement.mount('#payment-element');
+  // Add an instance of the card Element into the 'card-element' div
+  cardElement.mount('#card-element');
 
-document.getElementById('submit-button').addEventListener('click', async (e) => {
-    e.preventDefault();
+  // Handle form submission
+  const form = document.getElementById('payment-form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-    // Confirm the payment
-    const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-            return_url: 'payment_success.php', // Optional success page
-        }
-    });
+    // Disable the submit button to prevent multiple submissions
+    document.querySelector('#submit-button').disabled = true;
+
+    const { token, error } = await stripe.createToken(cardElement);
 
     if (error) {
-        const messageContainer = document.getElementById('payment-message');
-        messageContainer.classList.remove('hidden');
-        messageContainer.textContent = error.message;
+      // Display error.message in the UI
+      document.getElementById('card-errors').textContent = error.message;
+      document.querySelector('#submit-button').disabled = false;
+    } else {
+      // Send the token to your server
+      stripeTokenHandler(token);
     }
+  });
 });
+
+// Function to handle token submission to your server
+async function stripeTokenHandler(token) {
+  const response = await fetch('/process-payment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: token.id }),
+  });
+
+  const result = await response.json();
+
+  if (result.error) {
+    // Show error from the server on the UI
+    document.getElementById('card-errors').textContent = result.error.message;
+    document.querySelector('#submit-button').disabled = false;
+  } else {
+    // Redirect or show success message
+    window.location.href = '/payment-success'; // Redirect to success page
+  }
+}

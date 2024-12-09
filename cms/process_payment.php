@@ -2,6 +2,11 @@
 session_start();
 require 'vendor/autoload.php';
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 use Dotenv\Dotenv;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
@@ -10,99 +15,103 @@ use Stripe\PaymentIntent;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Access sensitive environment variables
 $stripeSecretKey = $_ENV['STRIPE_SECRET_KEY'];
 $encryptionKey = $_ENV['ENCRYPTION_KEY'];
 $iv = $_ENV['ENCRYPTION_IV'];
 
-// Set your Stripe API key
+// Set Stripe API key
 Stripe::setApiKey($stripeSecretKey);
 
 // Helper function for decryption
 function decryptData($data, $key, $iv) {
-    return openssl_decrypt($data, 'aes-256-cbc', $key, 0, $iv);
+    return openssl_decrypt($data, 'aes-256-cbc', $key, 0, $iv) ?: null;
 }
 
-// Retrieve and validate input
-$requestPayload = json_decode(file_get_contents('php://input'), true);
-$paymentMethodId = $requestPayload['payment_method_id'] ?? null;
+header("Content-Type: application/json");
 
-if (!$paymentMethodId) {
-    echo json_encode(['error' => 'Payment method ID is missing']);
+// Read and decode JSON payload
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
+
+if (!$data) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Invalid JSON input']);
     exit();
 }
 
-// Decrypt sensitive POST data
-$decryptedNameOnCard = decryptData($_POST['name_on_card'] ?? '', $encryptionKey, $iv);
-$decryptedCountryRegion = decryptData($_POST['country_region'] ?? '', $encryptionKey, $iv);
-$decryptedZipCode = decryptData($_POST['zip_code'] ?? '', $encryptionKey, $iv);
+// Extract and validate data
+$paymentMethodId = $data['payment_method_id'] ?? null;
+$nameOnCard = decryptData($data['name_on_card'] ?? '', $encryptionKey, $iv);
+$countryRegion = decryptData($data['country_region'] ?? '', $encryptionKey, $iv);
+$zipCode = decryptData($data['zip_code'] ?? '', $encryptionKey, $iv);
 
-// Validate decrypted data
-if (!$decryptedNameOnCard || !$decryptedCountryRegion || !$decryptedZipCode) {
-    echo json_encode(['error' => 'Invalid or missing payment details']);
+if (!$paymentMethodId || !$nameOnCard || !$countryRegion || !$zipCode) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Missing or invalid payment details']);
     exit();
 }
 
-// Create and confirm a PaymentIntent
 try {
+    // Create a PaymentIntent
     $paymentIntent = PaymentIntent::create([
         'payment_method' => $paymentMethodId,
-        'amount' => $_SESSION['order_total'], // Replace with actual order amount
-        'currency' => 'nzd', // Use appropriate currency
+        'amount' => $_SESSION['order_total'], // Replace with actual amount
+        'currency' => 'nzd',
         'confirmation_method' => 'manual',
         'confirm' => true,
     ]);
 
-    // If payment is successful, handle the order
     if ($paymentIntent->status === 'succeeded') {
-        // Insert order
+        // Order processing and database insertion
         $user_id = $_SESSION['user_id'];
         $grandTotal = $_SESSION['order_total'];
 
-        $sql = "INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, 'Pending')";
+        // Assuming $conn is your database connection
+        include 'setup.php';
 
-        if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param('id', $user_id, $grandTotal);
-            if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Order insert error: ' . $stmt->error]);
-                exit();
-            }
-            $order_id = $stmt->insert_id;
-            $_SESSION['order_id'] = $order_id;
+        $conn->begin_transaction();
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, 'Completed')");
+        $stmt->bind_param('id', $user_id, $grandTotal);
 
-            // Insert order items
-            foreach ($cart_items as $item) {
-                $product_id = $item['product_id'];
-                $quantity = $item['quantity'];
-                $price = $item['price'];
-                $subtotal = $quantity * $price;
-
-                $sql = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
-                        VALUES (?, ?, ?, ?, ?)";
-
-                if ($stmt = $conn->prepare($sql)) {
-                    $stmt->bind_param('iiidi', $order_id, $product_id, $quantity, $price, $subtotal);
-                    if (!$stmt->execute()) {
-                        echo json_encode(['error' => 'Order items error: ' . $stmt->error]);
-                        exit();
-                    }
-                } else {
-                    echo json_encode(['error' => 'Database prepare error: ' . $conn->error]);
-                    exit();
-                }
-            }
-
-            echo json_encode(['success' => true]);
-        } else {
-            echo json_encode(['error' => 'Order insert error: ' . $conn->error]);
-            exit();
+        if (!$stmt->execute()) {
+            $conn->rollback();
+            throw new Exception('Order insertion failed: ' . $stmt->error);
         }
+
+        $order_id = $stmt->insert_id;
+        $_SESSION['order_id'] = $order_id;
+
+        // Insert payment details
+        $stmt = $conn->prepare("INSERT INTO payment_details (order_id, card_name, zip_code, country, payment_method_id, status) VALUES (?, ?, ?, ?, ?, 'Success')");
+        $stmt->bind_param('issss', $order_id, $nameOnCard, $zipCode, $countryRegion, $paymentMethodId);
+
+        if (!$stmt->execute()) {
+            $conn->rollback();
+            throw new Exception('Payment details insertion failed: ' . $stmt->error);
+        }
+
+        // Insert order items
+        foreach ($_SESSION['cart_items'] as $item) {
+            $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param('iiidi', $order_id, $item['product_id'], $item['quantity'], $item['price'], $item['quantity'] * $item['price']);
+            if (!$stmt->execute()) {
+                $conn->rollback();
+                throw new Exception('Order item insertion failed: ' . $stmt->error);
+            }
+        }
+
+        $conn->commit();
+
+        echo json_encode(['success' => true, 'order_id' => $order_id]);
     } else {
+        http_response_code(500);
         echo json_encode(['error' => 'Payment confirmation pending']);
     }
 } catch (\Stripe\Exception\CardException $e) {
+    http_response_code(500);
     echo json_encode(['error' => $e->getError()->message]);
-} catch (\Exception $e) {
-    echo json_encode(['error' => 'Payment failed: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => $e->getMessage()]);
 }
 ?>
