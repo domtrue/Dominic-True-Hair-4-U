@@ -25,6 +25,7 @@ if (!isset($_SESSION['loggedin'])) {
     exit();
 }
 
+
 // Use session variables in form fields
 $first_name = isset($_SESSION['user_details']['firstname']) ? $_SESSION['user_details']['firstname'] : '';
 $last_name = isset($_SESSION['user_details']['lastname']) ? $_SESSION['user_details']['lastname'] : '';

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2024 at 06:59 AM
+-- Generation Time: Dec 10, 2024 at 07:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -182,7 +182,7 @@ INSERT INTO `hair_services` (`id`, `content_type`, `content`) VALUES
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `total_amount` decimal(10,2) NOT NULL,
+  `grand_total` decimal(10,2) NOT NULL,
   `status` enum('Pending','Completed') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

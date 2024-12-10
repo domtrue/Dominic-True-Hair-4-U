@@ -53,7 +53,7 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        body {
+    body {
             font-family: Arial, sans-serif;
             background-color: #f6f9fc;
         }
@@ -116,17 +116,35 @@ try {
     <script>
         const stripe = Stripe('<?php echo $_ENV['STRIPE_PUBLISHABLE_KEY']; ?>');
         const clientSecret = "<?php echo $clientSecret; ?>";
-        
+
         const elements = stripe.elements();
         const cardElement = elements.create('card');
         cardElement.mount('#card-element');
 
         document.getElementById('payment-form').addEventListener('submit', async (event) => {
             event.preventDefault();
-            
+
             const cardName = document.getElementById('card_name').value;
             const country = document.getElementById('country').value;
             const zip = document.getElementById('zip').value;
+
+            // Save the data in sessions
+            const formData = {
+                card_name: cardName,
+                country_region: country,
+                zip_code: zip,
+            };
+
+            const response = await fetch('save_session.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                document.getElementById('error-message').innerText = 'Failed to save session data.';
+                return;
+            }
 
             try {
                 const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
@@ -134,10 +152,7 @@ try {
                         card: cardElement,
                         billing_details: {
                             name: cardName,
-                            address: {
-                                country: country,
-                                postal_code: zip,
-                            },
+                            address: { country: country, postal_code: zip },
                         },
                     },
                 });
@@ -148,12 +163,10 @@ try {
                 }
 
                 if (paymentIntent.status === 'succeeded') {
-                    // Redirect or display success message
                     alert('Payment successful!');
                     window.location.href = 'success.php';
                 }
             } catch (err) {
-                console.error('Error:', err);
                 document.getElementById('error-message').innerText = 'An unexpected error occurred.';
             }
         });
