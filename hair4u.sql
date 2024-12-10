@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 07:31 AM
+-- Generation Time: Dec 10, 2024 at 11:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -187,6 +187,21 @@ CREATE TABLE `orders` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `grand_total`, `status`, `created_at`) VALUES
+(7, 2, 68.00, 'Pending', '2024-12-10 21:48:37'),
+(8, 2, 68.00, 'Pending', '2024-12-10 21:53:06'),
+(9, 2, 68.00, 'Pending', '2024-12-10 21:57:49'),
+(10, 2, 68.00, 'Pending', '2024-12-10 21:59:02'),
+(11, 2, 68.00, 'Pending', '2024-12-10 22:00:14'),
+(12, 2, 68.00, 'Pending', '2024-12-10 22:05:48'),
+(13, 2, 68.00, 'Pending', '2024-12-10 22:08:23'),
+(14, 2, 68.00, 'Pending', '2024-12-10 22:08:53'),
+(15, 2, 68.00, 'Pending', '2024-12-10 22:09:08');
+
 -- --------------------------------------------------------
 
 --
@@ -201,6 +216,20 @@ CREATE TABLE `order_items` (
   `price` decimal(10,2) NOT NULL,
   `subtotal` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`, `subtotal`) VALUES
+(1, 12, 2, 1, 29.50, 29.50),
+(2, 12, 1, 1, 29.50, 29.50),
+(3, 13, 2, 1, 29.50, 29.50),
+(4, 13, 1, 1, 29.50, 29.50),
+(5, 14, 2, 1, 29.50, 29.50),
+(6, 14, 1, 1, 29.50, 29.50),
+(7, 15, 2, 1, 29.50, 29.50),
+(8, 15, 1, 1, 29.50, 29.50);
 
 -- --------------------------------------------------------
 
@@ -589,13 +618,13 @@ ALTER TABLE `hair_services`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `pages`

@@ -2,7 +2,8 @@
 session_start();
 require 'vendor/autoload.php';
 include 'setup.php';
-
+header("Location: order_process.php");
+                    exit;
 use Dotenv\Dotenv;
 use Stripe\Stripe;
 

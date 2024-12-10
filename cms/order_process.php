@@ -2,13 +2,8 @@
 session_start();
 
 include 'setup.php';
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
-}
-
+//print_r($_SESSION); //die();
+$_SESSION['payment_status'] = 'Success'; 
 // Check if payment status is set and is successful
 if (!isset($_SESSION['payment_status']) || $_SESSION['payment_status'] !== 'Success') {
     die("Required session variables are missing or payment was not successful.");
@@ -20,44 +15,50 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['order_total']) || !isset($
 }
 
 // Initialize session variables
-$user_id = $_SESSION['user_id'];
+$userId = $_SESSION['user_id'];
 $grandTotal = $_SESSION['grand_total'];
 $cart = $_SESSION['cart'];
-$cardName = $_SESSION['card_name'];
-$country_region = $_SESSION['country'];
-$zip_code = $_SESSION['zip'];
+//$cardName = $_SESSION['card_name'];
+//$country_region = $_SESSION['country'];
+//$zip_code = $_SESSION['zip'];
 $gst = $_SESSION['gst'];
 $shippingCost = $_SESSION['shipping_cost'];
 
 
 // Function to process the order
-function processOrder($userId, $cart, $grandTotal, $gst, $shippingCost, $cardName, $countryRegion, $zipCode) {
-    global $db;
+function processOrder($userId, $cart, $grandTotal, $gst, $shippingCost) {
+    global $conn;
 
     $orderId = 'ORDER-' . uniqid(); // Example order ID generation
 
     // Prepare SQL to insert order details into database
-    $stmt = $db->prepare("INSERT INTO orders (user_id, grand_total, status, created_at) VALUES (?, ?, 'Pending', NOW())");
-    $stmt->bind_param('id', $userId, $orderTotal);
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, grand_total, status, created_at) VALUES (?, ?, 'Pending', NOW())");
+    $stmt->bind_param('id', $userId, $grandTotal);
 
     if ($stmt->execute()) {
         $orderId = $stmt->insert_id; // Get the last inserted order ID
+        //print($orderId);
 
         // Insert order items
         foreach ($cart as $item) {
-            $stmtItem = $db->prepare("INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
-            $stmtItem->bind_param('iiidd', $orderId, $item['id'], $item['quantity'], $item['price'], $item['price'] * $item['quantity']);
+           // print_r($item);
+            $product_id = $item['id'];
+            $quantity = $item['quantity'];
+            $price = $item['price'];
+            $subtotal = $item['price'] * $item['quantity'];
+            $stmtItem = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
+            $stmtItem->bind_param('iiidd', $orderId, $product_id, $quantity, $price, $subtotal);
             $stmtItem->execute();
-        }
+         }
 
         // Insert payment details
-        $stmtPayment = $db->prepare("INSERT INTO payment_details (order_id, card_name, zip_code, country, payment_method_id, status, created_at) VALUES (?, ?, ?, ?, ?, 'Success', NOW())");
-        $stmtPayment->bind_param('isssss', $orderId, $cardName, $zipCode, $countryRegion, $_SESSION['payment_method_id']);
-        $stmtPayment->execute();
+       // $stmtPayment = $db->prepare("INSERT INTO payment_details (order_id, card_name, zip_code, country, payment_method_id, status, created_at) VALUES (?, ?, ?, ?, ?, 'Success', NOW())");
+        //$stmtPayment->bind_param('isssss', $orderId, $cardName, $zipCode, $countryRegion, $_SESSION['payment_method_id']);
+        //$stmtPayment->execute();
 
         $stmt->close();
-        $stmtItem->close();
-        $stmtPayment->close();
+        //$stmtItem->close();
+       // $stmtPayment->close();
 
         return $orderId;
     } else {
@@ -66,12 +67,12 @@ function processOrder($userId, $cart, $grandTotal, $gst, $shippingCost, $cardNam
 }
 
 // Process the order
-$orderId = processOrder($userId, $cart, $orderTotal, $gst, 9.00, $cardName, $countryRegion, $zipCode, $grandTotal);
+$orderId = processOrder($userId, $cart, $grandTotal, $gst, $shippingCost); 
 
 // If order processing is successful, retrieve detailed information about the order
 if ($orderId) {
     // Prepare the SELECT query to fetch order details along with items and payment information
-    $stmtOrderDetails = $db->prepare("SELECT orders.*, order_items.*, payment_details.*
+    $stmtOrderDetails = $conn->prepare("SELECT orders.*, order_items.*, payment_details.*
                                       FROM orders
                                       JOIN order_items ON orders.order_id = order_items.order_id
                                       JOIN payment_details ON orders.order_id = payment_details.order_id

@@ -25,16 +25,14 @@ if (!isset($_SESSION['loggedin'])) {
     exit();
 }
 
-
-// Use session variables in form fields
-$first_name = isset($_SESSION['user_details']['firstname']) ? $_SESSION['user_details']['firstname'] : '';
-$last_name = isset($_SESSION['user_details']['lastname']) ? $_SESSION['user_details']['lastname'] : '';
-$email = isset($_SESSION['user_details']['email']) ? $_SESSION['user_details']['email'] : '';
-$phone = isset($_SESSION['user_details']['phone']) ? $_SESSION['user_details']['phone'] : '';
+print_r($_SESSION); 
+print"<br>";
+print_r($_POST);
+//die();
 
 // Retrieve user details from the database
 if ($stmt = $conn->prepare('SELECT firstname, lastname, email, phone, ad_1 FROM accounts WHERE id = ?')) {
-    $stmt->bind_param('s', $_SESSION['id']);
+    $stmt->bind_param('s', $_SESSION['user_id']);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {

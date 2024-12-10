@@ -1,5 +1,12 @@
 <?php
 session_start(); // Start the session
+print_r($_SESSION['loggedin']);
+// Ensure the user is logged in
+if (isset($_SESSION['loggedin'])) {
+    header('Location: checkout.php');
+    exit();
+}
+die();
 ?>
 
 <!DOCTYPE html>
