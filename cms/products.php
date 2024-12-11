@@ -2,33 +2,50 @@
 include 'setup.php';
 session_start();
 
-// Redirect to login page if user is not logged in
-if (!isset($_SESSION['loggedin'])) {
-    header('Location: index.html');
-    exit;
-}
-
-// Check if the user details are set in the session
-if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['account_id'])) {
-    $accountId = $_SESSION['user_details']['account_id'];
-    $firstName = htmlspecialchars($_SESSION['user_details']['firstname'], ENT_QUOTES);
-} else {
-    $firstName = "User";
-    $accountId = null;
-}
+// Fetch all products from the database
+$stmt = $pdo->query('SELECT id, name, description, price, image FROM products');
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>Manage Products</title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/admin.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+<body>
 <?php include 'admin_navbar.php'; ?>
-    <div class="content">
+<div class="content">
+<div class="header">
+    <h1>Manage Products</h1>
+</div>
+    <button onclick="location.href='add_product.php'">Add Product</button>
+    <table id="productsTable">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($products as $product): ?>
+            <tr>
+                <td><img src="img/<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>"></td>
+                <td><?= htmlspecialchars($product['name']) ?></td>
+                <td><?= htmlspecialchars($product['description']) ?></td>
+                <td><?= number_format($product['price'], 2) ?></td>
+                <td>
+                    <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a> | 
+                    <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
