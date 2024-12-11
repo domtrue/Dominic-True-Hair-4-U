@@ -25,11 +25,6 @@ if (!isset($_SESSION['loggedin'])) {
     exit();
 }
 
-print_r($_SESSION); 
-print"<br>";
-print_r($_POST);
-//die();
-
 // Retrieve user details from the database
 if ($stmt = $conn->prepare('SELECT firstname, lastname, email, phone, ad_1 FROM accounts WHERE id = ?')) {
     $stmt->bind_param('s', $_SESSION['user_id']);

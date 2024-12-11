@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 11:28 PM
+-- Generation Time: Dec 11, 2024 at 02:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -124,7 +124,8 @@ CREATE TABLE `business_logo` (
 --
 
 INSERT INTO `business_logo` (`id`, `logo_path`) VALUES
-(1, 'img/logo.png');
+(1, 'img/logo.png'),
+(2, 'img/logo_white.png');
 
 -- --------------------------------------------------------
 
@@ -200,7 +201,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `grand_total`, `status`, `created_a
 (12, 2, 68.00, 'Pending', '2024-12-10 22:05:48'),
 (13, 2, 68.00, 'Pending', '2024-12-10 22:08:23'),
 (14, 2, 68.00, 'Pending', '2024-12-10 22:08:53'),
-(15, 2, 68.00, 'Pending', '2024-12-10 22:09:08');
+(15, 2, 68.00, 'Pending', '2024-12-10 22:09:08'),
+(16, 2, 38.50, 'Pending', '2024-12-10 23:03:42');
 
 -- --------------------------------------------------------
 
@@ -229,7 +231,8 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (5, 14, 2, 1, 29.50, 29.50),
 (6, 14, 1, 1, 29.50, 29.50),
 (7, 15, 2, 1, 29.50, 29.50),
-(8, 15, 1, 1, 29.50, 29.50);
+(8, 15, 1, 1, 29.50, 29.50),
+(9, 16, 1, 1, 29.50, 29.50);
 
 -- --------------------------------------------------------
 
@@ -600,7 +603,7 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `business_logo`
 --
 ALTER TABLE `business_logo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -618,13 +621,13 @@ ALTER TABLE `hair_services`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `pages`
