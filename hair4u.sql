@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2024 at 04:46 AM
+-- Generation Time: Dec 11, 2024 at 07:09 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -106,7 +106,8 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`id`, `customer_first_name`, `customer_last_name`, `service_type`, `appointment_datetime`, `created_at`) VALUES
-(1, 'dom ', 'True', 'Perm', '2024-08-27 17:45:00', '2024-08-26 12:28:45');
+(1, 'Dominic', 'True', 'Perm', '2024-11-12 10:30:00', '2024-11-05 05:46:15'),
+(2, 'Dominic', 'True', 'Haircut', '2024-12-18 14:00:00', '2024-12-11 05:30:05');
 
 -- --------------------------------------------------------
 
@@ -597,7 +598,7 @@ ALTER TABLE `admin_images`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `business_logo`

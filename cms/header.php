@@ -13,7 +13,7 @@ session_start();
 <body>
     <nav class="navbar">
       <div class="logo">
-          <a href="/">
+          <a href="index.php">
             <img src="img/logo.png" alt="Logo">
           </a>
         </div>

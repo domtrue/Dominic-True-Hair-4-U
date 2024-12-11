@@ -46,6 +46,7 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
 <body>
 <nav class="navtop">
     <div class="logo">
+    <a href="admin.php">
         <img src="<?= $logoPath ?>" alt="Business Logo">
     </div>
     <div class="links">

@@ -177,9 +177,9 @@ body {
 
 /* Table Styles */
 .dashboard-table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse; /* Collapse borders for a clean look */
-    margin-top: 20px;
+    margin: 20px auto; /* Center the table horizontally and add vertical spacing */
     background-color: #ffffff; /* White background for the entire table */
 }
 
@@ -222,3 +222,8 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 10px;
 }
+
+.appointments-heading {
+    margin-top: 30px; /* Add extra space above the heading */
+}
+
