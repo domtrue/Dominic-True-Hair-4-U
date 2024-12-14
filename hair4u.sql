@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2024 at 10:20 AM
+-- Generation Time: Dec 14, 2024 at 11:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,16 +56,17 @@ CREATE TABLE `accounts` (
   `email` varchar(100) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `ad_1` varchar(50) NOT NULL,
-  `activation_code` varchar(50) DEFAULT ''
+  `activation_code` varchar(50) DEFAULT '',
+  `role` enum('admin','customer') NOT NULL DEFAULT 'customer'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`) VALUES
-(1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', ''),
-(2, 'Dominic', 'True', 'domtrue', '$2y$10$a0oKOVcmI4y2CbaAA9WHKuicU5U/V0LlxKhEYEsYF1.QKFNr8Tko6', 'domtrue.dt@icloud.com', '123456789', '', 'activated');
+INSERT INTO `accounts` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`, `role`) VALUES
+(1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', '', 'admin'),
+(2, 'Dominic', 'True', 'domtrue', '$2y$10$a0oKOVcmI4y2CbaAA9WHKuicU5U/V0LlxKhEYEsYF1.QKFNr8Tko6', 'domtrue.dt@icloud.com', '123456789', '', 'activated', 'customer');
 
 -- --------------------------------------------------------
 
@@ -598,7 +599,7 @@ ALTER TABLE `admin_images`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `business_logo`

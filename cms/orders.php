@@ -8,21 +8,32 @@ if (!isset($_SESSION['loggedin'])) {
     exit;
 }
 
-// Check if the user details are set in the session
-if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['account_id'])) {
-    $accountId = $_SESSION['user_details']['account_id'];
-    $firstName = htmlspecialchars($_SESSION['user_details']['firstname'], ENT_QUOTES);
+// Check user role
+$role = $_SESSION['role']; // 'admin' or 'customer'
+$accountId = $_SESSION['user_id']; // Current user's ID
+
+// Prepare query based on role
+if ($role === 'admin') {
+    // Admin: Fetch all orders
+    $query = "SELECT orders.*, accounts.firstname, accounts.lastname 
+              FROM orders 
+              JOIN accounts ON orders.user_id = accounts.id
+              ORDER BY orders.created_at DESC";
+    $stmt = $conn->prepare($query);
 } else {
-    $firstName = "User";
-    $accountId = null;
+    // Customer: Fetch only their orders
+    $query = "SELECT orders.*, accounts.firstname, accounts.lastname 
+              FROM orders 
+              JOIN accounts ON orders.user_id = accounts.id
+              WHERE accounts.id = ?
+              ORDER BY orders.created_at DESC";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $accountId);
 }
 
-// Fetch orders and associated user names from the database
-$query = "SELECT orders.*, accounts.firstname, accounts.lastname 
-          FROM orders 
-          JOIN accounts ON orders.user_id = accounts.id
-          ORDER BY orders.created_at DESC";
-$result = $conn->query($query);
+// Execute query
+$stmt->execute();
+$result = $stmt->get_result();
 
 ?>
 
@@ -30,15 +41,22 @@ $result = $conn->query($query);
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>Orders</title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/admin.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include 'admin_navbar.php'; ?>
+<?php
+// Include appropriate navbar
+if ($role === 'admin') {
+    include 'admin_navbar.php';
+} else {
+    include 'customer_navbar.php';
+}
+?>
 <div class="content">
-    <h2>Order List</h2>
+    <h2><?php echo ($role === 'admin') ? "All Orders" : "My Orders"; ?></h2>
     <table class="order-list">
         <thead>
             <tr>

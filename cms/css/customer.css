@@ -1,0 +1,320 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100vh; /* Ensures the body takes up the full viewport height */
+    display: flex;
+    flex-direction: column; /* Structured layout of children */
+    background-color: #f4f4f9;
+}
+
+.navtop {
+    background-color: #2f3947;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: #eaebed;
+}
+
+.navtop .logo img {
+    height: 70px;
+    width: auto;
+}
+
+.navtop .links {
+    display: flex;
+    flex: 1;
+    justify-content: space-around; /* Distribute links evenly */
+    margin: 0 20px; /* Optional: Add spacing around the links */
+}
+
+.navtop .links a {
+    color: #c1c4c8;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0 15px;
+    white-space: nowrap; /* Prevents text wrapping to the next line */
+}
+
+.navtop .links a:hover {
+    color: #eaebed;
+}
+
+.navtop .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds spacing between the image and the name */
+}
+
+.navtop .profile img {
+    height: 50px;
+    width: 50px; /* Ensures a perfect circle */
+    border-radius: 50%;
+    object-fit: cover; /* Prevents distortion */
+}
+
+.navtop .profile span {
+    color: #c1c4c8;
+    font-weight: bold;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+/* Content Styling */
+.content {
+    flex: 1; /* Fills remaining space to ensure the content stretches with the viewport */
+    overflow-y: auto; /* Enable vertical scrolling if content is too long */
+    background-image: url('../img/admin_bg.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0;
+    margin-top: 0;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    color: #333; /* Default text color */
+}
+
+.content h2 {
+    margin-top: 30px;
+    border-bottom: 2px solid #4a536e;
+    padding-bottom: 10px;
+}
+
+/* Utility Classes */
+.card {
+    background-color: #e9f7ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navtop div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navtop .links {
+        justify-content: flex-start;
+        gap: 10px; /* Reduce spacing between links for smaller screens */
+    }
+
+    .navtop .links a {
+        margin: 5px 0;
+    }
+}
+
+.order-list {
+    width: 90%; /* Resize table to fit better within the page */
+    max-width: 1000px; /* Set a max width to limit table expansion */
+    border-collapse: collapse;
+    margin: 20px auto; /* Center table horizontally */
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.order-list th,
+.order-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-list th {
+    background-color: #2f3947;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.order-list td {
+    text-align: center;
+}
+
+.order-list td a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.order-list td a:hover {
+    text-decoration: underline;
+}
+
+.order-list tr:hover {
+    background-color: #f1f1f1;
+}
+
+.order-list .action {
+    text-align: center;
+}
+
+/* Admin Dashboard Styles (admin.css) */
+
+.dashboard {
+    width: 90%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+.dashboard h3, .dashboard p, .dashboard h4 {
+    margin: 10px 0;
+    color: #333;
+}
+
+.dashboard h4 {
+    font-size: 1.2em; /* Slightly larger font size for headings */
+    margin: 30px;
+}
+
+/* Table Styles */
+.dashboard-table {
+    width: 90%;
+    border-collapse: collapse; /* Collapse borders for a clean look */
+    margin: 20px auto; /* Center the table horizontally and add vertical spacing */
+    background-color: #ffffff; /* White background for the entire table */
+}
+
+.dashboard-table th, .dashboard-table td {
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 1em;
+    border: 1px solid #ddd; /* Thin light grey border around each cell */
+    color: #333;
+}
+
+.dashboard-table th {
+    background-color: #2f3947;
+    color: #fff;
+    font-weight: bold;
+}
+
+.dashboard-table td {
+    background-color: #ffffff; /* White background for data rows */
+}
+
+.dashboard-table td a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.dashboard-table td a:hover {
+    text-decoration: underline;
+}
+
+.dashboard-table tr:hover {
+    background-color: #f2f2f2; /* Light grey background on hover for rows */
+}
+
+/* Utility classes */
+.card {
+    background-color: #e9f7ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+.appointments-heading {
+    margin-top: 30px; /* Add extra space above the heading */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* Basic reset for consistent look across browsers */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Table styling */
+#productsTable {
+    width: 80%; /* Reduce the width to 80% */
+    margin: 20px auto; /* Center the table with some margin around it */
+    border-collapse: collapse;
+    background-color: white; /* Set background color to white */
+}
+
+#productsTable th, #productsTable td {
+    border: 1px solid #ddd;
+    padding: 10px; /* Increase padding for better readability */
+    text-align: left;
+}
+
+#productsTable th {
+    background-color: #2f3947;
+    color: white;
+}
+
+#productsTable td img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 3px;
+}
+
+#productsTable td a {
+    text-decoration: none;
+    color: #333;
+}
+
+#productsTable td a:hover {
+    text-decoration: underline;
+}
+
+
+/* Button styling */
+button {
+    background-color: #2f3947;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #2f3947;
+}
+
+.header {
+    padding: 20px; /* Add padding to the header */
+
+}
+
+.profile-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+
+
+
+
