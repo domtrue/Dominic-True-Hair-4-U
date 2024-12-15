@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2024 at 06:07 AM
+-- Generation Time: Dec 16, 2024 at 12:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -68,7 +68,7 @@ CREATE TABLE `accounts` (
 
 INSERT INTO `accounts` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`, `role`, `reset_token`, `reset_token_expiry`) VALUES
 (1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', '', 'admin', NULL, NULL),
-(2, 'Dominic', 'True', 'domtrue', '$2y$10$81FW8a6V.LJjRjE.8J2VwOEpm8pK0wGsEECAckUl8ZIv2hres.yyu', 'domtrue.dt@icloud.com', '123456789', '', '0d331c851c332d80638eedaf35e90b18', 'customer', NULL, '2024-12-15 07:00:31');
+(2, 'Dominic', 'True', 'domtrue', '$2y$10$17tovT2zqrvTPUNTujN96eEmsMEM4rfH/D6QmoidYcoh2tu.iycea', 'domtrue.dt@icloud.com', '123456789', '', '0d331c851c332d80638eedaf35e90b18', 'customer', NULL, '2024-12-16 01:03:24');
 
 -- --------------------------------------------------------
 

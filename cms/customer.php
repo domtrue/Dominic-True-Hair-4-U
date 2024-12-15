@@ -4,16 +4,16 @@ session_start();
 
 // Redirect to login page if user is not logged in
 if (!isset($_SESSION['loggedin'])) {
-    header('Location: index.html');
+    header('Location: login.php');
     exit;
 }
 
 // Check if the user details are set in the session
-if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['account_id'])) {
-    $accountId = $_SESSION['user_details']['account_id'];
-    $firstName = htmlspecialchars($_SESSION['user_details']['firstname'], ENT_QUOTES);
+if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['user_id'])) {
+    $accountId = $_SESSION['user_details']['user_id'];
+    $first_name = htmlspecialchars($_SESSION['user_details']['firstname'], ENT_QUOTES);
 } else {
-    $firstName = "User";
+    $first_name = "User";
     $accountId = null;
 }
 ?>
@@ -30,7 +30,7 @@ if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['account
 <body>
 <?php include 'customer_navbar.php'; ?>
     <div class="content">
-        <h2>Welcome, <?= $firstName ?>!</h2>
+        <h2>Welcome, <?php echo $firstName; ?>!</h2>
         </div>
     </div>
 </body>

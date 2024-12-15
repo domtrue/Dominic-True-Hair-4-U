@@ -35,6 +35,8 @@ if ($role === 'admin') {
 $stmt->execute();
 $result = $stmt->get_result();
 
+print_r($_SESSION);
+
 ?>
 
 <!DOCTYPE html>
