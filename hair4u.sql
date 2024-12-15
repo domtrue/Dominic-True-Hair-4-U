@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 14, 2024 at 11:35 PM
+-- Generation Time: Dec 15, 2024 at 06:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -57,16 +57,18 @@ CREATE TABLE `accounts` (
   `phone` varchar(20) NOT NULL,
   `ad_1` varchar(50) NOT NULL,
   `activation_code` varchar(50) DEFAULT '',
-  `role` enum('admin','customer') NOT NULL DEFAULT 'customer'
+  `role` enum('admin','customer') NOT NULL DEFAULT 'customer',
+  `reset_token` varchar(255) DEFAULT NULL,
+  `reset_token_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`, `role`) VALUES
-(1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', '', 'admin'),
-(2, 'Dominic', 'True', 'domtrue', '$2y$10$a0oKOVcmI4y2CbaAA9WHKuicU5U/V0LlxKhEYEsYF1.QKFNr8Tko6', 'domtrue.dt@icloud.com', '123456789', '', 'activated', 'customer');
+INSERT INTO `accounts` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `ad_1`, `activation_code`, `role`, `reset_token`, `reset_token_expiry`) VALUES
+(1, 'Melissa', 'True', 'admin', '$2y$10$SfhYIDtn.iOuCW7zfoFLuuZHX6lja4lF4XA4JqNmpiH/.P3zB8JCa', 'test@test.com', '', '', '', 'admin', NULL, NULL),
+(2, 'Dominic', 'True', 'domtrue', '$2y$10$81FW8a6V.LJjRjE.8J2VwOEpm8pK0wGsEECAckUl8ZIv2hres.yyu', 'domtrue.dt@icloud.com', '123456789', '', '0d331c851c332d80638eedaf35e90b18', 'customer', NULL, '2024-12-15 07:00:31');
 
 -- --------------------------------------------------------
 

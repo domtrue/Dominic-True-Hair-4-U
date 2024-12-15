@@ -50,7 +50,7 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
     <div class="links">
         <a href="orders.php">My Orders</a>
         <a href="appointments.php">My Appointments</a>
-        <a href="account.php">My Account</a>
+        <a href="edit_account.php">My Account</a>
     </div>
     <div class="profile">
         <div class="profile-circle"><?= $initials ?></div>

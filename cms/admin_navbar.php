@@ -53,7 +53,7 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
         <a href="orders.php">Orders</a>
         <a href="appointments.php">Appointments</a>
         <a href="products.php">Inventory Management</a>
-        <a href="user_accounts.php">User Account Management</a>
+        <a href="edit_account.php">User Account Management</a>
     </div>
     <div class="profile">
         <img src="<?= $profilePic ?>" alt="Profile Picture">
