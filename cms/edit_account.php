@@ -131,7 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reset_password'])) {
     }
 }
 
-print_r($_SESSION);
 ?>
 
 
@@ -142,60 +141,79 @@ print_r($_SESSION);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Account</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <?php if ($role === 'admin'): ?>
-        <h1>Edit Accounts</h1>
-        <table>
-            <tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Actions</th></tr>
-            <?php
-            $stmt = $conn->prepare('SELECT id, firstname, lastname, email FROM accounts ORDER BY id ASC');
-            $stmt->execute();
-            $result = $stmt->get_result();
+    <div class="container">
+        <?php if ($role === 'admin'): ?>
+            <h1 class="page-title">Edit Accounts</h1>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $stmt = $conn->prepare('SELECT id, firstname, lastname, email FROM accounts ORDER BY id ASC');
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
-            while ($row = $result->fetch_assoc()) {
-                echo '<tr>';
-                echo '<td>' . $row['id'] . '</td>';
-                echo '<td>' . htmlspecialchars($row['firstname']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['lastname']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['email']) . '</td>';
-                echo '<td><a href="edit_user.php?id=' . $row['id'] . '">Edit</a></td>';
-                echo '</tr>';
-            }
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<tr>';
+                            echo '<td>' . $row['id'] . '</td>';
+                            echo '<td>' . htmlspecialchars($row['firstname']) . '</td>';
+                            echo '<td>' . htmlspecialchars($row['lastname']) . '</td>';
+                            echo '<td>' . htmlspecialchars($row['email']) . '</td>';
+                            echo '<td><a class="action-link" href="edit_user.php?id=' . $row['id'] . '">Edit</a></td>';
+                            echo '</tr>';
+                        }
 
-            $stmt->close();
-            ?>
-        </table>
-    <?php else: ?>
-        <h1>Update Your Account Information</h1>
-        <form method="post" action="">
-            <label for="email">Enter your email for password reset:</label>
-            <input type="email" id="email" name="email" required>
-            <button type="submit" name="reset_password">Send Reset Link</button>
-        </form>
+                        $stmt->close();
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            
+            <h1 class="section-title">Edit Account Details</h2>
+            <div class="form-container">
+                <form method="post" action="">
+                    <label for="firstname">First Name:</label>
+                    <input type="text" id="firstname" name="firstname" 
+                           value="<?php echo htmlspecialchars($_SESSION['user_details']['firstname'], ENT_QUOTES); ?>" required>
 
-        <h2>Edit Account Details</h2>
-<form method="post" action="">
-    <label for="firstname">First Name:</label>
-    <input type="text" id="firstname" name="firstname" 
-           value="<?php echo htmlspecialchars($_SESSION['user_details']['firstname'], ENT_QUOTES); ?>" required>
+                    <label for="lastname">Last Name:</label>
+                    <input type="text" id="lastname" name="lastname" 
+                           value="<?php echo htmlspecialchars($_SESSION['user_details']['lastname'], ENT_QUOTES); ?>" required>
 
-    <label for="lastname">Last Name:</label>
-    <input type="text" id="lastname" name="lastname" 
-           value="<?php echo htmlspecialchars($_SESSION['user_details']['lastname'], ENT_QUOTES); ?>" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" 
+                           value="<?php echo htmlspecialchars($_SESSION['user_details']['email'], ENT_QUOTES); ?>" required>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" 
-           value="<?php echo htmlspecialchars($_SESSION['user_details']['email'], ENT_QUOTES); ?>" required>
+                    <label for="phone">Phone Number:</label>
+                    <input type="text" id="phone" name="phone" 
+                           value="<?php echo htmlspecialchars($_SESSION['user_details']['phone'], ENT_QUOTES); ?>" required>
 
-    <label for="phone">Phone Number:</label>
-    <input type="text" id="phone" name="phone" 
-           value="<?php echo htmlspecialchars($_SESSION['user_details']['phone'], ENT_QUOTES); ?>" required>
-
-    <button type="submit">Update Account</button>
-</form>
-
-    <?php endif; ?>
+                    <button type="submit">Update Account</button>
+                </form>
+                </div>
+                <h2 class="page-title">Update Your Account Information</h1>
+    
+            <div class="form-container">
+                <form method="post" action="">
+                    <label for="email">Enter your email for password reset:</label>
+                    <input type="email" id="email" name="email" required>
+                    <button type="submit" name="reset_password">Send Reset Link</button>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
+

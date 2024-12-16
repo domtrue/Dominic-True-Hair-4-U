@@ -22,11 +22,14 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Customer Accounts</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
+<div class="content">
+<header class="content-header">
     <h1>Manage User Accounts</h1>
-    <table>
+    </header>
+    <table class="dashboard-table">
         <tr>
             <th>ID</th>
             <th>First Name</th>

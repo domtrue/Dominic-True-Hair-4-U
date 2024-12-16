@@ -2,6 +2,8 @@
 include 'setup.php';
 session_start();
 
+include 'admin_navbar.php';
+
 if (isset($_SESSION['user_details']['role']) && $_SESSION['user_details']['role'] !== 'admin') {
     header('Location: login.php');
     exit;
@@ -59,27 +61,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Customer Account</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <h1>Edit Customer Account</h1>
-    <form method="post" action="">
-        <label for="firstname">First Name:</label>
-        <input type="text" id="firstname" name="firstname" value="<?php echo htmlspecialchars($customer['firstname'], ENT_QUOTES); ?>" required>
+<div class="content">
+    <header class="content-header">
+        <h1>Edit Customer Account</h1>
+    </header>
+<div class="form-container">
+        <form method="post" action="">
+            <label for="firstname">First Name:</label>
+            <input type="text" id="firstname" name="firstname" 
+                   value="<?php echo htmlspecialchars($customer['firstname'], ENT_QUOTES); ?>" required>
 
-        <label for="lastname">Last Name:</label>
-        <input type="text" id="lastname" name="lastname" value="<?php echo htmlspecialchars($customer['lastname'], ENT_QUOTES); ?>" required>
+            <label for="lastname">Last Name:</label>
+            <input type="text" id="lastname" name="lastname" 
+                   value="<?php echo htmlspecialchars($customer['lastname'], ENT_QUOTES); ?>" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($customer['email'], ENT_QUOTES); ?>" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" 
+                   value="<?php echo htmlspecialchars($customer['email'], ENT_QUOTES); ?>" required>
 
-        <label for="phone">Phone Number:</label>
-        <input type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($customer['phone'], ENT_QUOTES); ?>" required>
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" 
+                   value="<?php echo htmlspecialchars($customer['phone'], ENT_QUOTES); ?>" required>
 
-        <label for="new_password">New Password:</label>
-        <input type="password" id="new_password" name="new_password">
+            <label for="new_password">New Password:</label>
+            <input type="password" id="new_password" name="new_password">
 
-        <button type="submit">Update Account</button>
-    </form>
+            <button type="submit">Update Account</button>
+        </form>
+    </div>
 </body>
 </html>

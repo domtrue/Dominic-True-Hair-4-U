@@ -300,7 +300,97 @@ button:hover {
 
 }
 
+.content-header {
+    text-align: center; /* Centers text horizontally */
+    margin: 10px auto; /* Adds spacing above and below, centers the block horizontally */
+    padding: 20px; /* Adds padding inside the header */
+    max-width: 80%; /* Restricts the width for a neat layout */
+    border-radius: 10px; /* Rounds the corners */
+    color: #333; /* Dark text for readability */
+    font-size: 1.2em; /* Slightly larger font size for emphasis */
+    line-height: 1.5; /* Improves text readability */
+}
 
+/* Form Styling */
+.form-container {
+    width: 90%;
+    max-width: 500px;
+    margin: 10px auto;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
 
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
+.form-container label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
 
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"] {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.form-container button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #2f3947;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.form-container button:hover {
+    background: #1f2835;
+}
+
+.table-container {
+    overflow-x: auto; /* Ensure responsiveness for smaller screens */
+    margin: 20px 0;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+table tr:hover {
+    background: #f1f1f1;
+}
+
+.action-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
