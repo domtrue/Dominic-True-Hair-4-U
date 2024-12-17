@@ -43,11 +43,12 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
 <body>
     <nav class="navtop">
         <div class="logo">
-            <a href="customer.php">
+            <a href="index.php">
                 <img src="<?= $logoPath ?>" alt="Business Logo">
             </a>
         </div>
         <div class="links">
+            <a href="customer.php">Customer Home</a>
             <a href="orders.php">My Orders</a>
             <a href="appointments.php">My Appointments</a>
             <a href="edit_account.php">My Account</a>

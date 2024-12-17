@@ -1,13 +1,20 @@
 <?php
 session_start(); // Start the session
-print_r($_SESSION['loggedin']);
-// Ensure the user is logged in
-if (isset($_SESSION['loggedin'])) {
+
+// Check if the user is logged in
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    // User is logged in, proceed to checkout
     header('Location: checkout.php');
     exit();
+} else {
+    // User is not logged in, redirect to login page with redirect parameter
+    $redirect_url = urlencode('checkout.php'); // Encode the redirect URL
+    header('Location: login.php?redirect=' . $redirect_url);
+    exit();
 }
-die();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

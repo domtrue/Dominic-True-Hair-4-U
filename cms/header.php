@@ -27,6 +27,11 @@ session_start();
                 <li><a href="gift_vouchers.php">Gift Vouchers</a></li>
                 <li><a href="about.php">About</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') { ?>
+        <li><a href="admin.php">Admin Dashboard</a></li>
+    <?php } elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'customer') { ?>
+        <li><a href="customer.php">Customer Dashboard</a></li>
+    <?php } ?>
                 <li style="position: relative;">
                     <a href="cart.php" class="fa-solid fa-bag-shopping">
                     <?php if (isset($_SESSION['cart']) && array_sum(array_column($_SESSION['cart'], 'quantity')) > 0) { ?>
@@ -37,7 +42,7 @@ session_start();
         </span>
                 </a></li>
                 <?php
-                if (!isset($_SESSION['loggedin'])) { ?>
+                if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) { ?>
     <li><a href="login.php" class="fa-solid fa-user"></a></li>
 <?php } else { ?>
     <li><a href="logout.php" class="fa fa-sign-out"></a></li>
@@ -54,8 +59,13 @@ session_start();
             <li><a href="about.php">About</a></li>
             <li><a href="contact.php">Contact</a></li>
             <li><a href="cart.php">Cart</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') { ?>
+        <li><a href="admin.php">Admin Dashboard</a></li>
+    <?php } elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'customer') { ?>
+        <li><a href="customer.php">Customer Dashboard</a></li>
+    <?php } ?>
             <?php
-                if (!isset($_SESSION['loggedin'])) { ?>
+                if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) { ?>
     <li><a href="login.php">Login</a></li>
 <?php } else { ?>
     <li><a href="logout.php">Logout</a></li>
@@ -64,6 +74,6 @@ session_start();
         </ul>
     </nav>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

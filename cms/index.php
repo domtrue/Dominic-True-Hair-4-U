@@ -118,7 +118,7 @@ if ($result->num_rows > 0) {
 
     <?php include 'footer.php'; ?>
 
-    <script src="script.js"></script>
-    <script src="slideshow.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/slideshow.js"></script>
 </body>
 </html>

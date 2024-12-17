@@ -132,13 +132,13 @@ footer {
   text-align: right;
 }
 
-@media (min-width: 884px) {
+@media (min-width: 1070px) {
   .menu {
     display: none; /* Hide the vertically stacked menu items */
   }
 }
 
-@media (max-width: 883px) {
+@media (max-width: 1069px) {
   .menu-container {
     display: none;
   }

@@ -49,7 +49,10 @@ if ($stmt = $conn->prepare('SELECT id, password, firstname, lastname, email, pho
             echo '</pre>';
 
             // Redirect based on role
-            if ($role === "admin") {
+            if (!empty($redirect)) {
+                // If a redirect URL is set, use it
+                header('Location: ' . $redirect);
+            } elseif ($role === "admin") {
                 header('Location: admin.php');
             } else {
                 header('Location: customer.php');
