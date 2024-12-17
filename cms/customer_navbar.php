@@ -41,21 +41,50 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<nav class="navtop">
-    <div class="logo">
-        <a href="customer.php">
-            <img src="<?= $logoPath ?>" alt="Business Logo">
-        </a>
-    </div>
-    <div class="links">
-        <a href="orders.php">My Orders</a>
-        <a href="appointments.php">My Appointments</a>
-        <a href="edit_account.php">My Account</a>
-    </div>
-    <div class="profile">
-        <div class="profile-circle"><?= $initials ?></div>
-        <span><?= $firstName ?></span>
-    </div>
-</nav>
+    <nav class="navtop">
+        <div class="logo">
+            <a href="customer.php">
+                <img src="<?= $logoPath ?>" alt="Business Logo">
+            </a>
+        </div>
+        <div class="links">
+            <a href="orders.php">My Orders</a>
+            <a href="appointments.php">My Appointments</a>
+            <a href="edit_account.php">My Account</a>
+        </div>
+        <div class="profile" id="profileMenu">
+            <div class="profile-circle"><?= $initials ?></div>
+            <span><?= $firstName ?></span>
+            <!-- Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+                <a href="logout.php">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // Toggle dropdown visibility on click
+        const profileMenu = document.getElementById('profileMenu');
+        const profileDropdown = document.getElementById('profileDropdown');
+
+        profileMenu.addEventListener('click', (event) => {
+            // Prevent closing dropdown when clicking inside it
+            event.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking anywhere else
+        window.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+        });
+
+        // Prevent closing dropdown when clicking inside it
+        profileDropdown.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    </script>
 </body>
 </html>
+

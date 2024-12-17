@@ -394,3 +394,14 @@ table tr:hover {
     text-decoration: underline;
     color: #0056b3;
 }
+
+.page-heading {
+    font-family: 'Arial', sans-serif; /* Clean and modern font */
+    font-size: 2rem; /* Large heading size */
+    font-weight: bold; /* Bold heading */
+    color: #333333; /* Dark gray color for text */
+    text-align: center; /* Center the heading */
+    margin: 20px 0; /* Vertical spacing: 20px top and bottom */
+    padding: 10px 0; /* Add some padding above and below */
+    letter-spacing: 1px; /* Slight spacing between letters */
+}

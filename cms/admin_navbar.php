@@ -46,8 +46,9 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
 <body>
 <nav class="navtop">
     <div class="logo">
-    <a href="admin.php">
-        <img src="<?= $logoPath ?>" alt="Business Logo">
+        <a href="admin.php">
+            <img src="<?= $logoPath ?>" alt="Business Logo">
+        </a>
     </div>
     <div class="links">
         <a href="orders.php">Orders</a>
@@ -55,10 +56,38 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
         <a href="products.php">Inventory Management</a>
         <a href="user_account_management.php">User Account Management</a>
     </div>
-    <div class="profile">
+    <div class="profile" id="profileMenu">
         <img src="<?= $profilePic ?>" alt="Profile Picture">
         <span><?= $firstName ?></span>
+        <!-- Dropdown -->
+        <div class="profile-dropdown" id="profileDropdown">
+            <a href="logout.php">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
     </div>
 </nav>
+
+<script>
+    // Toggle dropdown visibility on click
+    const profileMenu = document.getElementById('profileMenu');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    profileMenu.addEventListener('click', (event) => {
+        // Prevent closing dropdown when clicking inside it
+        event.stopPropagation();
+        profileDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking anywhere else
+    window.addEventListener('click', () => {
+        profileDropdown.classList.remove('show');
+    });
+
+    // Prevent closing dropdown when clicking inside it
+    profileDropdown.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+</script>
 </body>
 </html>

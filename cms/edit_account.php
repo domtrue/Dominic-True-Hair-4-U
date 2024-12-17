@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reset_password'])) {
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <div class="container">
+    <div class="content">
         <?php if ($role === 'admin'): ?>
             <h1 class="page-title">Edit Accounts</h1>
             <div class="table-container">
@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reset_password'])) {
             </div>
         <?php else: ?>
             
-            <h1 class="section-title">Edit Account Details</h2>
+            <h1 class="page-heading">Edit Account Details</h2>
             <div class="form-container">
                 <form method="post" action="">
                     <label for="firstname">First Name:</label>
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reset_password'])) {
                     <button type="submit">Update Account</button>
                 </form>
                 </div>
-                <h2 class="page-title">Update Your Account Information</h1>
+                <h1 class="page-heading">Update Your Account Information</h1>
     
             <div class="form-container">
                 <form method="post" action="">
