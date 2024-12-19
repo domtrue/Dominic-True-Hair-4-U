@@ -7,6 +7,9 @@ if (!isset($_SESSION['loggedin'])) {
     header('Location: index.html');
     exit;
 }
+// Check user role
+$role = $_SESSION['role']; // 'admin' or 'customer'
+$accountId = $_SESSION['user_id']; // Current user's ID
 
 // Check if the user details are set in the session
 if (isset($_SESSION['user_details']) && isset($_SESSION['user_details']['id'])) {
@@ -65,7 +68,14 @@ if ($orderId > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<?php include 'admin_navbar.php'; ?>
+<?php
+// Include appropriate navbar
+if ($role === 'admin') {
+    include 'admin_navbar.php';
+} else {
+    include 'customer_navbar.php';
+} 
+?>
 <div class="content">
     <h2>Order Details</h2>
     <div class="dashboard">

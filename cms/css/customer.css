@@ -62,6 +62,100 @@ body {
     white-space: nowrap; /* Prevents text wrapping */
 }
 
+/* Hamburger Icon */
+.navtop .hamburger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #eaebed;
+}
+
+/* Hidden by default */
+.menu {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #2f3947;
+    color: #eaebed;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Links inside the menu */
+.menu a {
+    display: block;
+    color: #eaebed;
+    text-decoration: none;
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    color: #c1c4c8;
+}
+
+/* Visible state of the menu */
+.menu.show {
+    display: block; /* Make the menu visible */
+}
+
+
+/* Open sidebar */
+.navtop .menu.open {
+    transform: translateX(0);
+}
+
+/* Responsive Design */
+@media (max-width: 860px) {
+    .navtop .links {
+        display: none !important;
+    }
+
+    .navtop .hamburger {
+        display: block;
+        margin-top: -15px;
+    }
+
+    .navtop .profile {
+        flex-direction: column;
+    }
+
+    .navtop .profile img {
+        height: 40px; /* Smaller circle */
+        width: 40px;
+    }
+
+    .profile-circle .initials {
+        position: absolute;
+        transform: translateX(10px); /* Moves the initials to the right slightly */
+        font-weight: bold;
+        text-align: center;
+        line-height: 50px; /* Vertically center the text */
+        white-space: nowrap; /* Prevents text wrapping */
+    }
+    
+    .navtop div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navtop .links {
+        justify-content: flex-start;
+        gap: 10px; /* Reduce spacing between links for smaller screens */
+    }
+
+    .navtop .links a {
+        margin: 5px 0;
+    }
+
+}
+
+
 /* Content Styling */
 .content {
     flex: 1; /* Fills remaining space to ensure the content stretches with the viewport */
@@ -95,22 +189,6 @@ body {
     margin: 10px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .navtop div {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .navtop .links {
-        justify-content: flex-start;
-        gap: 10px; /* Reduce spacing between links for smaller screens */
-    }
-
-    .navtop .links a {
-        margin: 5px 0;
-    }
-}
 
 .order-list {
     width: 90%; /* Resize table to fit better within the page */
@@ -313,6 +391,38 @@ button:hover {
     font-weight: bold;
     text-transform: uppercase;
 }
+
+.profile-dropdown {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 100%; /* Position below the button */
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 1000; /* Ensure dropdown is above other content */
+    padding: 8px;
+    text-align: right;
+}
+
+.profile-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+.profile-dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+.user-dropdown:hover .profile-dropdown {
+    display: block; /* Show dropdown on hover */
+}
+
 
 
 

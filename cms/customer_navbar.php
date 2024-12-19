@@ -41,51 +41,90 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <nav class="navtop">
-        <div class="logo">
-            <a href="index.php">
-                <img src="<?= $logoPath ?>" alt="Business Logo">
+<nav class="navtop">
+    <div class="logo">
+        <a href="index.php">
+            <img src="<?= $logoPath ?>" alt="Business Logo">
+        </a>
+    </div>
+    <div class="links">
+        <a href="customer.php">Customer Home</a>
+        <a href="orders.php">My Orders</a>
+        <a href="appointments.php">My Appointments</a>
+        <a href="edit_account.php">My Account</a>
+    </div>
+    <div class="profile" id="profileMenu">
+        <div class="profile-circle">
+        <div class="initials"><?= $initials ?></div>
+        </div>
+        <span><?= $firstName ?></span>
+        <div class="profile-dropdown" id="profileDropdown">
+            <a href="logout.php">
+                <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </div>
-        <div class="links">
-            <a href="customer.php">Customer Home</a>
-            <a href="orders.php">My Orders</a>
-            <a href="appointments.php">My Appointments</a>
-            <a href="edit_account.php">My Account</a>
-        </div>
-        <div class="profile" id="profileMenu">
-            <div class="profile-circle"><?= $initials ?></div>
-            <span><?= $firstName ?></span>
-            <!-- Dropdown -->
-            <div class="profile-dropdown" id="profileDropdown">
-                <a href="logout.php">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-        </div>
-    </nav>
+    </div>
+    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+    <div class="menu" id="sidemenu">
+        <a href="customer.php">Customer Home</a>
+        <a href="orders.php">My Orders</a>
+        <a href="appointments.php">My Appointments</a>
+        <a href="edit_account.php">My Account</a>
+    </div>
+</nav>
 
-    <script>
-        // Toggle dropdown visibility on click
-        const profileMenu = document.getElementById('profileMenu');
-        const profileDropdown = document.getElementById('profileDropdown');
 
-        profileMenu.addEventListener('click', (event) => {
-            // Prevent closing dropdown when clicking inside it
-            event.stopPropagation();
-            profileDropdown.classList.toggle('show');
-        });
+<script> 
 
-        // Close dropdown when clicking anywhere else
-        window.addEventListener('click', () => {
+// Toggle the side menu
+function toggleMenu() {
+    const menu = document.getElementById('sidemenu');
+    menu.classList.toggle('show');
+}
+
+
+// Close the menu if clicked outside
+document.addEventListener('click', (e) => {
+    const menu = document.querySelector('.menu');
+    const hamburger = document.querySelector('.hamburger');
+
+    if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+        menu.classList.remove('open');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var profileMenu = document.getElementById('profileMenu');
+    var profileDropdown = document.getElementById('profileDropdown');
+
+    profileMenu.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent event from propagating to the document
+        profileDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function(event) {
+        // If the click is outside the profile menu and dropdown, hide the dropdown
+        if (!profileMenu.contains(event.target) && !profileDropdown.contains(event.target)) {
             profileDropdown.classList.remove('show');
-        });
+        }
+    });
+});
 
-        // Prevent closing dropdown when clicking inside it
-        profileDropdown.addEventListener('click', (event) => {
-            event.stopPropagation();
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function() {
+    var mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    var desktopNavLinks = document.querySelector('.desktop-nav-links');
+
+    mobileMenuToggle.addEventListener('click', function() {
+        desktopNavLinks.classList.toggle('hidden');
+    });
+});
+
+
+
+
+
+
+</script>
 </body>
 </html>
 

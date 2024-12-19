@@ -62,6 +62,99 @@ body {
     white-space: nowrap; /* Prevents text wrapping */
 }
 
+/* Hamburger Icon */
+.navtop .hamburger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #eaebed;
+}
+
+/* Hidden by default */
+.menu {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #2f3947;
+    color: #eaebed;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Links inside the menu */
+.menu a {
+    display: block;
+    color: #eaebed;
+    text-decoration: none;
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    color: #c1c4c8;
+}
+
+/* Visible state of the menu */
+.menu.show {
+    display: block; /* Make the menu visible */
+}
+
+
+/* Open sidebar */
+.navtop .menu.open {
+    transform: translateX(0);
+}
+
+/* Responsive Design */
+@media (max-width: 860px) {
+    .navtop .links {
+        display: none !important;
+    }
+
+    .navtop .hamburger {
+        display: block;
+        margin-top: -15px;
+    }
+
+    .navtop .profile {
+        flex-direction: column;
+    }
+
+    .navtop .profile img {
+        height: 40px; /* Smaller circle */
+        width: 40px;
+    }
+
+    .profile-circle .initials {
+        position: absolute;
+        transform: translateX(10px); /* Moves the initials to the right slightly */
+        font-weight: bold;
+        text-align: center;
+        line-height: 50px; /* Vertically center the text */
+        white-space: nowrap; /* Prevents text wrapping */
+    }
+    
+    .navtop div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navtop .links {
+        justify-content: flex-start;
+        gap: 10px; /* Reduce spacing between links for smaller screens */
+    }
+
+    .navtop .links a {
+        margin: 5px 0;
+    }
+
+}
+
 /* Content Styling */
 .content {
     flex: 1; /* Fills remaining space to ensure the content stretches with the viewport */
