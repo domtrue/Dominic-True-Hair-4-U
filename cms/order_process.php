@@ -1,103 +1,95 @@
 <?php
-session_start();
+session_start(); // Start a new session or resume an existing session.
 
-include 'setup.php';
-//print_r($_SESSION); //die();
+include 'setup.php'; // Include the database setup or configuration file.
+
+// Set payment status for debugging/testing purposes (can be replaced in production).
 $_SESSION['payment_status'] = 'Success'; 
-// Check if payment status is set and is successful
+
+// Check if payment was successful and required session variables are set.
 if (!isset($_SESSION['payment_status']) || $_SESSION['payment_status'] !== 'Success') {
-    die("Required session variables are missing or payment was not successful.");
+    die("Required session variables are missing or payment was not successful."); // Terminate if payment isn't marked as successful.
 }
 
-// Check if user details and cart session variables are set
+// Check if essential session variables are available for processing the order.
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['order_total']) || !isset($_SESSION['cart'])) {
-    die("Missing required session data.");
+    die("Missing required session data."); // Terminate if any critical session variable is missing.
 }
 
-// Initialize session variables
-$userId = $_SESSION['user_id'];
-$grandTotal = $_SESSION['grand_total'];
-$cart = $_SESSION['cart'];
-//$cardName = $_SESSION['card_name'];
-//$country_region = $_SESSION['country'];
-//$zip_code = $_SESSION['zip'];
-$gst = $_SESSION['gst'];
-$shippingCost = $_SESSION['shipping_cost'];
+// Initialize session variables into PHP variables for easier reference.
+$userId = $_SESSION['user_id']; // ID of the logged-in user.
+$grandTotal = $_SESSION['grand_total']; // Total order amount including taxes and shipping.
+$cart = $_SESSION['cart']; // Array of cart items.
+$gst = $_SESSION['gst']; // Goods and Services Tax amount.
+$shippingCost = $_SESSION['shipping_cost']; // Shipping cost for the order.
 
-
-// Function to process the order
+// Function to handle the order processing.
 function processOrder($userId, $cart, $grandTotal, $gst, $shippingCost) {
-    global $conn;
+    global $conn; // Use the global database connection.
 
-    $orderId = 'ORDER-' . uniqid(); // Example order ID generation
+    // Generate a unique order ID (for example purposes; can be replaced with auto-increment IDs).
+    $orderId = 'ORDER-' . uniqid();
 
-    // Prepare SQL to insert order details into database
+    // Prepare an SQL statement to insert the order into the orders table.
     $stmt = $conn->prepare("INSERT INTO orders (user_id, grand_total, status, created_at) VALUES (?, ?, 'Pending', NOW())");
-    $stmt->bind_param('id', $userId, $grandTotal);
+    $stmt->bind_param('id', $userId, $grandTotal); // Bind user ID and grand total to the query.
 
-    if ($stmt->execute()) {
-        $orderId = $stmt->insert_id; // Get the last inserted order ID
-        //print($orderId);
+    if ($stmt->execute()) { // Execute the query.
+        $orderId = $stmt->insert_id; // Retrieve the last inserted order ID.
 
-        // Insert order items
+        // Insert each cart item as an individual order item.
         foreach ($cart as $item) {
-           // print_r($item);
-            $product_id = $item['id'];
-            $quantity = $item['quantity'];
-            $price = $item['price'];
-            $subtotal = $item['price'] * $item['quantity'];
+            $product_id = $item['id']; // Product ID from the cart.
+            $quantity = $item['quantity']; // Quantity of the product.
+            $price = $item['price']; // Price per unit.
+            $subtotal = $item['price'] * $item['quantity']; // Calculate the subtotal for this item.
+
+            // Prepare and execute an SQL statement to insert the order item.
             $stmtItem = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
             $stmtItem->bind_param('iiidd', $orderId, $product_id, $quantity, $price, $subtotal);
             $stmtItem->execute();
-         }
+        }
 
-        // Insert payment details
-       // $stmtPayment = $db->prepare("INSERT INTO payment_details (order_id, card_name, zip_code, country, payment_method_id, status, created_at) VALUES (?, ?, ?, ?, ?, 'Success', NOW())");
-        //$stmtPayment->bind_param('isssss', $orderId, $cardName, $zipCode, $countryRegion, $_SESSION['payment_method_id']);
-        //$stmtPayment->execute();
-
+        // Close the main order statement.
         $stmt->close();
-        //$stmtItem->close();
-       // $stmtPayment->close();
-
-        return $orderId;
+        return $orderId; // Return the generated order ID on success.
     } else {
-        return false;
+        return false; // Return false if order insertion fails.
     }
 }
 
-// Process the order
+// Call the order processing function.
 $orderId = processOrder($userId, $cart, $grandTotal, $gst, $shippingCost); 
 
-// If order processing is successful, retrieve detailed information about the order
+// Check if the order processing was successful.
 if ($orderId) {
-    // Prepare the SELECT query to fetch order details along with items and payment information
+    // Prepare a query to fetch order details, including items and payment info, using joins.
     $stmtOrderDetails = $conn->prepare("SELECT orders.*, order_items.*, payment_details.*
                                       FROM orders
                                       JOIN order_items ON orders.order_id = order_items.order_id
                                       JOIN payment_details ON orders.order_id = payment_details.order_id
                                       WHERE orders.order_id = ?");
-    $stmtOrderDetails->bind_param('i', $orderId);
-    
-    if ($stmtOrderDetails->execute()) {
-        $result = $stmtOrderDetails->get_result();
-        $orderDetails = $result->fetch_assoc();
+    $stmtOrderDetails->bind_param('i', $orderId); // Bind the order ID to the query.
 
-        // Store order details in session to be displayed later
+    if ($stmtOrderDetails->execute()) { // Execute the query.
+        $result = $stmtOrderDetails->get_result(); // Get the query result.
+        $orderDetails = $result->fetch_assoc(); // Fetch the order details.
+
+        // Store the fetched order details in a session variable for use on the success page.
         $_SESSION['order_details'] = $orderDetails;
 
-        header('Location: order_success.php');
-        exit();
+        header('Location: order_success.php'); // Redirect to the order success page.
+        exit(); // Exit script after redirection.
     } else {
-        die("Failed to fetch order details. Please try again.");
+        die("Failed to fetch order details. Please try again."); // Handle any failures in fetching order details.
     }
 
-    $stmtOrderDetails->close();
+    $stmtOrderDetails->close(); // Close the order details statement.
 } else {
-    die("Order processing failed. Please try again.");
+    die("Order processing failed. Please try again."); // Terminate if order processing fails.
 }
 
-// Clean up session data after processing the order
-session_unset(); // Clear session variables
-session_destroy(); // Destroy session
+// Clean up session data after processing is complete.
+session_unset(); // Clear all session variables.
+session_destroy(); // Destroy the session completely.
 ?>

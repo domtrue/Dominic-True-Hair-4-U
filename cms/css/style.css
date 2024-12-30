@@ -35,18 +35,19 @@ body {
   overflow-x: hidden; /* Prevent horizontal scrollbars */
 }
 
-      .content {
-          background-image: url('../img/homepage_bg.jpg'); /* Replace with your image path */
-          background-size: cover; /* Ensures the image covers the whole area */
-          background-position: center; /* Centers the image */
-          background-repeat: no-repeat; /* Prevents the image from repeating */
-          height: auto; /* Adjusted to allow content to dictate height */
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-      }
+.content {
+  background-image: url('../img/homepage_bg.jpg'); /* Replace with your image path */
+  background-size: cover; /* Ensures the image covers the whole area */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  min-height: 100vh; /* Ensures the content is at least as tall as the viewport */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  padding: 20px; /* Optional: Add padding to prevent content from touching the edges */
+}
 
 
 .navbar {
@@ -547,4 +548,21 @@ color: white;
   display: block;
 }
 
+.login-message {
+  font-family: 'Arial', sans-serif; /* Use a clean, modern font */
+  font-size: 18px; /* Adjust font size for readability */
+  color: black; /* Dark gray color for good contrast */
+  text-align: center; /* Center-align the text */
+  margin: 20px 0; /* Add some spacing around the message */
+}
+
+.login-message a {
+  color: #8bb7f0; /* A blue color for the links */
+  text-decoration: none; /* Remove underline from links */
+  font-weight: normal; /* Keep links slightly less bold */
+}
+
+.login-message a:hover {
+  color: #a5c8f7; /* Darker blue on hover */
+}
 

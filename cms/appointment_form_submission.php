@@ -1,28 +1,40 @@
 <?php
-// Include your database connection file here
-// Example: include 'db_connection.php';
+include 'setup.php';
+session_start();
 
-// Retrieve form data
-$first_name = $_POST['first_name'];
-$last_name = $_POST['last_name'];
-$service_type = $_POST['service_type'];
-$appointment_date = $_POST['appointment_date'];
-$appointment_time = $_POST['appointment_time'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ensure the user is logged in
+    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $service_type = $_POST['service_type'];
+        $appointment_date = $_POST['appointment_date'];
+        $appointment_time = $_POST['appointment_time'];
 
-// Combine date and time into a datetime format
-$appointment_datetime = $appointment_date . ' ' . $appointment_time;
+        // Prepare SQL query to insert the appointment into the database
+        $query = "INSERT INTO appointments (user_id, service_type, appointment_date, appointment_time, first_name, last_name)
+                  VALUES (?, ?, ?, ?, ?, ?)";
 
-// Insert into database
-// Example assuming you have a PDO connection established
-try {
-    $pdo = new PDO('mysql:host=localhost;dbname=hair4u', 'sec_user', 'greenChair153');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if ($stmt = $conn->prepare($query)) {
+            // Bind parameters
+            $stmt->bind_param("isssss", $_SESSION['user_id'], $service_type, $appointment_date, $appointment_time, $first_name, $last_name);
 
-    $stmt = $pdo->prepare('INSERT INTO appointments (customer_first_name, customer_last_name, service_type, appointment_datetime) VALUES (?, ?, ?, ?)');
-    $stmt->execute([$first_name, $last_name, $service_type, $appointment_datetime]);
+            // Execute the query
+            if ($stmt->execute()) {
+                // Redirect to a success page or show confirmation
+                echo "Your appointment has been successfully booked!";
+            } else {
+                echo "Error booking appointment: " . $stmt->error;
+            }
 
-    echo 'Appointment booked successfully!';
-} catch (PDOException $e) {
-    die('Error: ' . $e->getMessage());
+            $stmt->close();
+        } else {
+            echo "Error preparing statement: " . $conn->error;
+        }
+    } else {
+        echo "You must be logged in to book an appointment.";
+    }
+} else {
+    echo "Invalid request method.";
 }
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2024 at 06:52 AM
+-- Generation Time: Dec 30, 2024 at 09:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -96,21 +96,39 @@ INSERT INTO `admin_images` (`id`, `account_id`, `image_path`) VALUES
 --
 
 CREATE TABLE `appointments` (
+  `appointment_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `service_type` int(11) NOT NULL,
+  `appointment_date` date NOT NULL,
+  `time_slot` varchar(5) NOT NULL,
+  `status` enum('booked','pending','cancelled') NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `business_hours`
+--
+
+CREATE TABLE `business_hours` (
   `id` int(11) NOT NULL,
-  `customer_first_name` varchar(50) NOT NULL,
-  `customer_last_name` varchar(50) NOT NULL,
-  `service_type` varchar(100) NOT NULL,
-  `appointment_datetime` datetime NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `day_of_week` varchar(20) NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `lunch_break_start` time DEFAULT NULL,
+  `lunch_break_end` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `appointments`
+-- Dumping data for table `business_hours`
 --
 
-INSERT INTO `appointments` (`id`, `customer_first_name`, `customer_last_name`, `service_type`, `appointment_datetime`, `created_at`) VALUES
-(1, 'Dominic', 'True', 'Perm', '2024-11-12 10:30:00', '2024-11-05 05:46:15'),
-(2, 'Dominic', 'True', 'Haircut', '2024-12-18 14:00:00', '2024-12-11 05:30:05');
+INSERT INTO `business_hours` (`id`, `day_of_week`, `start_time`, `end_time`, `lunch_break_start`, `lunch_break_end`) VALUES
+(1, 'Thursday', '09:00:00', '19:00:00', '13:00:00', '13:30:00'),
+(2, 'Friday', '09:00:00', '18:00:00', '13:00:00', '13:30:00'),
+(3, 'Saturday', '09:00:00', '13:00:00', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -130,6 +148,41 @@ CREATE TABLE `business_logo` (
 INSERT INTO `business_logo` (`id`, `logo_path`) VALUES
 (1, 'img/logo.png'),
 (2, 'img/logo_white.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `closed_days`
+--
+
+CREATE TABLE `closed_days` (
+  `id` int(11) NOT NULL,
+  `closed_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `closed_days`
+--
+
+INSERT INTO `closed_days` (`id`, `closed_date`) VALUES
+(1, '2025-01-02'),
+(2, '2025-01-03'),
+(3, '2025-01-04'),
+(4, '2025-02-06'),
+(5, '2025-04-12'),
+(6, '2025-04-17'),
+(7, '2025-04-18'),
+(8, '2025-04-19'),
+(9, '2025-04-24'),
+(10, '2025-04-25'),
+(11, '2025-04-26'),
+(12, '2025-06-20'),
+(13, '2025-12-25'),
+(14, '2025-12-26'),
+(15, '2025-12-27'),
+(16, '2026-01-01'),
+(17, '2026-01-02'),
+(18, '2026-01-03');
 
 -- --------------------------------------------------------
 
@@ -181,6 +234,49 @@ INSERT INTO `hair_services` (`id`, `content_type`, `content`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `lunch_breaks`
+--
+
+CREATE TABLE `lunch_breaks` (
+  `id` int(11) NOT NULL,
+  `day` varchar(50) NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lunch_breaks`
+--
+
+INSERT INTO `lunch_breaks` (`id`, `day`, `start_time`, `end_time`) VALUES
+(1, 'Thursday', '13:00:00', '13:30:00'),
+(2, 'Friday', '13:00:00', '13:30:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `operating_hours`
+--
+
+CREATE TABLE `operating_hours` (
+  `id` int(11) NOT NULL,
+  `day` varchar(50) NOT NULL,
+  `open_time` time NOT NULL,
+  `close_time` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `operating_hours`
+--
+
+INSERT INTO `operating_hours` (`id`, `day`, `open_time`, `close_time`) VALUES
+(1, 'Thursday', '09:00:00', '19:00:00'),
+(2, 'Friday', '09:00:00', '19:00:00'),
+(3, 'Saturday', '09:00:00', '13:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orders`
 --
 
@@ -206,7 +302,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `grand_total`, `status`, `created_a
 (13, 2, 68.00, 'Pending', '2024-12-10 22:08:23'),
 (14, 2, 68.00, 'Pending', '2024-12-10 22:08:53'),
 (15, 2, 68.00, 'Pending', '2024-12-10 22:09:08'),
-(16, 2, 38.50, 'Pending', '2024-12-10 23:03:42');
+(16, 2, 38.50, 'Pending', '2024-12-10 23:03:42'),
+(17, 2, 38.50, 'Pending', '2024-12-26 00:43:51');
 
 -- --------------------------------------------------------
 
@@ -236,7 +333,8 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (6, 14, 1, 1, 29.50, 29.50),
 (7, 15, 2, 1, 29.50, 29.50),
 (8, 15, 1, 1, 29.50, 29.50),
-(9, 16, 1, 1, 29.50, 29.50);
+(9, 16, 1, 1, 29.50, 29.50),
+(10, 17, 1, 1, 29.50, 29.50);
 
 -- --------------------------------------------------------
 
@@ -263,23 +361,6 @@ CREATE TABLE `pages` (
 
 INSERT INTO `pages` (`id`, `title1`, `text1`, `image1`, `title2`, `text2`, `image2`, `title3`, `text3`, `image3`) VALUES
 (1, 'Welcome to Hair 4 U', 'Where style meets sophistication in the heart of Bulls, New Zealand. Owner and senior stylist Melissa True brings her passion and expertise to every appointment. Whether you\'re looking for a fresh new look or a classic cut, Melissa is dedicated to delivering the perfect style for your needs. ', NULL, NULL, 'Looking for top-notch hair products? Explore our curated selection of quality items from industry-leading brands, all available for purchase online at competitive prices. ', NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `payment_details`
---
-
-CREATE TABLE `payment_details` (
-  `payment_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `card_name` varchar(255) NOT NULL,
-  `zip_code` varchar(20) NOT NULL,
-  `country` varchar(100) NOT NULL,
-  `payment_method_id` varchar(255) NOT NULL,
-  `status` enum('Success','Failed') NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -379,6 +460,32 @@ INSERT INTO `regions` (`region_id`, `region_name`) VALUES
 (13, 'West Coast'),
 (14, 'Otago'),
 (15, 'Southland');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services`
+--
+
+CREATE TABLE `services` (
+  `id` int(11) NOT NULL,
+  `service_name` varchar(100) NOT NULL,
+  `duration_minutes` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `services`
+--
+
+INSERT INTO `services` (`id`, `service_name`, `duration_minutes`) VALUES
+(1, 'Haircut', 30),
+(2, 'Haircut and blow wave', 45),
+(3, 'Colour', 120),
+(4, 'Colour and foils', 150),
+(5, 'Full head of foils', 150),
+(6, 'Half head of foils', 135),
+(7, 'Perm', 150),
+(8, 'Treatment', 45);
 
 -- --------------------------------------------------------
 
@@ -499,12 +606,26 @@ ALTER TABLE `admin_images`
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
+  ADD PRIMARY KEY (`appointment_id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `service_type` (`service_type`);
+
+--
+-- Indexes for table `business_hours`
+--
+ALTER TABLE `business_hours`
   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `business_logo`
 --
 ALTER TABLE `business_logo`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `closed_days`
+--
+ALTER TABLE `closed_days`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -517,6 +638,18 @@ ALTER TABLE `contacts`
 -- Indexes for table `hair_services`
 --
 ALTER TABLE `hair_services`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `lunch_breaks`
+--
+ALTER TABLE `lunch_breaks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `operating_hours`
+--
+ALTER TABLE `operating_hours`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -539,13 +672,6 @@ ALTER TABLE `pages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `payment_details`
---
-ALTER TABLE `payment_details`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `order_id` (`order_id`);
-
---
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
@@ -556,6 +682,12 @@ ALTER TABLE `products`
 --
 ALTER TABLE `regions`
   ADD PRIMARY KEY (`region_id`);
+
+--
+-- Indexes for table `services`
+--
+ALTER TABLE `services`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `shipping_rates`
@@ -601,6 +733,12 @@ ALTER TABLE `admin_images`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
+  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `business_hours`
+--
+ALTER TABLE `business_hours`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
@@ -608,6 +746,12 @@ ALTER TABLE `appointments`
 --
 ALTER TABLE `business_logo`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `closed_days`
+--
+ALTER TABLE `closed_days`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -622,28 +766,34 @@ ALTER TABLE `hair_services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `lunch_breaks`
+--
+ALTER TABLE `lunch_breaks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `operating_hours`
+--
+ALTER TABLE `operating_hours`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `payment_details`
---
-ALTER TABLE `payment_details`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -656,6 +806,12 @@ ALTER TABLE `products`
 --
 ALTER TABLE `regions`
   MODIFY `region_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `services`
+--
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `slideshow`
@@ -680,16 +836,17 @@ ALTER TABLE `admin_images`
   ADD CONSTRAINT `admin_images_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`);
 
 --
+-- Constraints for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`service_type`) REFERENCES `services` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
   ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`);
-
---
--- Constraints for table `payment_details`
---
-ALTER TABLE `payment_details`
-  ADD CONSTRAINT `payment_details_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`);
 
 --
 -- Constraints for table `shipping_rates`

@@ -17,7 +17,9 @@ body {
     justify-content: space-between;
     padding: 0 20px;
     color: #eaebed;
-}
+    flex-shrink: 0; /* Prevents the navbar from shrinking */
+  }
+  
 
 .navtop .logo img {
     height: 70px;
