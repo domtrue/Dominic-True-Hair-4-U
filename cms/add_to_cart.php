@@ -17,13 +17,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Add item to cart
-if (isset($_GET['id'])) {
+if (isset($_GET['id']) && isset($_GET['type'])) {
     $productId = intval($_GET['id']);
-    $quantity = isset($_GET['quantity']) ? intval($_GET['quantity']) : 1; // Default to 1 if quantity is not set
+    $type = $_GET['type'];
+    $quantity = isset($_GET['quantity']) ? intval($_GET['quantity']) : 1;
 
-    // Fetch product details from the database
-    $sql = "SELECT id, name, description, price, image FROM products WHERE id = ?";
+    // Determine the table based on the type
+    $table = ($type === 'voucher') ? 'gift_vouchers' : 'products';
+
+    // Fetch item details from the corresponding table
+    $sql = "SELECT id, name, description, price, image FROM $table WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $productId);
     $stmt->execute();
@@ -32,17 +35,16 @@ if (isset($_GET['id'])) {
     if ($result->num_rows === 1) {
         $productData = $result->fetch_assoc();
 
-        // Prepare product data
         $product = [
             'id' => $productData['id'],
             'name' => $productData['name'],
             'description' => $productData['description'],
             'price' => $productData['price'],
             'quantity' => $quantity,
-            'image' => 'img/' . $productData['image'] // Adjust path as necessary
+            'image' => 'img/' . $productData['image']
         ];
 
-        // Add or update product in the cart
+        // Add to cart logic
         $found = false;
         foreach ($_SESSION['cart'] as &$item) {
             if ($item['id'] == $productId) {
@@ -56,11 +58,12 @@ if (isset($_GET['id'])) {
             $_SESSION['cart'][] = $product;
         }
     } else {
-        echo "Product not found.";
+        echo "Item not found.";
     }
 
     $stmt->close();
 }
+
 
 // Close connection
 $conn->close();

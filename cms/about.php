@@ -34,6 +34,8 @@
             font-size: 1.2rem;
             line-height: 1.6;
             color: #ddd;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1.5s ease-in-out; /* Smooth fade-in effect */
         }
 
         /* Right section: Circular Profile Image */
@@ -50,33 +52,11 @@
             object-fit: cover;
         }
 
-
-body {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensures body takes the full viewport height */
-}
-
-.content {
-    flex: 1; /* Fill the remaining space */
-    display: flex;
-    flex-direction: column; /* Stack heading and text vertically */
-    justify-content: flex-start; /* Align everything towards the top */
-    align-items: flex-start; /* Align to the left */
-    padding: 10px; /* Optional padding adjustment */
-    gap: 10px; /* Space between heading and text */
-}
-
-.text-container {
-    width: 100%; /* Ensure it fills available space */
-    margin-top: 0; /* Remove top margin */
-}
-
-h1, p {
-    margin: 0; /* Eliminate default margins */
-    padding: 0;
-}
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #1c1c1c, #282828);
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +65,7 @@ h1, p {
     <div class="content">
         <div class="about-container">
             <?php
+
             // Database connection
             include 'setup.php';
 
@@ -104,13 +85,14 @@ h1, p {
                 $body_text = $row['body_text'];
                 $image_path = $row['image_path'];
             }
+            
 
             $conn->close();
             ?>
 
             <div class="about-text">
-                <h1><?php echo $heading; ?></h1>
-                <p><?php echo $body_text; ?></p>
+                <h1 id="about-heading"><?php echo $heading; ?></h1>
+                <p id="about-body"><?php echo $body_text; ?></p>
             </div>
 
             <div class="profile-image">
@@ -120,6 +102,31 @@ h1, p {
     </div>
 
     <?php include 'footer.php'; ?>
-    <script src="script.js"></script>
+
+    <!-- Scripts -->
+    <script>
+        // Typewriter Effect for Heading
+const heading = document.getElementById('about-heading');
+const headingText = heading.textContent; // Use textContent here instead of innerText
+        
+heading.textContent = ''; // Clear the heading initially
+let i = 0;
+
+function typeWriter() {
+    if (i < headingText.length) {
+        heading.textContent += headingText.charAt(i); // Add each character
+        i++;
+        setTimeout(typeWriter, 100); // Adjust typing speed here
+    } else {
+        // Trigger fade-in effect for the body text after the typewriter finishes
+        const bodyText = document.getElementById('about-body');
+        bodyText.style.opacity = 1; // Make the text visible with the fade-in effect
+    }
+}
+
+typeWriter();
+
+        
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 30, 2024 at 09:54 AM
+-- Generation Time: Dec 31, 2024 at 09:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -205,6 +205,34 @@ CREATE TABLE `contacts` (
 
 INSERT INTO `contacts` (`id`, `firstname`, `lastname`, `email`, `message`, `created_at`) VALUES
 (1, '', '', '', 'hi :)', '2024-09-22 14:58:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gift_vouchers`
+--
+
+CREATE TABLE `gift_vouchers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `gift_vouchers`
+--
+
+INSERT INTO `gift_vouchers` (`id`, `name`, `description`, `image`, `price`) VALUES
+(1, '$25 Gift Voucher', NULL, 'gift_vouchers/25_gift_voucher.png', 25.00),
+(2, '$50 Gift Voucher', NULL, 'gift_vouchers/50_gift_voucher.png', 50.00),
+(3, '$75 Gift Voucher', NULL, 'gift_vouchers/75_gift_voucher.png', 75.00),
+(4, '$100 Gift Voucher', NULL, 'gift_vouchers/100_gift_voucher.png', 100.00),
+(5, '$125 Gift Voucher', NULL, 'gift_vouchers/125_gift_voucher.png', 125.00),
+(6, '$150 Gift Voucher', NULL, 'gift_vouchers/150_gift_voucher.png', 150.00),
+(7, '$175 Gift Voucher', NULL, 'gift_vouchers/175_gift_voucher.png', 175.00),
+(8, '$200 Gift Voucher', NULL, 'gift_vouchers/200_gift_voucher.png', 200.00);
 
 -- --------------------------------------------------------
 
@@ -635,6 +663,12 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `gift_vouchers`
+--
+ALTER TABLE `gift_vouchers`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `hair_services`
 --
 ALTER TABLE `hair_services`
@@ -758,6 +792,12 @@ ALTER TABLE `closed_days`
 --
 ALTER TABLE `contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `gift_vouchers`
+--
+ALTER TABLE `gift_vouchers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `hair_services`
