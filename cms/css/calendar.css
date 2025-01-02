@@ -1,0 +1,34 @@
+/* Customize the calendar container */
+#calendar {
+    max-width: 1200px; /* Adjust max width */
+    margin: 0 auto;    /* Center the calendar */
+    padding: 20px;
+    background-color: #fff; /* White background for the calendar */
+    border-radius: 8px; /* Rounded corners */
+}
+
+/* Customize the calendar header */
+.fc-header-toolbar {
+    background-color: #2f3947; /* Green background for header */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Customize event title and block */
+.fc-event {
+    background-color: #007bff; /* Blue background for events */
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* Hover effect for events */
+.fc-event:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Customize today’s date */
+.fc-today {
+    background-color: #f1f1f1; /* Light gray background for today */
+}

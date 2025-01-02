@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2024 at 09:44 AM
+-- Generation Time: Jan 02, 2025 at 10:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -92,19 +92,26 @@ INSERT INTO `admin_images` (`id`, `account_id`, `image_path`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `appointments`
+-- Table structure for table `appointment_requests`
 --
 
-CREATE TABLE `appointments` (
-  `appointment_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
+CREATE TABLE `appointment_requests` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
   `service_type` int(11) NOT NULL,
   `appointment_date` date NOT NULL,
-  `time_slot` varchar(5) NOT NULL,
-  `status` enum('booked','pending','cancelled') NOT NULL DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `appointment_time` time NOT NULL,
+  `request_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `appointment_requests`
+--
+
+INSERT INTO `appointment_requests` (`id`, `first_name`, `last_name`, `service_type`, `appointment_date`, `appointment_time`, `request_date`) VALUES
+(1, 'Dominic', 'True', 7, '2025-01-09', '14:00:00', '2024-12-31 21:30:08'),
+(2, 'Dominic', 'True', 3, '2025-02-13', '10:00:00', '2024-12-31 21:32:01');
 
 -- --------------------------------------------------------
 
@@ -204,7 +211,32 @@ CREATE TABLE `contacts` (
 --
 
 INSERT INTO `contacts` (`id`, `firstname`, `lastname`, `email`, `message`, `created_at`) VALUES
-(1, '', '', '', 'hi :)', '2024-09-22 14:58:44');
+(1, '', '', '', 'hi :)', '2024-09-22 14:58:44'),
+(2, 'Dominic', 'True', 'test@mail.com', 'Hello World', '2025-01-02 07:58:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `start_date`, `end_date`, `start_time`, `end_time`) VALUES
+(1, 'Dominic True: Perm', '2025-01-09', '2025-01-09', '14:00:00', '16:30:00'),
+(2, 'John Doe: Haircut', '2025-01-07', '2025-01-07', '15:00:00', '15:30:00'),
+(3, 'Dominic True: Colour', '2025-01-08', '2025-01-08', '10:00:00', '12:00:00');
 
 -- --------------------------------------------------------
 
@@ -242,7 +274,7 @@ INSERT INTO `gift_vouchers` (`id`, `name`, `description`, `image`, `price`) VALU
 
 CREATE TABLE `hair_services` (
   `id` int(11) NOT NULL,
-  `content_type` enum('paragraph','list_item') NOT NULL,
+  `content_type` enum('paragraph','list_item','image') NOT NULL,
   `content` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -257,7 +289,8 @@ INSERT INTO `hair_services` (`id`, `content_type`, `content`) VALUES
 (4, 'list_item', 'Foils'),
 (5, 'list_item', 'Perms'),
 (6, 'list_item', 'Treatments'),
-(7, 'list_item', 'Blow waves');
+(7, 'list_item', 'Blow waves'),
+(8, 'image', 'img/styling_stations.jpg');
 
 -- --------------------------------------------------------
 
@@ -631,11 +664,10 @@ ALTER TABLE `admin_images`
   ADD KEY `account_id` (`account_id`);
 
 --
--- Indexes for table `appointments`
+-- Indexes for table `appointment_requests`
 --
-ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`appointment_id`),
-  ADD KEY `customer_id` (`customer_id`),
+ALTER TABLE `appointment_requests`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `service_type` (`service_type`);
 
 --
@@ -660,6 +692,12 @@ ALTER TABLE `closed_days`
 -- Indexes for table `contacts`
 --
 ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -764,10 +802,10 @@ ALTER TABLE `admin_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `appointments`
+-- AUTO_INCREMENT for table `appointment_requests`
 --
-ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `appointment_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `business_hours`
@@ -791,7 +829,13 @@ ALTER TABLE `closed_days`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `gift_vouchers`
@@ -803,7 +847,7 @@ ALTER TABLE `gift_vouchers`
 -- AUTO_INCREMENT for table `hair_services`
 --
 ALTER TABLE `hair_services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `lunch_breaks`
@@ -876,11 +920,10 @@ ALTER TABLE `admin_images`
   ADD CONSTRAINT `admin_images_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`);
 
 --
--- Constraints for table `appointments`
+-- Constraints for table `appointment_requests`
 --
-ALTER TABLE `appointments`
-  ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`service_type`) REFERENCES `services` (`id`) ON DELETE CASCADE;
+ALTER TABLE `appointment_requests`
+  ADD CONSTRAINT `appointment_requests_ibfk_1` FOREIGN KEY (`service_type`) REFERENCES `services` (`id`);
 
 --
 -- Constraints for table `order_items`

@@ -124,6 +124,7 @@ body {
 
     .navtop .profile {
         flex-direction: column;
+        margin-left: auto;  /* Pushes profile to the right */
     }
 
     .navtop .profile img {

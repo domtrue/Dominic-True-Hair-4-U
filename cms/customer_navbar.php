@@ -30,13 +30,11 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Customer Navbar</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/customer.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -53,9 +51,14 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
         <a href="appointments.php">My Appointments</a>
         <a href="edit_account.php">My Account</a>
     </div>
+    
+    <!-- Move hamburger icon here before the profile -->
+    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+    
+    <!-- Move profile to after hamburger icon -->
     <div class="profile" id="profileMenu">
         <div class="profile-circle">
-        <div class="initials"><?= $initials ?></div>
+            <div class="initials"><?= $initials ?></div>
         </div>
         <span><?= $firstName ?></span>
         <div class="profile-dropdown" id="profileDropdown">
@@ -64,7 +67,7 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
             </a>
         </div>
     </div>
-    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+    
     <div class="menu" id="sidemenu">
         <a href="customer.php">Customer Home</a>
         <a href="orders.php">My Orders</a>
@@ -73,58 +76,51 @@ if ($logoResult && !empty($logoResult['logo_path'])) {
     </div>
 </nav>
 
-
-<script> 
-
+<script>
 // Toggle the side menu
 function toggleMenu() {
     const menu = document.getElementById('sidemenu');
     menu.classList.toggle('show');
 }
 
-
-// Close the menu if clicked outside
+// Close the side menu if clicked outside
 document.addEventListener('click', (e) => {
-    const menu = document.querySelector('.menu');
+    const menu = document.getElementById('sidemenu');
     const hamburger = document.querySelector('.hamburger');
 
+    // Check if click is outside the menu and hamburger
     if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
-        menu.classList.remove('open');
+        menu.classList.remove('show');
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    var profileMenu = document.getElementById('profileMenu');
-    var profileDropdown = document.getElementById('profileDropdown');
+document.addEventListener('DOMContentLoaded', function () {
+    // Profile dropdown toggle
+    const profileMenu = document.getElementById('profileMenu');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-    profileMenu.addEventListener('click', function(event) {
+    profileMenu.addEventListener('click', function (event) {
         event.stopPropagation(); // Prevent event from propagating to the document
         profileDropdown.classList.toggle('show');
     });
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         // If the click is outside the profile menu and dropdown, hide the dropdown
         if (!profileMenu.contains(event.target) && !profileDropdown.contains(event.target)) {
             profileDropdown.classList.remove('show');
         }
     });
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    var mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    var desktopNavLinks = document.querySelector('.desktop-nav-links');
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const desktopNavLinks = document.querySelector('.desktop-nav-links');
 
-    mobileMenuToggle.addEventListener('click', function() {
+    mobileMenuToggle.addEventListener('click', function () {
         desktopNavLinks.classList.toggle('hidden');
     });
 });
-
-
-
-
-
-
 </script>
 </body>
 </html>
+
 

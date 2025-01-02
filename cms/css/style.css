@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -354,88 +356,8 @@ footer {
       font-size: 16px;
   }
 }
-/* Reset some default browser styling */
-.appointment-page body, 
-.appointment-page h2, 
-.appointment-page h3, 
-.appointment-page p, 
-.appointment-page ul, 
-.appointment-page li, 
-.appointment-page input, 
-.appointment-page select {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body Styling for Appointment Page */
-.appointment-page body {
-    background-color: #f0f0f5;
-    color: #333;
-    line-height: 1.6;
-}
-
-/* Apply Roboto only to main-content */
-.appointment-page .main-content {
-    font-family: 'Roboto', sans-serif;
-}
 
 
-/* Form Styling */
-.appointment-page form {
-    background-color: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-    text-align: left;
-}
-
-/* Input and Select Styling */
-.appointment-page input[type="text"],
-.appointment-page input[type="date"],
-.appointment-page input[type="time"],
-.appointment-page select {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-/* Submit Button Styling */
-.appointment-page input[type="submit"] {
-    background-color: #4a00e0;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    width: 100%;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.appointment-page input[type="submit"]:hover {
-    background-color: #7325f2;
-}
-
-/* Form Label Styling */
-.appointment-page label {
-    font-weight: 500;
-    margin-top: 10px;
-    display: block;
-    color: #4a00e0;
-}
-
-/* Heading Styling */
-.appointment-page h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
 
 /* Responsive Design for Appointment Page */
 @media (max-width: 600px) {
@@ -452,41 +374,6 @@ footer {
 
 body {
   font-family: 'Roboto', sans-serif;
-}
-
-.info-box {
-  background-image: url('../img/homepage_bg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: calc(100vh - 60px); /* Full viewport height minus 60px */
-  min-height: 100px; /* Minimum height to ensure background is visible */
-  padding-left: 10px; /* Reduce left padding */
-}
-
-
-
-
-.info-box p {
-font-size: 1.2rem;
-margin: 0 0 1em 20px; /* Align to the left and add some left margin */
-max-width: 600px; /* Optional: Set max-width for better readability */
-line-height: 1.6;
-color: white;
-text-align: left; /* Ensure left alignment */
-}
-
-.info-box ul {
-list-style-type: disc;
-padding-left: 40px; /* Standard padding for bullets */
-margin: 0;
-text-align: left;
-}
-
-.info-box li {
-font-size: 1rem;
-margin-bottom: 0.5em;
-color: white;
 }
 
 /* Profile Dropdown Styles */
@@ -566,3 +453,193 @@ color: white;
   color: #a5c8f7; /* Darker blue on hover */
 }
 
+/* Container for the success message */
+.appointment-success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+/* Reveal animation for the heading */
+.appointment-success-message h1 {
+  color: white; /* Set heading text to white */
+  opacity: 0;
+  transform: translateY(20px); /* Start slightly below */
+  animation: revealText 1s 0.5s forwards; /* Reveal animation */
+  margin-bottom: 20px;
+}
+
+/* Reveal animation for the paragraph */
+.appointment-success-message p {
+  color: white; /* Set paragraph text to white */
+  opacity: 0;
+  transform: translateY(20px); /* Start slightly below */
+  animation: revealText 1s 1s forwards; /* Reveal animation */
+  margin-bottom: 40px;
+}
+
+/* Button Reveal Animation */
+.back-home-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007BFF; /* Blue color */
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 25px; /* Rounded corners */
+  font-size: 16px;
+  opacity: 0; /* Initially hidden */
+  transform: translateY(20px); /* Start slightly below */
+  animation: revealButton 1s 1.5s forwards; /* Reveal animation */
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the button */
+.back-home-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Keyframes for reveal effect (for both text and button) */
+@keyframes revealText {
+  from {
+      opacity: 0;
+      transform: translateY(20px); /* Start from below */
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0); /* Move to original position */
+  }
+}
+
+/* Keyframes for button reveal effect */
+@keyframes revealButton {
+  from {
+      opacity: 0;
+      transform: translateY(20px); /* Start from below */
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0); /* Move to original position */
+  }
+}
+
+.service-image {
+  display: flex;
+  justify-content: center; /* Keeps the content horizontally aligned in the center */
+  margin: -300px 0 20px; /* Moves the image 300px upward and 20px margin below */
+  padding-top: 0; /* Removes any extra padding above */
+  position: relative; /* Allows for more control over positioning */
+  left: 320px; /* Moves the image 50px to the right */
+}
+
+.service-image img {
+  max-width: 90%; /* Ensures the image fits within 90% of the viewport width */
+  max-height: 350px; /* Limits the image height to 350px */
+  width: auto; /* Maintains aspect ratio */
+  height: auto; /* Maintains aspect ratio */
+  border-radius: 10px; /* Adds rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
+}
+
+/* Text Content Section */
+.text-content {
+  margin-top: 50px; /* Add space from the navbar */
+  padding: 0 20px; /* Optional: Add horizontal padding */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align the text to the left */
+  width: 100%; /* Take full width to allow proper left alignment */
+}
+
+/* Paragraph Styling */
+.text-content p {
+  font-size: 1.2rem;
+  margin: 0 0 1em; /* Bottom margin for paragraph spacing */
+  max-width: 600px; /* Set max-width for better readability */
+  line-height: 1.6;
+  color: white;
+  text-align: left; /* Left-align paragraphs */
+}
+
+/* List Styling */
+.text-content ul {
+  list-style-type: disc;
+  padding-left: 40px; /* Add padding for bullets */
+  margin: 0;
+  text-align: left; /* Left-align list items */
+}
+
+/* List Item Styling */
+.text-content li {
+  font-size: 1rem;
+  margin-bottom: 0.5em;
+  color: white;
+}
+
+/* Info Box Paragraph Styling */
+.info-box p {
+  font-size: 1.2rem;
+  margin: 0 0 1em 20px; /* Align to the left and add some left margin */
+  max-width: 600px; /* Optional: Set max-width for better readability */
+  line-height: 1.6;
+  color: white;
+  text-align: left; /* Ensure left alignment */
+  margin-top: -15px; /* Decrease the value to move it further up */
+}
+
+/* Info Box List Styling */
+.info-box ul {
+  list-style-type: disc;
+  padding-left: 10px; /* Reduce this value to move the list left */
+  margin: 0;
+  text-align: left;
+}
+
+/* Info Box List Item Styling */
+.info-box li {
+  font-size: 1rem;
+  margin-bottom: 0.5em;
+  color: white;
+}
+
+.info-box p,
+.info-box li {
+  margin-left: -300px; /* Adjust to move the text further left */
+}
+
+/* Define the reveal animation */
+@keyframes reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(50px); /* Start with an offset below */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* End at the normal position */
+  }
+}
+
+/* Apply animation to the image */
+.service-image img {
+  max-width: 90%;
+  max-height: 350px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0; /* Initially hide the image */
+  animation: reveal 1s ease-out forwards; /* Add animation */
+  animation-delay: 0.3s; /* Delay to make the image appear after the text */
+}
+
+/* Apply animation to the text content */
+.text-content p,
+.text-content li {
+  opacity: 0; /* Initially hide the text */
+  animation: reveal 1s ease-out forwards; /* Add animation */
+  animation-delay: 0.5s; /* Delay for text to reveal after the image */
+}

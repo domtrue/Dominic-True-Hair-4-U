@@ -1,12 +1,144 @@
-body {
-    font-family: Arial, sans-serif;
+html, body {
+    height: 100%; /* Ensure the body and html elements take up the full height */
+    margin: 0;
+    padding: 0;
+}
+
+.info-box {
+    background-image: url('../img/homepage_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: calc(100vh - 60px); /* Full viewport height minus 60px */
+    min-height: 100px; /* Minimum height to ensure background is visible */
+    padding-left: 10px; /* Reduce left padding */
+  }
+
+  
+  .info-box p {
+  font-size: 1.2rem;
+  margin: 0 0 1em 20px; /* Align to the left and add some left margin */
+  max-width: 600px; /* Optional: Set max-width for better readability */
+  line-height: 1.6;
+  color: white;
+  text-align: left; /* Ensure left alignment */
+  }
+  
+  .info-box ul {
+  list-style-type: disc;
+  padding-left: 40px; /* Standard padding for bullets */
+  margin: 0;
+  text-align: left;
+  }
+  
+  .info-box li {
+  font-size: 1rem;
+  margin-bottom: 0.5em;
+  color: white;
+  }
+
+  /* Reset some default browser styling */
+.appointment-page body, 
+.appointment-page h2, 
+.appointment-page h3, 
+.appointment-page p, 
+.appointment-page ul, 
+.appointment-page li, 
+.appointment-page input, 
+.appointment-page select {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    height: 100vh; /* Ensures the body takes up the full viewport height */
+}
+
+/* Body Styling for Appointment Page */
+.appointment-page body {
+    background-color: #f0f0f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Apply Roboto only to main-content */
+.appointment-page .main-content {
+    font-family: 'Roboto', sans-serif;
+}
+
+
+/* Form Styling */
+.appointment-page form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: left;
+}
+
+/* Input and Select Styling */
+.appointment-page input[type="text"],
+.appointment-page input[type="date"],
+.appointment-page input[type="time"],
+.appointment-page select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Submit Button Styling */
+.appointment-page input[type="submit"] {
+    background-color: #4a00e0;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.appointment-page input[type="submit"]:hover {
+    background-color: #7325f2;
+}
+
+/* Form Label Styling */
+.appointment-page label {
+    font-weight: 500;
+    margin-top: 10px;
+    display: block;
+    color: #4a00e0;
+}
+
+/* Heading Styling */
+.appointment-page h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+  
+
+body {
     display: flex;
-    flex-direction: column; /* Structured layout of children */
-    background-color: #f4f4f9;
+    flex-direction: column;
+    min-height: 100%; /* Allow the body to grow with content */
+    overflow-x: hidden;
+    background-image: url('../img/admin_bg.jpg'); /* Admin page background image */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.content {
+    flex-grow: 1; /* Allow the content to expand and take up remaining space */
+    padding: 20px;
+    text-align: center;
+    color: #333;
 }
 
 .navtop {
@@ -17,9 +149,8 @@ body {
     justify-content: space-between;
     padding: 0 20px;
     color: #eaebed;
-    flex-shrink: 0; /* Prevents the navbar from shrinking */
-  }
-  
+    flex-shrink: 0;
+}
 
 .navtop .logo img {
     height: 70px;
@@ -29,8 +160,8 @@ body {
 .navtop .links {
     display: flex;
     flex: 1;
-    justify-content: space-around; /* Distribute links evenly */
-    margin: 0 20px; /* Optional: Add spacing around the links */
+    justify-content: space-around;
+    margin: 0 20px;
 }
 
 .navtop .links a {
@@ -38,7 +169,7 @@ body {
     text-decoration: none;
     font-weight: bold;
     padding: 0 15px;
-    white-space: nowrap; /* Prevents text wrapping to the next line */
+    white-space: nowrap;
 }
 
 .navtop .links a:hover {
@@ -48,20 +179,20 @@ body {
 .navtop .profile {
     display: flex;
     align-items: center;
-    gap: 10px; /* Adds spacing between the image and the name */
+    gap: 10px;
 }
 
 .navtop .profile img {
     height: 50px;
-    width: 50px; /* Ensures a perfect circle */
+    width: 50px;
     border-radius: 50%;
-    object-fit: cover; /* Prevents distortion */
+    object-fit: cover;
 }
 
 .navtop .profile span {
     color: #c1c4c8;
     font-weight: bold;
-    white-space: nowrap; /* Prevents text wrapping */
+    white-space: nowrap;
 }
 
 /* Hamburger Icon */
@@ -72,9 +203,9 @@ body {
     color: #eaebed;
 }
 
-/* Hidden by default */
+/* Menu container (initially hidden) */
 .menu {
-    display: none; /* Initially hidden */
+    display: none;
     position: fixed;
     top: 0;
     right: 0;
@@ -88,7 +219,6 @@ body {
     overflow-y: auto;
 }
 
-/* Links inside the menu */
 .menu a {
     display: block;
     color: #eaebed;
@@ -103,44 +233,54 @@ body {
 
 /* Visible state of the menu */
 .menu.show {
-    display: block; /* Make the menu visible */
+    display: block;
 }
 
-
-/* Open sidebar */
 .navtop .menu.open {
     transform: translateX(0);
 }
 
 /* Responsive Design */
-@media (max-width: 860px) {
-    .navtop .links {
-        display: none !important;
+@media (max-width: 1090px) {
+    .navtop {
+        display: flex;
+        justify-content: space-between; /* Space between logo, hamburger, and profile */
+        align-items: center; /* Vertically align items */
+    }
+
+    .navtop .logo {
+        display: flex;
+        order: 1; /* Ensure logo stays first */
     }
 
     .navtop .hamburger {
+        font-size: 24px;
+        color: #eaebed;
+        cursor: pointer;
         display: block;
-        margin-top: -15px;
+        margin-left: 15px; /* Space between the logo and hamburger */
+        margin-right: 15px; /* Optional: Space between hamburger and profile image */
+        order: 2; /* Place hamburger between logo and profile */
     }
 
     .navtop .profile {
         flex-direction: column;
+        margin-left: auto; /* Push profile image to the right */
+        display: flex;
+        align-items: center;
+        order: 3; /* Ensure profile image stays last */
     }
 
     .navtop .profile img {
-        height: 40px; /* Smaller circle */
+        height: 40px; /* Smaller profile image */
         width: 40px;
     }
 
-    .profile-circle .initials {
-        position: absolute;
-        transform: translateX(10px); /* Moves the initials to the right slightly */
-        font-weight: bold;
-        text-align: center;
-        line-height: 50px; /* Vertically center the text */
-        white-space: nowrap; /* Prevents text wrapping */
-    }
     
+    .navtop .links {
+        display: none !important;
+    }
+
     .navtop div {
         flex-direction: column;
         align-items: flex-start;
@@ -148,36 +288,20 @@ body {
 
     .navtop .links {
         justify-content: flex-start;
-        gap: 10px; /* Reduce spacing between links for smaller screens */
+        gap: 10px;
     }
 
     .navtop .links a {
         margin: 5px 0;
     }
-
 }
 
-/* Content Styling */
-.content {
-    flex: 1; /* Fills remaining space to ensure the content stretches with the viewport */
-    overflow-y: auto; /* Enable vertical scrolling if content is too long */
-    background-image: url('../img/admin_bg.jpg'); /* Replace with your image path */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    padding-top: 0;
-    margin-top: 0;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: center;
-    color: #333; /* Default text color */
-}
+
 
 .content h2 {
     margin-top: 30px;
     border-bottom: 2px solid #4a536e;
+    display: inline-block; /* Ensures the border is only under the text */
     padding-bottom: 10px;
 }
 
@@ -190,22 +314,6 @@ body {
     margin: 10px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .navtop div {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .navtop .links {
-        justify-content: flex-start;
-        gap: 10px; /* Reduce spacing between links for smaller screens */
-    }
-
-    .navtop .links a {
-        margin: 5px 0;
-    }
-}
 
 .order-list {
     width: 90%; /* Resize table to fit better within the page */
@@ -500,3 +608,122 @@ table tr:hover {
     padding: 10px 0; /* Add some padding above and below */
     letter-spacing: 1px; /* Slight spacing between letters */
 }
+
+/* Table styling */
+.appointments-table {
+    width: 80%; /* Reduce the width to 80% */
+    margin: 20px auto; /* Center the table with some margin around it */
+    border-collapse: collapse;
+    background-color: white; /* Set background color to white */
+}
+
+.appointments-table th, .appointments-table td {
+    border: 1px solid #ddd;
+    padding: 10px; /* Increase padding for better readability */
+    text-align: left;
+}
+
+.appointments-table th {
+    background-color: #2f3947;
+    color: white;
+}
+
+.appointments-table td img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 3px;
+}
+
+.appointments-table td a {
+    text-decoration: none;
+    color: #333;
+}
+
+.appointments-table td a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: none; /* Removes bullets */
+    padding: 0; /* Optional: removes any default padding */
+    margin: 0; /* Optional: removes any default margin */
+}
+
+ul li {
+    padding: 5px 0; /* Optional: adds space between each list item */
+}
+
+/* General input fields */
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 66%;             /* Defines the width of the input fields */
+  padding: 15px;          /* Adds padding inside the fields */
+  font-size: 18px;        /* Sets the font size */
+  border: 2px solid #ccc; /* Adds a border */
+  border-radius: 5px;     /* Rounds the corners */
+  margin: 0 auto 20px;    /* Centers horizontally with auto; 20px bottom margin */
+  display: block;         /* Ensures the element is treated as block-level */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Space between fields */
+}
+
+label {
+    display: block; /* Ensures the label is on its own line */
+    margin-bottom: 15px; /* Adds space between the label and input */
+    margin-top: 10px;
+    font-weight: bold; /* Optional: makes the label text bold */
+}
+
+
+/* Specific style for the textarea (body field) */
+textarea {
+    height: 300px; /* Makes the body field much taller */
+    resize: vertical; /* Allows users to resize the textarea vertically */
+}
+
+/* Optionally, style the form itself to add some space */
+form {
+    max-width: 900px; /* Restricts the form width to 2/3 of the page */
+    margin: 0 auto; /* Centers the form */
+}
+
+/* Dropdown Menu */
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 60px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 180px;
+    z-index: 1000;
+  }
+  
+  .profile-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .profile-dropdown a:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .profile-dropdown i {
+    color: #007bff;
+  }
+  
+  /* Show dropdown on toggle */
+  .profile-dropdown.show {
+    display: block;
+  }
+

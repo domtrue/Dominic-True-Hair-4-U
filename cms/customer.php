@@ -2,8 +2,6 @@
 include 'setup.php';
 session_start();
 
-print_r($_SESSION);
-
 // Redirect to login page if user is not logged in
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');

@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +27,7 @@
         }
 
         .about-text h1 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif; 
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: #fff;
@@ -55,7 +59,7 @@
         body {
             margin: 0;
             background: linear-gradient(135deg, #1c1c1c, #282828);
-            color: #fff;
+            
         }
     </style>
 </head>

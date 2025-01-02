@@ -44,3 +44,49 @@ function updateCartCount() {
 }
 
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("cartModal");
+  const modalImage = document.getElementById("modalImage");
+  const modalName = document.getElementById("modalName");
+  const modalPrice = document.getElementById("modalPrice");
+  const closeBtn = document.querySelector(".close");
+
+  // Handle "Add to Cart" button click
+  document.querySelectorAll(".add-to-cart").forEach(button => {
+      button.addEventListener("click", event => {
+          const productId = button.dataset.id;
+          const productName = button.dataset.name;
+          const productPrice = button.dataset.price;
+          const productImage = button.dataset.image;
+
+          // Update modal content
+          modalImage.src = productImage;
+          modalName.textContent = productName;
+          modalPrice.textContent = `$${parseFloat(productPrice).toFixed(2)}`;
+
+          // Show modal
+          modal.style.display = "block";
+
+          // Send AJAX request to add product to cart
+          fetch(`add_to_cart.php?id=${productId}&quantity=1`)
+              .then(response => response.json())
+              .then(data => {
+                  console.log("Cart updated:", data);
+              })
+              .catch(error => console.error("Error:", error));
+      });
+  });
+
+  // Close modal
+  closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+  });
+
+  // Close modal when clicking outside
+  window.addEventListener("click", event => {
+      if (event.target === modal) {
+          modal.style.display = "none";
+      }
+  });
+});

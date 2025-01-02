@@ -11,7 +11,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Manage Products</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/admin.css" rel="stylesheet" type="text/css">
 </head>
 <body>

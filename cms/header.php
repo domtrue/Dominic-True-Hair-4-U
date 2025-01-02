@@ -17,7 +17,7 @@
         <div class="menu-container">
             <ul class="menu-left">
                 <li><a href="shop.php">Shop</a></li>
-                <li><a href="book_appointment.php">Book Appointment</a></li>
+                <li><a href="request_appointment.php">Request Appointment</a></li>
             </ul>
             <ul class="menu-right">
                 <li><a href="hair_services.php">Hair Services</a></li>
@@ -32,9 +32,7 @@
                 <li style="position: relative;">
                     <a href="cart.php" class="fa-solid fa-bag-shopping">
                     <?php if (isset($_SESSION['cart']) && array_sum(array_column($_SESSION['cart'], 'quantity')) > 0) { ?>
-        <span id="cart-count" class="badge">
-            <?php echo array_sum(array_column($_SESSION['cart'], 'quantity')); ?>
-        </span>
+        
     <?php } ?>
         </span>
                 </a></li>
